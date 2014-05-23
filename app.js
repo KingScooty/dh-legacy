@@ -25,7 +25,9 @@ app.use('/', routes);
 app.use('/users', users);
 
 // Twitter Server
-require('./server/twitter.js').twitterServer();
+// require('./server/twitter.js').twitterServer();
+// Database
+require('./server/database.js').database();
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
