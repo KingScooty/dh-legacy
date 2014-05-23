@@ -27,3 +27,8 @@ io.sockets.on('connection', function (socket) {
 });
 
 // require('../server/sockets.js').sockets(server);
+
+// Twitter Server
+// require('../server/twitter.js').twitterServer();
+// Database
+require('../server/database.js').database();
