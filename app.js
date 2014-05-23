@@ -28,6 +28,7 @@ app.use('/users', users);
 // require('./server/twitter.js').twitterServer();
 // Database
 require('./server/database.js').database();
+// require('./server/sockets.js').sockets(app);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
