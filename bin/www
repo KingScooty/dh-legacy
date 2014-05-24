@@ -30,9 +30,6 @@ var tweets = fixture.tweets;
 
 io.sockets.on('connection', function (socket) {
   setInterval(function() {
-    socket.emit('news', { tweet: tweets[0] });
-  }, 1000);
-  // socket.on('my other event', function (data) {
-  //   console.log(data);
-  // });
+    socket.emit('news', { tweet: tweets[2] });
+  }, 2000);
 });
