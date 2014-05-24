@@ -1,8 +1,275 @@
+// @import 'helpers/normalize';
+// @import 'modules/animation-shake';
+
+html {
+    overflow-y: scroll;
+}
+
+html, body {
+    height: 100%;
+}
+
+$dark_blue: #00223e;
+$wood: url(/images/dark_wood.jpg);
+
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-image: $wood;
+    background-attachment: fixed;
+    background-color: #111;
+    color: #FFF;
+    
+    font-size: 18px;
+    line-height: 1.231;
+    font-family: "myriad-pro-condensed",sans-serif;
+}
+
+body.ready {
+    background-image: url(/images/background.jpg);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+/*    background-position: 50px center;*/
+    background-position: top center;
+    background-color: $dark_blue;
+}
+
+.no-js { 
+    body {
+        background-image: url(/images/background.jpg);
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+/*        background-position: 50px center;*/
+        background-position: top center;
+        background-color: $dark_blue;
+    }
 }
 
 a {
-  color: #00B7FF;
+    color: white;
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+p { color: #EEE; }
+
+#tweetthis, #likethis {
+    float: left;
+    margin: 1px 0 0 0;
+}
+
+body > footer {
+    opacity: 0;
+    text-align:center;
+    position: fixed;
+    bottom: 0;
+    background: url(/images/fader.png) bottom center ;
+    width: 100%;
+    padding-top: 90px;
+    padding-bottom: 5px;
+    font-size: 15px;
+    div {
+/*        padding: 5px 0;*/
+        background: $dark_blue;
+        p {
+            opacity: 0.9;
+/*            margin: 0 0 12px;*/
+            margin:0 0 4px;
+        }
+    }
+}
+
+.social.right {
+    position: absolute;
+    bottom: 5px;
+    right: 0;
+    background: none;
+}
+
+.bgFader {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+#slides {
+    display: block;
+    width: 450px;
+    position: absolute;
+/*    top: 50%;*/
+    left: 50%;
+    margin-left: -225px;
+    z-index: 8;
+    text-align: center;
+    .text {
+        font-family: "myriad-pro-condensed",sans-serif;
+        font-size: 55px;
+        font-weight: bold;
+    }
+}
+
+#blackout {
+/*    background: url(http://subtlepatterns.com/patterns/px_by_Gre3g.png);*/
+    background: $wood;
+}
+
+// @import 'elements/preloader';
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+#main {
+    z-index: 10;
+    width: 450px;
+    margin: 0 auto;
+/*    background: rgba(0, 0, 0, 0.4);*/
+    background: url(/images/dark_matter.png);
+/*    padding: 5px 20px 10px;*/
+    padding: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -o-border-radius: 20px;
+    border-radius: 20px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    
+    h1 {
+        font-size: 70px;
+        margin: 0;
+        line-height: 1;
+        text-align: center;
+        border-bottom: 1px solid rgba(50, 50, 50, 0.5);
+        padding-bottom: 5px;
+        text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.3);
+    }
+    h1 + h2 {
+        padding-top: 5px;
+        margin: 0;
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    h2, h3, p {
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+    }
+    hr {
+        height: 0;
+        border: 0;
+        border-top: 1px solid rgba(50, 50, 50, 0.5);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 5px 0;
+    }
+    p + hr {
+        margin-top: 12px;
+    }
+}
+
+.masthead {
+    height: 475px;
+    padding-top: 50px;
+}
+
+.hero-scotty_vernon {
+    opacity: 0;
+    height: 744px;
+    width: 454px;
+    position: fixed;
+    bottom: 0;
+    left: -150px;
+    background: url(/images/scotty_vernon.png) no-repeat left bottom;
+    z-index: 3;
+    -webkit-transition: opacity 0.5s;
+}
+
+.logo {
+    -webkit-perspective: 1000;
+    position: relative;
+    width: 730px;
+    height: 536px;
+    margin: 0 auto;
+    z-index: 10;
+
+    a{
+        display: block;
+        height: 449px; 
+        width: 464px;
+        background: url(/images/logo.png) no-repeat;
+        text-indent: -999em;
+        margin: 0 auto;
+        z-index: 10;
+    }
+}
+
+.js {
+    .logo {
+        position: absolute;
+        top: 50px;
+        left: 50%;
+        margin-left: -365px;
+        -webkit-transform-style: preserve-3d;
+        -webkit-transform: translate3d(0,0,0);
+    }
+}
+
+#twitter_timeline {
+    hr {
+        margin: 1em 0;
+    }
+    padding-top: 10px;
+    .tweet {
+        position: relative;
+        opacity: 0;
+/*        margin-bottom: 10px;*/
+        margin-bottom: 20px;
+        min-height: 50px;
+        img {
+            box-shadow: 1px 2px 5px rgba(0,0,0,0.3);
+        }
+        .profile_picture {
+            position: absolute; 
+            top: 0;
+            left: -60px;
+            img {
+                display: block;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                -o-border-radius: 5px;
+            }
+        }
+        p span {
+            display: block;
+            font-size: 15px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 5px;
+        }
+        p + img {
+            width: 450px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            -o-border-radius: 5px;
+        }
+    }
+}
+
+.flames {
+    position: absolute;
+    top: -15px;
+    left: -25px;
+    display:  block;
+    background: url(/images/fire.png) no-repeat;
+    width: 730px;
+    height: 536px;
+    z-index: -1;
+    -webkit-transform-style: preserve-3d;
+    -webkit-transform: translate3d(0,0,0);
+}
+
+
+@media screen and (min-width: 1700px) and (min-height: 1000px) {
+    .hero-scotty_vernon {
+        opacity: 1;
+        bottom: 0;
+        left: 0;
+    }
 }
