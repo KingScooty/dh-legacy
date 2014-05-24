@@ -1,6 +1,14 @@
 
 var digitalheroes = digitalheroes || {};
 
+if (window.location.hostname === 'digital-heroes.com') {
+  console.log('Digital Heroes 2014 - Let\'s Do This!');
+
+  digitalheroes.domain = 'digital-heroes.com';
+} else {
+  digitalheroes.domain = 'http://192.168.1.4:3000';
+}
+
 digitalheroes.templateInit = jQuery(function($) {
 
   digitalheroes.templates = {};
@@ -16,7 +24,7 @@ digitalheroes.templateInit = jQuery(function($) {
 digitalheroes.tweets = jQuery(function($) { 
   var html;
 
-  var socket = io.connect('http://192.168.1.4:3000');
+  var socket = io.connect(digitalheroes.domain);
   socket.on('news', function (data) {
     console.log(data);
 
