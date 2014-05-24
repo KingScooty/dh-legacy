@@ -1,4 +1,4 @@
-// @import 'helpers/normalize';
+@import '../../public/bower_components/normalize-scss/normalize';
 // @import 'modules/animation-shake';
 
 html {
@@ -212,14 +212,15 @@ body > footer {
   }
 }
 
-#twitter_timeline {
+.tweet-list {
   hr {
     margin: 1em 0;
   }
   padding-top: 10px;
   .tweet {
+    display: block;
     position: relative;
-    opacity: 0;
+    // opacity: 0;
 /*        margin-bottom: 10px;*/
     margin-bottom: 20px;
     min-height: 50px;
@@ -237,13 +238,13 @@ body > footer {
         -o-border-radius: 5px;
       }
     }
-    p span {
+    .tweet_meta {
       display: block;
       font-size: 15px;
       color: rgba(255,255,255,0.5);
       margin-top: 5px;
     }
-    p + img {
+    .tweet__media {
       width: 450px;
       -webkit-border-radius: 5px;
       -moz-border-radius: 5px;
