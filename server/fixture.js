@@ -1,4 +1,5 @@
-{ created_at: 'Fri May 23 20:24:47 +0000 2014',
+var tweets = [
+  { created_at: 'Fri May 23 20:24:47 +0000 2014',
   id: 469937002558029800,
   id_str: '469937002558029824',
   text: '@littletreestyle testafgsvgsgosj #digitalheroes2014',
@@ -63,7 +64,8 @@
   favorited: false,
   retweeted: false,
   filter_level: 'medium',
-  lang: 'in' }
+  lang: 'in' },
+
 { created_at: 'Fri May 23 20:26:29 +0000 2014',
   id: 469937430226010100,
   id_str: '469937430226010112',
@@ -130,3 +132,6 @@
   retweeted: false,
   filter_level: 'medium',
   lang: 'tl' }
+];
+
+exports.tweets = tweets;
