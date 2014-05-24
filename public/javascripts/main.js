@@ -11,6 +11,8 @@ digitalheroes.templateInit = jQuery(function($) {
   });
 });
 
+
+
 digitalheroes.tweets = jQuery(function($) { 
   var html;
 
@@ -20,7 +22,11 @@ digitalheroes.tweets = jQuery(function($) {
 
     html = digitalheroes.templates.tweet(data);
 
-    $('.tweet-list').append(html);
+    $('.tweet-list').prepend(html);
+
+    var $tweetTime = $('.timeago', $('.tweet:first-child'));
+    $tweetTime.timeago();
+
   });
 
 });

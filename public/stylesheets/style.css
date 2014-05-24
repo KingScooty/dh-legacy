@@ -528,7 +528,7 @@ body > footer {
         -webkit-border-radius: 5px;
         -moz-border-radius: 5px;
         -o-border-radius: 5px; }
-    .tweet-list .tweet .tweet_meta {
+    .tweet-list .tweet .tweet__meta {
       display: block;
       font-size: 15px;
       color: rgba(255, 255, 255, 0.5);
