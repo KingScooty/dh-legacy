@@ -22,8 +22,24 @@ server.listen(app.get('port'), function() {
 
 // Twitter Server
 // require('../server/twitter.js').twitterServer();
+
 // Database
-require('../server/database.js').database();
+var database = require('../server/database.js');
+database.connectDatabase();
+var db = database.db;
+
+  // db.save('skywalker', {
+  //     force: 'light',
+  //     name: 'Luke Skywalker'
+  // }, function (err, res) {
+  //     if (err) {
+  //       console.log('Save failed!');
+  //         // Handle error
+  //     } else {
+  //       console.log('Save success!');
+  //         // Handle success
+  //     }
+  // });
 
 var fixture = require('../server/fixture.js');
 var tweets = fixture.tweets;

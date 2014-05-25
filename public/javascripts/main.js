@@ -3,7 +3,6 @@ var digitalheroes = digitalheroes || {};
 
 if (window.location.hostname === 'digital-heroes.com') {
   console.log('Digital Heroes 2014 - Let\'s Do This!');
-
   digitalheroes.domain = 'digital-heroes.com';
 } else {
   digitalheroes.domain = 'http://192.168.1.4:3000';
@@ -18,7 +17,6 @@ digitalheroes.templateInit = jQuery(function($) {
     digitalheroes.templates.tweet = Handlebars.compile(tweetTemplate);
   });
 });
-
 
 
 digitalheroes.tweets = jQuery(function($) { 
