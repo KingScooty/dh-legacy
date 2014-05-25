@@ -6,6 +6,8 @@ var chai = require('chai');
 chai.should();
 var assert = chai.assert;
 
+var async = require('async');
+
 var express = require('express');
 var app = require('../app.js');
 
@@ -66,6 +68,24 @@ describe('Database', function() {
     });
   })
 
+  it('Should save another tweet', function(done) {
+    db.save(tweets[1].id_str, tweets[1], function (err, res) {
+    // db.save(tweets[0], function (err, res) {
+      if (err) return done(err);
+      res.ok.should.be.true;
+      done();
+    });
+  })
+
+  // it('Should save another tweet', function(done) {
+  //   db.save(tweets[2].id_str, tweets[2], function (err, res) {
+  //   // db.save(tweets[0], function (err, res) {
+  //     if (err) return done(err);
+  //     res.ok.should.be.true;
+  //     done();
+  //   });
+  // })
+
   it('Should create a view', function(done) {
     db.save('_design/tweets', {
       all: {
@@ -93,8 +113,8 @@ describe('Database', function() {
       res.forEach(function (key, row, id) {
         row.user.screen_name.should.equal(key);
         // console.log("%s has view key %s.", row.user.screen_name, key);
-        done();
       });
+      done();
     });
   })
 
