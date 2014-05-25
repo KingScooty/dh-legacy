@@ -23,9 +23,16 @@ server.listen(app.get('port'), function() {
 // Twitter Server
 // require('../server/twitter.js').twitterServer();
 
+
+
+var config = require('../server/_config');
+config.init(app);
+
+var settings = config.settings;
+
 // Database
 var database = require('../server/database.js');
-database.connectDatabase();
+database.connectDatabase(settings);
 var db = database.db;
 
   // db.save('skywalker', {
