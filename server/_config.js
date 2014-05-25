@@ -17,6 +17,11 @@ module.exports.init = function(app) {
     envSettings = require("./environment/production");
   }
 
+  // -- TEST
+  if ('test' == app.settings.env) {
+    envSettings = require("./environment/test");
+  }
+
   exports.settings = envSettings.settings;
 
 };

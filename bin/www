@@ -18,12 +18,6 @@ server.listen(app.get('port'), function() {
 }); 
 
 
-// require('../server/sockets.js').sockets(server);
-
-// Twitter Server
-// require('../server/twitter.js').twitterServer();
-
-
 
 var config = require('../server/_config');
 config.init(app);
@@ -34,6 +28,10 @@ var settings = config.settings;
 var database = require('../server/database.js');
 database.connectDatabase(settings);
 var db = database.db;
+
+// Twitter Server
+// require('../server/twitter.js').twitterServer();
+
 
   // db.save('skywalker', {
   //     force: 'light',

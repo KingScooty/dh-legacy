@@ -14,19 +14,19 @@ module.exports.connectDatabase = function (settings) {
 
   var c = new(cradle.Connection);
 
-  var db = c.database('digitalheroes-2014');
+  var db = c.database(settings.database.name);
 
-  db.exists(function (err, exists) {
-    if (err) {
-      console.log('error', err);
-    } else if (exists) {
-      console.log('the force is with you.');
-    } else {
-      console.log('database does not exists.');
-      // db.create();
-      /* populate design documents */
-    }
-  });
+  // db.exists(function (err, exists) {
+  //   if (err) {
+  //     console.log('error', err);
+  //   } else if (exists) {
+  //     console.log('the force is with you.');
+  //   } else {
+  //     console.log('database does not exists.');
+  //     // db.create();
+  //     /* populate design documents */
+  //   }
+  // });
 
   exports.db = db;
 
