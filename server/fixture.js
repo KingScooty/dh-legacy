@@ -61,7 +61,7 @@ var tweets = [
      symbols: [],
      urls: [],
      user_mentions: [ [Object] ] },
-  favorited: false,
+  favorited: true,
   retweeted: false,
   filter_level: 'medium',
   lang: 'in' },
