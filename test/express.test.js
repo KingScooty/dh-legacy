@@ -30,11 +30,10 @@ var db = database.db;
 describe('Database', function() {
 
   it('Should create a database', function(done){
-    db.create();
-    db.exists(function (err, exists) {
+    db.create(function(err, res) {
       if (err) return done(err);
-        exists.should.be.true;
-        done();
+      res.ok.should.be.true;
+      done();
     });
   })
 
@@ -44,16 +43,16 @@ describe('Database', function() {
       name: 'Luke Skywalker'
     }, function (err, res) {
       if (err) return done(err);
-        res.ok.should.be.true;
-        done();
+      res.ok.should.be.true;
+      done();
     });
   })
 
   it('Should delete a document', function(done) {
     db.remove('skywalker', function (err, res) {
       if (err) return done(err);
-        res.ok.should.be.true;
-        done();
+      res.ok.should.be.true;
+      done();
     });
   })
 

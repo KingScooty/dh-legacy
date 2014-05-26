@@ -16,40 +16,24 @@ module.exports.connectDatabase = function (settings) {
 
   var db = c.database(settings.database.name);
 
-  // db.exists(function (err, exists) {
-  //   if (err) {
-  //     console.log('error', err);
-  //   } else if (exists) {
-  //     console.log('the force is with you.');
-  //   } else {
-  //     console.log('database does not exists.');
-  //     // db.create();
-  //     /* populate design documents */
-  //   }
-  // });
-
   exports.db = db;
 
-  // db.save('skywalker', {
-  //     force: 'light',
-  //     name: 'Luke Skywalker'
-  // }, function (err, res) {
-  //     if (err) {
-  //       console.log('Save failed!');
-  //         // Handle error
-  //     } else {
-  //       console.log('Save success!');
-  //         // Handle success
-  //     }
-  // });
+}
 
-  // db.remove('skywalker', function (err, res) {
-  //   // Handle response
-  //   if (err) {
-  //     console.log('Remove failed');
-  //   } else {
-  //     console.log('Remove: Sucess');
-  //   }
-  // });
+module.exports.databaseExists = function (db) {
+
+  db.exists(function (err, exists) {
+    if (err) {
+      console.log('error', err);
+    } else if (exists) {
+      console.log('the force is with you.');
+    } else {
+      console.log('database does not exists.');
+      db.create(function(err, res) {
+        console.log('Database created.');
+      });
+
+    }
+  });
 
 }

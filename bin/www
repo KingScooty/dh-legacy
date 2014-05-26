@@ -15,7 +15,7 @@ var io = require('socket.io').listen(server);
 
 server.listen(app.get('port'), function() {
   console.log(('Express server listening on port ' + server.address().port));
-}); 
+});
 
 
 
@@ -28,6 +28,7 @@ var settings = config.settings;
 var database = require('../server/database.js');
 database.connectDatabase(settings);
 var db = database.db;
+database.databaseExists(db);
 
 // Twitter Server
 // require('../server/twitter.js').twitterServer();
