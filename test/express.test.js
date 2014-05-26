@@ -69,6 +69,8 @@ describe('Database', function() {
 
     var increment = 0;
 
+    // console.log('DB info: ' + db.info);
+
     for (var i = 0; i < tweets.length; i++) {
       db.save(tweets[i].id_str, tweets[i], function (err, res) {
         if (err) return done(err);

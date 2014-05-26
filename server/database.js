@@ -20,7 +20,7 @@ module.exports.connectDatabase = function (settings) {
 
 }
 
-module.exports.databaseExists = function (db) {
+module.exports.databaseExists = function (db, callback) {
 
   db.exists(function (err, exists) {
     if (err) {
@@ -31,6 +31,7 @@ module.exports.databaseExists = function (db) {
       console.log('database does not exists.');
       db.create(function(err, res) {
         console.log('Database created.');
+        callback();
       });
 
     }
@@ -52,5 +53,37 @@ module.exports.createTestFixture = function (db) {
       }
     });
   }
+
+}
+
+module.exports.createView = function (db, callback) {
+
+  console.log('Creating database view');
+
+  db.save('_design/tweets', {
+    all: {
+      map: function (doc) {
+        if (doc.user.screen_name) emit(doc.user.screen_name, doc);
+      }
+    },
+    favourited: {
+      map: function (doc) {
+        if (doc.user.screen_name && doc.favourited == true) {
+          emit(null, doc);
+        }
+      }
+    }
+  }, function(err, res) {
+    if (err) {
+      console.log('error', err);
+    } else {
+      callback();
+    }
+  });
+}
+
+module.exports.loadDatabaseData = function (db) {
+
+
 
 }

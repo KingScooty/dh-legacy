@@ -28,12 +28,17 @@ var settings = config.settings;
 var database = require('../server/database.js');
 database.connectDatabase(settings);
 var db = database.db;
-database.databaseExists(db);
 
-// Test fixture for local work
-if (app.settings.env === 'development') {
-  database.createTestFixture(db);
-}
+// Prepare database if it doesn't exist
+database.databaseExists(db, function() {
+  database.createView(db, function() {
+    if (app.settings.env === 'development') {
+      // Test fixture for local work
+      database.createTestFixture(db);
+    }
+  });
+});
+
 
 // Twitter Server
 // require('../server/twitter.js').twitterServer();
