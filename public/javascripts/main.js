@@ -19,11 +19,32 @@ digitalheroes.templateInit = jQuery(function($) {
 });
 
 
-digitalheroes.tweets = jQuery(function($) { 
+digitalheroes.tweets = jQuery(function($) {
   var html;
 
   var socket = io.connect(digitalheroes.domain);
-  socket.on('news', function (data) {
+
+  socket.on('connect', function () {
+    socket.emit("greetingFromVisitor", 'word!');
+    console.log('Emitting greeting to server');
+    // socket.emit("greeting", { key : seed });
+  });
+
+  socket.on('replyToGreeting', function(data) {
+    console.log(data);
+
+    for (var i = 0; i < data.length; i++) {
+      console.log(data[i]);
+      html = digitalheroes.templates.tweet(data[i]);
+
+      $('.tweet-list').prepend(html);
+
+      var $tweetTime = $('.timeago', $('.tweet:first-child'));
+      $tweetTime.timeago();
+    }
+  });
+
+  socket.on('incomingTweet', function (data) {
     console.log(data);
 
     html = digitalheroes.templates.tweet(data);

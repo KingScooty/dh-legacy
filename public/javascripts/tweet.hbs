@@ -1,9 +1,9 @@
 <script class="template--tweet" type="template/handlebars">
   <a href="https://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}" class="tweet">
-    
+
     <div class="profile_picture"><img src="{{ tweet.user.profile_image_url }}"></div>
     <div class="">{{ tweet.user.screen_name }}</div>
-    
+
     <p class="tweet__body">{{ tweet.text }}</p>
 
     <p class="tweet__meta">
@@ -15,7 +15,7 @@
       <img class="tweet__media" src="{{ this.media_url }}">
     {{/each}}
     {{/if}}
-    
+
     <hr>
   </a>
 </script>

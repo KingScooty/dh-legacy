@@ -82,8 +82,15 @@ module.exports.createView = function (db, callback) {
   });
 }
 
-module.exports.loadDatabaseData = function (db) {
-
-
-
-}
+// module.exports.loadDatabaseData = function (db) {
+//
+//   var dbContent = [];
+//
+//   db.view('tweets/all', function (err, res) {
+//     res.forEach(function (key, row, id) {
+//       dbContent.push(row);
+//     });
+//     return dbContent;
+//   });
+//
+// }

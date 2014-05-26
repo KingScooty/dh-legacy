@@ -44,11 +44,28 @@ database.databaseExists(db, function() {
 // require('../server/twitter.js').twitterServer();
 
 
-// var fixture = require('../server/fixture.js');
-// var tweets = fixture.tweets;
-
 io.sockets.on('connection', function (socket) {
-  setInterval(function() {
-    socket.emit('news', { tweet: tweets[2] });
-  }, 2000);
+  socket.on('greetingFromVisitor', function (message) {
+
+    var dbContent = [];
+
+    db.view('tweets/all', function (err, res) {
+      res.forEach(function (key, row, id) {
+        dbContent.push({'tweet' : row});
+      });
+
+      socket.emit('replyToGreeting', dbContent);
+    });
+
+  });
 });
+
+// Twitter
+// socket.emit('incomingTweet', dbContent);
+
+// io.sockets.on('connection', function (socket) {
+//   socket.emit('greeting', dbContent);
+//   // setInterval(function() {
+//   //   socket.emit('news', { tweet: tweets[2] });
+//   // }, 2000);
+// });
