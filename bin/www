@@ -30,25 +30,17 @@ database.connectDatabase(settings);
 var db = database.db;
 database.databaseExists(db);
 
+// Test fixture for local work
+if (app.settings.env === 'development') {
+  database.createTestFixture(db);
+}
+
 // Twitter Server
 // require('../server/twitter.js').twitterServer();
 
 
-  // db.save('skywalker', {
-  //     force: 'light',
-  //     name: 'Luke Skywalker'
-  // }, function (err, res) {
-  //     if (err) {
-  //       console.log('Save failed!');
-  //         // Handle error
-  //     } else {
-  //       console.log('Save success!');
-  //         // Handle success
-  //     }
-  // });
-
-var fixture = require('../server/fixture.js');
-var tweets = fixture.tweets;
+// var fixture = require('../server/fixture.js');
+// var tweets = fixture.tweets;
 
 io.sockets.on('connection', function (socket) {
   setInterval(function() {

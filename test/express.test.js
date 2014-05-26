@@ -65,13 +65,24 @@ describe('Database', function() {
     });
   })
 
-  it('Should save another tweet', function(done) {
-    db.save(tweets[1].id_str, tweets[1], function (err, res) {
-    // db.save(tweets[0], function (err, res) {
-      if (err) return done(err);
-      res.ok.should.be.true;
-      done();
-    });
+  it('Should save a few more tweets', function(done) {
+
+    var increment = 0;
+
+    for (var i = 0; i < tweets.length; i++) {
+      db.save(tweets[i].id_str, tweets[i], function (err, res) {
+        if (err) return done(err);
+        res.ok.should.be.true;
+        increment++;
+        testComplete();
+      });
+    }
+    function testComplete() {
+      if (increment === tweets.length) {
+        increment.should.equal(tweets.length);
+        done();
+      }
+    }
   })
 
   // it('Should save another tweet', function(done) {

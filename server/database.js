@@ -37,3 +37,20 @@ module.exports.databaseExists = function (db) {
   });
 
 }
+
+module.exports.createTestFixture = function (db) {
+
+  var fixture = require('./fixture.js');
+  var tweets = fixture.tweets;
+
+  for (var i = 0; i < tweets.length; i++) {
+    db.save(tweets[i].id_str, tweets[i], function (err, res) {
+      if (err) {
+        console.log('error', err);
+      } else {
+        console.log('Fixture entry added to database');
+      }
+    });
+  }
+
+}
