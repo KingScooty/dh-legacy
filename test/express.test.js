@@ -6,8 +6,6 @@ var chai = require('chai');
 chai.should();
 var assert = chai.assert;
 
-var async = require('async');
-
 var express = require('express');
 var app = require('../app.js');
 
@@ -118,7 +116,7 @@ describe('Database', function() {
     });
   })
 
-  it('Should delete a database', function(done){
+  it('Should delete the database', function(done){
     db.destroy(function(err, res) {
       if (err) return done(err);
       res.ok.should.be.true;
@@ -126,4 +124,3 @@ describe('Database', function() {
     });
   })
 })
-
