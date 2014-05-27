@@ -1,0 +1,12 @@
+.flames {
+  position: absolute;
+  top: -15px;
+  left: -25px;
+  display:  block;
+  background: url(/images/fire.png) no-repeat;
+  width: 730px;
+  height: 536px;
+  z-index: -1;
+  -webkit-transform-style: preserve-3d;
+  -webkit-transform: translate3d(0,0,0);
+}

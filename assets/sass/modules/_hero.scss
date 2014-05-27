@@ -1,0 +1,20 @@
+.hero-scotty_vernon {
+  opacity: 0;
+  height: 744px;
+  width: 454px;
+  position: fixed;
+  bottom: 0;
+  left: -150px;
+  background: url(/images/scotty_vernon.png) no-repeat left bottom;
+  z-index: 3;
+  -webkit-transition: opacity 0.5s;
+}
+
+
+@media screen and (min-width: 1700px) and (min-height: 1000px) {
+  .hero-scotty_vernon {
+    opacity: 1;
+    bottom: 0;
+    left: 0;
+  }
+}

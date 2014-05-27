@@ -1,0 +1,35 @@
+.masthead {
+  height: 475px;
+  padding-top: 50px;
+}
+
+
+.logo {
+  -webkit-perspective: 1000;
+  position: relative;
+  width: 730px;
+  height: 536px;
+  margin: 0 auto;
+  z-index: 10;
+
+  a{
+    display: block;
+    height: 449px;
+    width: 464px;
+    background: url(/images/logo.png) no-repeat;
+    text-indent: -999em;
+    margin: 0 auto;
+    z-index: 10;
+  }
+}
+
+.js {
+  .logo {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    margin-left: -365px;
+    -webkit-transform-style: preserve-3d;
+    -webkit-transform: translate3d(0,0,0);
+  }
+}

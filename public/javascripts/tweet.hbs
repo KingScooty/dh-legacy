@@ -1,8 +1,8 @@
 <script class="template--tweet" type="template/handlebars">
   <a href="https://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}" class="tweet">
 
-    <div class="profile_picture"><img src="{{ tweet.user.profile_image_url }}"></div>
-    <div class="">{{ tweet.user.screen_name }}</div>
+    <div class="tweet__profile_picture"><img src="{{ tweet.user.profile_image_url }}"></div>
+    <div class="tweet__screen_name">{{ tweet.user.screen_name }}</div>
 
     <p class="tweet__body">{{ tweet.text }}</p>
 
