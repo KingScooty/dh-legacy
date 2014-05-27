@@ -3,7 +3,7 @@
 
     <div class="tweet__container">
       <div class="tweet__profile_picture">
-        <img src="{{ tweet.user.profile_image_url }}">
+        <img src="{{{changeImageSize tweet.user.profile_image_url }}}">
       </div>
       <div class="tweet__screen_name">@{{ tweet.user.screen_name }}</div>
 

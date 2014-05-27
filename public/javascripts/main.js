@@ -8,6 +8,11 @@ if (window.location.hostname === 'digital-heroes.com') {
   digitalheroes.domain = 'http://0.0.0.0:3000';
 }
 
+Handlebars.registerHelper('changeImageSize', function(text) {
+  var res = text.replace("normal", "200x200");
+  return res;
+});
+
 digitalheroes.templateInit = jQuery(function($) {
 
   digitalheroes.templates = {};
