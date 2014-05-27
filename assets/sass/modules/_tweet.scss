@@ -1,7 +1,55 @@
-.tweet {}
-.tweet__profile_picture {}
-.tweet__body {}
-.tweet__screen_name {}
-.tweet__meta {}
+.tweet-list {
+  border-left: 3px solid #747f8a;
+}
+
+.tweet {
+  margin-left: -139px;
+  margin-bottom: 1.5rem;
+  @extend .clearfix;
+  &:last-child {
+    border-left: 0;
+    margin-bottom: 0;
+  }
+}
+.tweet__container {
+  padding-left: 110px;
+  position: relative;
+  @extend .clearfix;
+}
+
+.tweet__entities {
+  margin-top: 1.5rem;
+  img {
+    border-radius: 5px;
+  }
+}
+
+.tweet__profile_picture {
+  float: left;
+  border-radius: 100%;
+  overflow: hidden;
+  width: 55px;
+  height: 55px;
+  border: 4px solid #747f8a;
+  background-color: #747f8a;
+  img {
+    width: 100%;
+  }
+}
+.tweet__body {
+  padding-left: 70px;
+}
+.tweet__screen_name {
+  padding-left: 70px;
+  color: #b4b8be;
+}
+.tweet__meta {
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  margin-top: -1rem;
+  color: #747e8a;
+  font-weight: bold;
+}
 .tweet__time {}
-.tweet__media {}
+.tweet__media { width: 100%; }

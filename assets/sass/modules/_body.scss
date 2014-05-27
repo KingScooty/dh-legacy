@@ -13,26 +13,25 @@ body {
   background-color: #111;
   color: #FFF;
 
-  font-size: 18px;
-  line-height: 1.231;
+  /* font-size: 18px; */
+  /* line-height: 1.231; */
   font-family: "myriad-pro-condensed",sans-serif;
 }
 
 body.ready {
-  background-image: url(/images/background.jpg);
+  background-image: url(/images/explosion-bg.jpg);
+  /* background-image: url(/images/fire-bg.jpg); */
   background-attachment: fixed;
   background-repeat: no-repeat;
-/*    background-position: 50px center;*/
   background-position: top center;
   background-color: $dark_blue;
 }
 
 .no-js {
   body {
-    background-image: url(/images/background.jpg);
+    background-image: url(/images/explosion-bg.jpg);
     background-attachment: fixed;
     background-repeat: no-repeat;
-/*        background-position: 50px center;*/
     background-position: top center;
     background-color: $dark_blue;
   }

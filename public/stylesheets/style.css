@@ -335,6 +335,14 @@ table {
 td, th {
   padding: 0; }
 
+.clearfix:after, .tweet:after, .tweet__container:after {
+  content: "";
+  display: table;
+  clear: both; }
+
+* {
+  box-sizing: border-box; }
+
 html {
   overflow-y: scroll; }
 
@@ -346,29 +354,38 @@ body {
   background-attachment: fixed;
   background-color: #111;
   color: #FFF;
-  font-size: 18px;
-  line-height: 1.231;
+  /* font-size: 18px; */
+  /* line-height: 1.231; */
   font-family: "myriad-pro-condensed", sans-serif; }
 
 body.ready {
-  background-image: url(/images/background.jpg);
+  background-image: url(/images/explosion-bg.jpg);
+  /* background-image: url(/images/fire-bg.jpg); */
   background-attachment: fixed;
   background-repeat: no-repeat;
-  /*    background-position: 50px center;*/
   background-position: top center;
   background-color: #00223e; }
 
 .no-js body {
-  background-image: url(/images/background.jpg);
+  background-image: url(/images/explosion-bg.jpg);
   background-attachment: fixed;
   background-repeat: no-repeat;
-  /*        background-position: 50px center;*/
   background-position: top center;
   background-color: #00223e; }
 
+html {
+  font: 1em/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif; }
+
+/* Set vertical rhythm on all elements */
+h1, h2, h3, h4, h5, h6, hgroup, ul, ol, dd, p, figure, pre, table, fieldset, hr, .inline-SMP {
+  margin-top: 0;
+  margin-bottom: 24pxpx;
+  margin-bottom: 1.5rem; }
+
 .masthead {
   height: 475px;
-  padding-top: 50px; }
+  padding-top: 50px;
+  margin-bottom: 3rem; }
 
 .logo {
   -webkit-perspective: 1000;
@@ -394,12 +411,54 @@ body.ready {
   -webkit-transform-style: preserve-3d;
   -webkit-transform: translate3d(0, 0, 0); }
 
+.tweet-list {
+  border-left: 3px solid #747f8a; }
+
+.tweet {
+  margin-left: -139px;
+  margin-bottom: 1.5rem; }
+  .tweet:last-child {
+    border-left: 0;
+    margin-bottom: 0; }
+
+.tweet__container {
+  padding-left: 110px;
+  position: relative; }
+
+.tweet__entities {
+  margin-top: 1.5rem; }
+  .tweet__entities img {
+    border-radius: 5px; }
+
+.tweet__profile_picture {
+  float: left;
+  border-radius: 100%;
+  overflow: hidden;
+  width: 55px;
+  height: 55px;
+  border: 4px solid #747f8a;
+  background-color: #747f8a; }
+  .tweet__profile_picture img {
+    width: 100%; }
+
+.tweet__body {
+  padding-left: 70px; }
+
+.tweet__screen_name {
+  padding-left: 70px;
+  color: #b4b8be; }
+
+.tweet__meta {
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  margin-top: -1rem;
+  color: #747e8a;
+  font-weight: bold; }
 
 
-
-
-
-
+.tweet__media {
+  width: 100%; }
 
 .flames {
   position: absolute;
@@ -466,37 +525,53 @@ p {
   max-width: 960px;
   margin: 0 auto; }
 
+.tweets-wrapper {
+  padding-left: 136px; }
+
+.socket-connection {
+  display: inline-block;
+  padding: 5px 10px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px; }
+
+.socket-connection__status {
+  transition: color 0.3s ease-in-out; }
+
+.socket-connection__status--up {
+  color: green; }
+
+.socket-connection__status--down {
+  color: red; }
+
 .main {
   z-index: 10;
-  width: 450px;
+  width: 590px;
   margin: 0 auto;
-  background: url(/images/dark_matter.png);
-  padding: 20px;
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  -o-border-radius: 20px;
-  border-radius: 20px;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5); }
-  .main h1 {
-    font-size: 70px;
-    margin: 0;
-    line-height: 1;
-    text-align: center;
-    border-bottom: 1px solid rgba(50, 50, 50, 0.5);
-    padding-bottom: 5px;
-    text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.3); }
-  .main h1 + h2 {
-    padding-top: 5px;
-    margin: 0;
-    text-align: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.1); }
-  .main h2, .main h3, .main p {
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3); }
-  .main hr {
-    height: 0;
-    border: 0;
-    border-top: 1px solid rgba(50, 50, 50, 0.5);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin: 5px 0; }
-  .main p + hr {
-    margin-top: 12px; }
+  /*   h1 {
+  font-size: 70px;
+  margin: 0;
+  line-height: 1;
+  text-align: center;
+  border-bottom: 1px solid rgba(50, 50, 50, 0.5);
+  padding-bottom: 5px;
+  text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.3);
+}
+h1 + h2 {
+  padding-top: 5px;
+  margin: 0;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+h2, h3, p {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+hr {
+  height: 0;
+  border: 0;
+  border-top: 1px solid rgba(50, 50, 50, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 5px 0;
+}
+p + hr {
+  margin-top: 12px;
+} */ }

@@ -25,6 +25,12 @@ digitalheroes.tweets = jQuery(function($) {
   var socket = io.connect(digitalheroes.domain);
 
   socket.on('connect', function () {
+
+    $('.socket-connection__status').text('Active');
+
+    $('.socket-connection__status').removeClass('socket-connection__status--down');
+    $('.socket-connection__status').addClass('socket-connection__status--up');
+
     socket.emit("greetingFromVisitor", 'word!');
     console.log('Emitting greeting to server');
     // socket.emit("greeting", { key : seed });
@@ -54,6 +60,13 @@ digitalheroes.tweets = jQuery(function($) {
     var $tweetTime = $('.timeago', $('.tweet:first-child'));
     $tweetTime.timeago();
 
+  });
+
+  socket.on('disconnect', function() {
+    $('.socket-connection__status').text('Down');
+
+    $('.socket-connection__status').addClass('socket-connection__status--down');
+    $('.socket-connection__status').removeClass('socket-connection__status--up');
   });
 
 });
