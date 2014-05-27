@@ -9,7 +9,7 @@ html, body {
 
 body {
   background-image: $wood;
-  background-attachment: fixed;
+  /* background-attachment: fixed; */
   background-color: #111;
   color: #FFF;
 
@@ -21,7 +21,7 @@ body {
 body.ready {
   background-image: url(/images/explosion-bg.jpg);
   /* background-image: url(/images/fire-bg.jpg); */
-  background-attachment: fixed;
+  /* background-attachment: fixed; */
   background-repeat: no-repeat;
   background-position: top center;
   background-color: $dark_blue;
@@ -30,7 +30,7 @@ body.ready {
 .no-js {
   body {
     background-image: url(/images/explosion-bg.jpg);
-    background-attachment: fixed;
+    /* background-attachment: fixed; */
     background-repeat: no-repeat;
     background-position: top center;
     background-color: $dark_blue;

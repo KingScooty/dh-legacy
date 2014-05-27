@@ -71,13 +71,15 @@ p { color: #EEE; }
 
 .tweets-wrapper {
   padding-left: 136px;
+  margin-bottom: 1.5rem;
 }
 
 .socket-connection {
   display: inline-block;
   padding: 5px 10px;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0,0,0,0.5);
   border-radius: 10px;
+  margin-bottom: 1.5rem;
 }
 
 .socket-connection__status {

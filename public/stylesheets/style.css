@@ -351,7 +351,7 @@ html, body {
 
 body {
   background-image: url(/images/dark_wood.jpg);
-  background-attachment: fixed;
+  /* background-attachment: fixed; */
   background-color: #111;
   color: #FFF;
   /* font-size: 18px; */
@@ -361,14 +361,14 @@ body {
 body.ready {
   background-image: url(/images/explosion-bg.jpg);
   /* background-image: url(/images/fire-bg.jpg); */
-  background-attachment: fixed;
+  /* background-attachment: fixed; */
   background-repeat: no-repeat;
   background-position: top center;
   background-color: #00223e; }
 
 .no-js body {
   background-image: url(/images/explosion-bg.jpg);
-  background-attachment: fixed;
+  /* background-attachment: fixed; */
   background-repeat: no-repeat;
   background-position: top center;
   background-color: #00223e; }
@@ -526,13 +526,15 @@ p {
   margin: 0 auto; }
 
 .tweets-wrapper {
-  padding-left: 136px; }
+  padding-left: 136px;
+  margin-bottom: 1.5rem; }
 
 .socket-connection {
   display: inline-block;
   padding: 5px 10px;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 10px; }
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  margin-bottom: 1.5rem; }
 
 .socket-connection__status {
   transition: color 0.3s ease-in-out; }
