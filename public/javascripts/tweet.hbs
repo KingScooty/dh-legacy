@@ -18,13 +18,12 @@
 
     {{#if tweet.entities.media}}
     <div class="tweet__entities">
-    {{#each tweet.entities.media }}
-      <img class="tweet__media" src="{{ this.media_url }}">
-    {{/each}}
+      <a href="https://twitter.com/{{ tweet.user.screen_name}}/status/{{ tweet.id_str }}">
+        {{#each tweet.entities.media }}
+          <img class="tweet__media" src="{{ this.media_url }}">
+        {{/each}}
+      </a>
     </div>
     {{/if}}
-
-    <!-- <a href="https://twitter.com/{{ tweet.user.screen_name }}/status/
-      {{ tweet.id_str }}" class="tweet__link"></a> -->
   </div>
 </script>
