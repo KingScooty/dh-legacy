@@ -13,24 +13,27 @@ var http = require('http');
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
+// var server = require('http').Server(app);
+// var io = require('socket.io')(server);
+
 server.listen(app.get('port'), function() {
   console.log(('Express server listening on port ' + server.address().port));
 });
 
 
-io.configure('production', function(){
-  io.enable('browser client minification');  // send minified client
-  io.enable('browser client etag');          // apply etag caching logic based on version number
-  io.enable('browser client gzip');          // gzip the file
-  io.set('log level', 1);                    // reduce logging
-  io.set('transports', [                     // enable all transports (optional if you want flashsocket)
-      'websocket'
-    , 'flashsocket'
-    , 'htmlfile'
-    , 'xhr-polling'
-    , 'jsonp-polling'
-  ]);
-});
+// io.configure('production', function(){
+//   io.enable('browser client minification');  // send minified client
+//   io.enable('browser client etag');          // apply etag caching logic based on version number
+//   io.enable('browser client gzip');          // gzip the file
+//   io.set('log level', 1);                    // reduce logging
+//   io.set('transports', [                     // enable all transports (optional if you want flashsocket)
+//       'websocket'
+//     , 'flashsocket'
+//     , 'htmlfile'
+//     , 'xhr-polling'
+//     , 'jsonp-polling'
+//   ]);
+// });
 
 
 var config = require('../server/_config');
