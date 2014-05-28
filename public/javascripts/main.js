@@ -1,12 +1,13 @@
 
 var digitalheroes = digitalheroes || {};
 
-if (window.location.hostname === 'digital-heroes.com') {
-  console.log('Digital Heroes 2014 - Let\'s Do This!');
-  digitalheroes.domain = 'digital-heroes.com';
-} else {
-  digitalheroes.domain = 'http://0.0.0.0:3000';
-}
+// if ((window.location.hostname === 'www.digital-heroes.com') ||
+// (window.location.hostname === 'digital-heroes.com')) {
+//   console.log('Digital Heroes 2014 - Let\'s Do This!');
+//   digitalheroes.domain = 'digital-heroes.com';
+// } else {
+//   digitalheroes.domain = 'http://0.0.0.0:3000';
+// }
 
 Handlebars.registerHelper('changeImageSize', function(text) {
   var res = text.replace("normal", "200x200");
@@ -27,7 +28,8 @@ digitalheroes.templateInit = jQuery(function($) {
 digitalheroes.tweets = jQuery(function($) {
   var html;
 
-  var socket = io.connect(digitalheroes.domain);
+  // var socket = io.connect(digitalheroes.domain);
+  var socket = io.connect();
 
   socket.on('connect', function () {
 

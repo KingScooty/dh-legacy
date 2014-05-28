@@ -50,9 +50,13 @@ io.sockets.on('connection', function (socket) {
     var dbContent = [];
 
     db.view('tweets/all', function (err, res) {
-      res.forEach(function (key, row, id) {
-        dbContent.push({'tweet' : row});
-      });
+      if (err) {
+        console.log(err)
+      } else {
+        res.forEach(function (key, row, id) {
+          dbContent.push({'tweet' : row});
+        });
+      }
 
       socket.emit('replyToGreeting', dbContent);
     });
