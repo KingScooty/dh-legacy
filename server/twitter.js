@@ -18,6 +18,13 @@ module.exports.twitterServer = function (settings, db, io) {
   stream.on('tweet', function (tweet) {
     // console.log(tweet)
     // console.log('Logging media');
+    // console.log('ENTITIES: ');
+    // console.log(tweet.entities);
+    // console.log('HASHTAGS: ');
+    // console.log(tweet.entities.hashtags);
+    // console.log('SYMBOLS: ');
+    // console.log(tweet.entities.symbols);
+
     db.save(tweet.id_str, tweet, function (err, res) {
       if (err) return done(err);
       console.log('Tweet '+ tweet.id_str +' saved to db');

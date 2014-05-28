@@ -40,15 +40,21 @@
   padding-left: 70px;
 }
 .tweet__screen_name {
+  font-weight: bold;
   padding-left: 70px;
-  color: #b4b8be;
+  &, a {
+    color: #b4b8be;
+  }
 }
 .tweet__meta {
   position: absolute;
   left: 0px;
-  top: 50%;
-  margin-top: -1rem;
-  color: #747e8a;
+  /* top: 50%; */
+  top: 0;
+  /* margin-top: -1rem; */
+  &, a {
+    color: #747e8a;
+  }
   font-weight: bold;
   text-align: right;
   width: 90px;

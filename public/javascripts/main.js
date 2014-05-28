@@ -32,10 +32,10 @@ digitalheroes.tweets = jQuery(function($) {
 
   socket.on('connect', function () {
 
-    $('.socket-connection__status').text('Active');
-
-    $('.socket-connection__status').removeClass('socket-connection__status--down');
     $('.socket-connection__status').addClass('socket-connection__status--up');
+    $('.socket-connection__status').removeClass('socket-connection__status--down');
+
+    $('.socket-connection__status').text('Active - Downloading content...');
 
     socket.emit("greetingFromVisitor", 'word!');
     console.log('Emitting greeting to server');
@@ -44,6 +44,8 @@ digitalheroes.tweets = jQuery(function($) {
 
   socket.on('replyToGreeting', function(data) {
     console.log(data);
+
+    $('.socket-connection__status').text('Active');
 
     for (var i = 0; i < data.length; i++) {
       console.log(data[i]);

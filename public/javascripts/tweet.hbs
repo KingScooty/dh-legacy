@@ -5,14 +5,14 @@
       <div class="tweet__profile_picture">
         <img src="{{{changeImageSize tweet.user.profile_image_url }}}">
       </div>
-      <div class="tweet__screen_name">@{{ tweet.user.screen_name }}</div>
+      <div class="tweet__screen_name"><a href="http://twitter.com/{{ tweet.user.screen_name }}">@{{ tweet.user.screen_name }}</a></div>
 
       <div class="tweet__body">{{ tweet.text }}</div>
 
       <div class="tweet__meta">
-        <time class="tweet__time timeago" datetime="{{ tweet.created_at }}">
+        <a href="https://twitter.com/{{ tweet.user.screen_name}}/status/{{ tweet.id_str }}"><time class="tweet__time timeago" datetime="{{ tweet.created_at }}">
           {{ tweet.created_at }}
-        </time>
+        </time></a>
       </div>
     </div>
 

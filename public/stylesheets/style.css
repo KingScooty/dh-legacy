@@ -356,7 +356,8 @@ body {
   color: #FFF;
   /* font-size: 18px; */
   /* line-height: 1.231; */
-  font-family: "myriad-pro-condensed", sans-serif; }
+  /* font-family: "myriad-pro-condensed",sans-serif; */
+  font-family: "proxima-nova", sans-serif; }
 
 body.ready {
   background-image: url(/images/explosion-bg.jpg);
@@ -445,18 +446,22 @@ h1, h2, h3, h4, h5, h6, hgroup, ul, ol, dd, p, figure, pre, table, fieldset, hr,
   padding-left: 70px; }
 
 .tweet__screen_name {
-  padding-left: 70px;
-  color: #b4b8be; }
+  font-weight: bold;
+  padding-left: 70px; }
+  .tweet__screen_name, .tweet__screen_name a {
+    color: #b4b8be; }
 
 .tweet__meta {
   position: absolute;
   left: 0px;
-  top: 50%;
-  margin-top: -1rem;
-  color: #747e8a;
+  /* top: 50%; */
+  top: 0;
+  /* margin-top: -1rem; */
   font-weight: bold;
   text-align: right;
   width: 90px; }
+  .tweet__meta, .tweet__meta a {
+    color: #747e8a; }
 
 
 .tweet__media {
@@ -542,10 +547,11 @@ p {
   transition: color 0.3s ease-in-out; }
 
 .socket-connection__status--up {
-  color: green; }
+  color: #5CB85C;
+  /* color: #428BCA; */ }
 
 .socket-connection__status--down {
-  color: red; }
+  color: #D9534F; }
 
 .main {
   z-index: 10;

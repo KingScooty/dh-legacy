@@ -10,7 +10,7 @@ var tweets = [
   in_reply_to_user_id: 2390559389,
   in_reply_to_user_id_str: '2390559389',
   in_reply_to_screen_name: 'littletreestyle',
-  user: 
+  user:
    { id: 9351682,
      id_str: '9351682',
      name: 'Scotty Vernon',
@@ -56,7 +56,7 @@ var tweets = [
   contributors: null,
   retweet_count: 0,
   favorite_count: 0,
-  entities: 
+  entities:
    { hashtags: [ [Object] ],
      symbols: [],
      urls: [],
@@ -77,7 +77,7 @@ var tweets = [
   in_reply_to_user_id: 9351682,
   in_reply_to_user_id_str: '9351682',
   in_reply_to_screen_name: 'KingScooty',
-  user: 
+  user:
    { id: 2390559389,
      id_str: '2390559389',
      name: 'Catherine',
@@ -123,7 +123,7 @@ var tweets = [
   contributors: null,
   retweet_count: 0,
   favorite_count: 0,
-  entities: 
+  entities:
    { hashtags: [ [Object] ],
      symbols: [],
      urls: [],
@@ -144,7 +144,7 @@ var tweets = [
   in_reply_to_user_id: null,
   in_reply_to_user_id_str: null,
   in_reply_to_screen_name: null,
-  user: 
+  user:
    { id: 2390559389,
      id_str: '2390559389',
      name: 'Catherine',
@@ -190,7 +190,7 @@ var tweets = [
   contributors: null,
   retweet_count: 0,
   favorite_count: 0,
-  entities: 
+  entities:
    { hashtags: [ [Object] ],
      symbols: [],
      urls: [],
@@ -204,7 +204,7 @@ var tweets = [
     display_url: 'pic.twitter.com/ZAFq3htkER',
     expanded_url: 'http://twitter.com/littletreestyle/status/470275911171207168/photo/1',
     type: 'photo',
-    sizes: 
+    sizes:
      { small: [Object],
        thumb: [Object],
        medium: [Object],
@@ -213,7 +213,133 @@ var tweets = [
   retweeted: false,
   possibly_sensitive: false,
   filter_level: 'medium',
-  lang: 'en' }
+  lang: 'en' },
+
+  {
+    "created_at":"Wed May 28 22:34:58 +0000 2014",
+    "id":471781704798326800,
+    "id_str":"471781704798326784",
+    "text":"@digitalheroes2014 I'm a digital hero #digitalheroes2014 http://t.co/R4heT6k92S",
+    "source":"<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "truncated":false,
+    "in_reply_to_status_id":null,
+    "in_reply_to_status_id_str":null,
+    "in_reply_to_user_id":null,
+    "in_reply_to_user_id_str":null,
+    "in_reply_to_screen_name":null,
+    "user":{
+      "id":16718528,
+      "id_str":"16718528",
+      "name":"Alex Nelson",
+      "screen_name":"lexnels",
+      "location":"Leeds/London/Melbourne",
+      "url":"http://www.alexnelson.co",
+      "description":"Digital creative. Co-owner of http://FormFiftyFive.com and head of digital at http://elmwood.com. #design #web #music #technology #art #photography #bikes",
+      "protected":false,
+      "verified":false,
+      "followers_count":1108,
+      "friends_count":869,
+      "listed_count":50,
+      "favourites_count":180,
+      "statuses_count":9974,
+      "created_at":"Mon Oct 13 09:03:36 +0000 2008",
+      "utc_offset":3600,
+      "time_zone":"London",
+      "geo_enabled":true,
+      "lang":"en",
+      "contributors_enabled":false,
+      "is_translator":false,
+      "profile_background_color":"1A1B1F",
+      "profile_background_image_url":"http://pbs.twimg.com/profile_background_images/71582850/bg_illus.png",
+      "profile_background_image_url_https":"https://pbs.twimg.com/profile_background_images/71582850/bg_illus.png",
+      "profile_background_tile":true,
+      "profile_link_color":"2FC2EF",
+      "profile_sidebar_border_color":"FFFFFF",
+      "profile_sidebar_fill_color":"2E2E2E",
+      "profile_text_color":"666666",
+      "profile_use_background_image":true,
+      "profile_image_url":"http://pbs.twimg.com/profile_images/378800000570627732/8fdb2cecd672fad4e4bc0c35a16e7b8c_normal.jpeg",
+      "profile_image_url_https":"https://pbs.twimg.com/profile_images/378800000570627732/8fdb2cecd672fad4e4bc0c35a16e7b8c_normal.jpeg",
+      "profile_banner_url":"https://pbs.twimg.com/profile_banners/16718528/1398201901",
+      "default_profile":false,
+      "default_profile_image":false,
+      "following":null,
+      "follow_request_sent":null,
+      "notifications":null
+    },
+    "geo":null,
+    "coordinates":null,
+    "place":null,
+    "contributors":null,
+    "retweet_count":0,
+    "favorite_count":0,
+    "entities":{
+      "hashtags":[
+        {
+          "text":"digitalheroes2014",
+          "indices":[
+            38,
+            56
+          ]
+        }
+      ],
+      "trends":[
+
+      ],
+      "urls":[
+
+      ],
+      "user_mentions":[
+
+      ],
+      "symbols":[
+
+      ],
+      "media":[
+        {
+          "id":471781702910488600,
+          "id_str":"471781702910488577",
+          "indices":[
+            57,
+            79
+          ],
+          "media_url":"http://pbs.twimg.com/media/Bowa9Y2CMAEmYW_.jpg",
+          "media_url_https":"https://pbs.twimg.com/media/Bowa9Y2CMAEmYW_.jpg",
+          "url":"http://t.co/R4heT6k92S",
+          "display_url":"pic.twitter.com/R4heT6k92S",
+          "expanded_url":"http://twitter.com/lexnels/status/471781704798326784/photo/1",
+          "type":"photo",
+          "sizes":{
+            "medium":{
+              "w":471,
+              "h":312,
+              "resize":"fit"
+            },
+            "large":{
+              "w":471,
+              "h":312,
+              "resize":"fit"
+            },
+            "thumb":{
+              "w":150,
+              "h":150,
+              "resize":"crop"
+            },
+            "small":{
+              "w":339,
+              "h":225,
+              "resize":"fit"
+            }
+          }
+        }
+      ]
+    },
+    "favorited":false,
+    "retweeted":false,
+    "possibly_sensitive":false,
+    "filter_level":"medium",
+    "lang":"tl"
+  }
 ];
 
 exports.tweets = tweets;

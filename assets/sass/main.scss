@@ -87,11 +87,12 @@ p { color: #EEE; }
 }
 
 .socket-connection__status--up {
-  color: green;
+  color: #5CB85C;
+  /* color: #428BCA; */
 }
 
 .socket-connection__status--down {
-  color: red;
+  color: #D9534F;
 }
 
 .main {
