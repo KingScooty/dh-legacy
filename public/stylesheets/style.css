@@ -454,7 +454,9 @@ h1, h2, h3, h4, h5, h6, hgroup, ul, ol, dd, p, figure, pre, table, fieldset, hr,
   top: 50%;
   margin-top: -1rem;
   color: #747e8a;
-  font-weight: bold; }
+  font-weight: bold;
+  text-align: right;
+  width: 90px; }
 
 
 .tweet__media {

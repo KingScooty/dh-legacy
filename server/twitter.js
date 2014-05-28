@@ -1,4 +1,4 @@
-module.exports.twitterServer = function (settings) {
+module.exports.twitterServer = function (settings, db, io) {
 
   var Twit = require('twit')
 
@@ -17,9 +17,14 @@ module.exports.twitterServer = function (settings) {
 
   stream.on('tweet', function (tweet) {
     // console.log(tweet)
-    console.log('Logging media');
-    console.log(tweet.entities.media);
-    console.log(tweet.entities.media[0]);
+    // console.log('Logging media');
+    db.save(tweet.id_str, tweet, function (err, res) {
+      if (err) return done(err);
+      console.log('Tweet '+ tweet.id_str +' saved to db');
+    });
+
+    io.sockets.emit('incomingTweet', tweet);
+
   });
 
 }

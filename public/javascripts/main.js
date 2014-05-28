@@ -10,8 +10,7 @@ var digitalheroes = digitalheroes || {};
 // }
 
 Handlebars.registerHelper('changeImageSize', function(text) {
-  var res = text.replace("normal", "200x200");
-  return res;
+  return text.replace("normal", "200x200");
 });
 
 digitalheroes.templateInit = jQuery(function($) {

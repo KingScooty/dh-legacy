@@ -9,7 +9,8 @@ module.exports.connectDatabase = function (settings) {
     port: 5984,
     cache: true,
     raw: false,
-    forceSave: true
+    forceSave: true,
+    auth: settings.database.auth
   });
 
   var c = new(cradle.Connection);
@@ -62,6 +63,11 @@ module.exports.createView = function (db, callback) {
 
   db.save('_design/tweets', {
     all: {
+      map: function (doc) {
+        if (doc._id) emit(doc._id, doc);
+      }
+    },
+    screen_name: {
       map: function (doc) {
         if (doc.user.screen_name) emit(doc.user.screen_name, doc);
       }
