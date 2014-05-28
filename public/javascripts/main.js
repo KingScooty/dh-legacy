@@ -57,6 +57,7 @@ digitalheroes.tweets = jQuery(function($) {
   });
 
   socket.on('incomingTweet', function (data) {
+    console.log('Incoming tweet...');
     console.log(data);
 
     html = digitalheroes.templates.tweet(data);

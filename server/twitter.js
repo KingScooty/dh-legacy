@@ -23,7 +23,7 @@ module.exports.twitterServer = function (settings, db, io) {
       console.log('Tweet '+ tweet.id_str +' saved to db');
     });
 
-    io.sockets.emit('incomingTweet', tweet);
+    io.sockets.emit('incomingTweet', {'tweet': tweet});
 
   });
 
