@@ -22,7 +22,11 @@ $wood: url(/images/dark_wood.jpg);
 @import 'modules/tweet';
 @import 'modules/flames';
 @import 'modules/hero';
+@import 'modules/animations';
 
+.preload {
+  display: none;
+}
 
 a {
   color: white;

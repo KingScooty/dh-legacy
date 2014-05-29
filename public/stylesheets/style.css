@@ -350,7 +350,8 @@ html, body {
   height: 100%; }
 
 body {
-  background-image: url(/images/dark_wood.jpg);
+  /* background-image: \$wood; */
+  /* background-repeat: repeat; */
   /* background-attachment: fixed; */
   background-color: #111;
   color: #FFF;
@@ -366,6 +367,23 @@ body.ready {
   background-repeat: no-repeat;
   background-position: top center;
   background-color: #00223e; }
+
+.bg2 {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(/images/fire-bg.jpg);
+  background-position: top center;
+  background-repeat: no-repeat;
+  z-index: -1;
+  -webkit-transition: opacity 0.2s ease-in-out; }
+  .bg2.active {
+    opacity: 1; }
 
 .no-js body {
   background-image: url(/images/explosion-bg.jpg);
@@ -407,13 +425,19 @@ h1, h2, h3, h4, h5, h6, hgroup, ul, ol, dd, p, figure, pre, table, fieldset, hr,
 .js .logo {
   position: absolute;
   top: 50px;
+  /* top: -450px; */
   left: 50%;
   margin-left: -365px;
   -webkit-transform-style: preserve-3d;
   -webkit-transform: translate3d(0, 0, 0); }
 
 .tweet-list {
-  border-left: 3px solid #747f8a; }
+  border-left: 3px solid #747f8a;
+  -webkit-transition: opacity 0.3s ease-in-out;
+  -o-transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out; }
+  .tweet-list.inactive {
+    opacity: 0; }
 
 .tweet {
   margin-left: -139px;
@@ -495,6 +519,50 @@ h1, h2, h3, h4, h5, h6, hgroup, ul, ol, dd, p, figure, pre, table, fieldset, hr,
     opacity: 1;
     bottom: 0;
     left: 0; } }
+
+@-webkit-keyframes shake_x {
+  0% {
+    -webkit-transform: translate(0, 0); }
+
+  25% {
+    -webkit-transform: translate(5px, 0); }
+
+  75% {
+    -webkit-transform: translate(-5px, 0); }
+
+  100% {
+    -webkit-transform: translate(0, 0); } }
+
+@-webkit-keyframes shake_y {
+  0% {
+    -webkit-transform: translate(0, 0); }
+
+  25% {
+    -webkit-transform: translate(0, 5px); }
+
+  75% {
+    -webkit-transform: translate(0, -5px); }
+
+  100% {
+    -webkit-transform: translate(0, 0); } }
+
+.shake {
+  -webkit-animation-duration: 0.1s;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-animation-iteration-count: 3;
+  -webkit-animation-timing-function: linear;
+  -webkit-transform-style: preserve-3d; }
+
+.shake_x {
+  -webkit-animation-name: shake_x;
+  -webkit-animation-duration: 0.08s; }
+
+.shake_y {
+  -webkit-animation-name: shake_y;
+  -webkit-animation-duration: 0.12s; }
+
+.preload {
+  display: none; }
 
 a {
   color: white;

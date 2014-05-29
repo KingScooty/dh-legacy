@@ -32,6 +32,14 @@ digitalheroes.tweets = jQuery(function($) {
 
   socket.on('connect', function () {
 
+    // $('.logo').transition({
+    //   opacity: 0
+    // }, 200)
+    // .transition({
+    //   opacity: 1,
+    //   top: "-450px"
+    // }, 0)
+
     $('.socket-connection__status').addClass('socket-connection__status--up');
     $('.socket-connection__status').removeClass('socket-connection__status--down');
 
@@ -44,6 +52,17 @@ digitalheroes.tweets = jQuery(function($) {
 
   socket.on('replyToGreeting', function(data) {
     console.log(data);
+
+    $('.logo')
+    .transition({
+      top: "50px",
+      duration: 400,
+      easing: 'easeInCirc'
+    }, function() {
+      $('.logo').addClass('shake shake_y');
+      $('.bg2').addClass('active shake shake_x');
+      $('.tweet-list').removeClass('inactive');
+    });
 
     $('.socket-connection__status').text('Active');
 
