@@ -4,7 +4,8 @@ FROM node:0.10-onbuild
 # RUN npm install -g nodemon
 RUN npm install -g bower grunt-cli
 
-RUN bower install
+# WORKDIR src/app
+RUN bower install --allow-root
 
 # Expose port
 EXPOSE 3000
