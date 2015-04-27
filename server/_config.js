@@ -9,7 +9,7 @@ module.exports.init = function(app) {
 
   // -- DEVELOPMENT
   if ('development' == app.settings.env) {
-    envSettings = require("./environment/development");
+    envSettings = require("./env/development");
   }
 
   // -- PRODUCTION
@@ -19,7 +19,7 @@ module.exports.init = function(app) {
 
   // -- TEST
   if ('test' == app.settings.env) {
-    envSettings = require("./environment/test");
+    envSettings = require("./env/test");
   }
 
   exports.settings = envSettings.settings;
