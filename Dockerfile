@@ -1,4 +1,4 @@
-FROM node:0.10-onbuild
+FROM node:0.12-onbuild
 
 # Install nodemon
 # RUN npm install -g nodemon
