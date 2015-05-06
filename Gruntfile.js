@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         tasks: ['sass:dist']
       },
       browserify: {
-        files: ['js/src/**/*.js'],
+        files: ['public/javascripts/src/**/*.{js,jsx}'],
         tasks: ['browserify']
       },
       livereload: {
@@ -26,6 +26,9 @@ module.exports = function(grunt) {
       }
     },
     browserify: {
+      options:      {
+        transform:  [ require('grunt-react').browserify ]
+      },
       dist: {
         files: {
           'public/javascripts/dist/main.bundle.js': ['public/javascripts/src/app.js'],

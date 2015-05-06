@@ -20,7 +20,8 @@
     "react": "^0.13.2",
     "react-router": "^0.13.3",
     "serve-favicon": "^2.0.0",
-    "socket.io": "~1.0.4",
+    "socket.io": "^1.3.5",
+    "socket.io-client": "^1.3.5",
     "static-favicon": "~1.0.0",
     "twit": "^1.1.15"
   },
@@ -29,6 +30,7 @@
     "grunt": "^0.4.5",
     "grunt-browserify": "^3.8.0",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-react": "^0.12.2",
     "grunt-sass": "^0.18.1",
     "mocha": "^1.19.0",
     "node-sass": "^2.1.1"

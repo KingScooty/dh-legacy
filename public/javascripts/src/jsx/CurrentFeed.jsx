@@ -1,23 +1,44 @@
 /** @jsx React.DOM */
 
-var React         = require('react');//,
-    // ShowAddButton = require('./ShowAddButton'),
+var React         = require('react'); //,
+var io            = require('socket.io-client');
     // FeedForm      = require('./FeedForm'),
     // FeedList      = require('./FeedList'),
     // _             = require('lodash');
 
 var Stream = React.createClass({
 
+  // getInitialState: function() {
+  //   var FEED_ITEMS = [
+  //     { key: '1', title: 'Realtime data!', description: 'Firebase is cool', voteCount: 49},
+  //     { key: '2', title: 'JavaScript is fun', description: 'Lexical scoping FTW', voteCount: 34},
+  //     { key: '3', title: 'Coffee makes you awake', description: 'Drink responsibly', voteCount: 15}
+  //   ];
+  //   return {
+  //     items: FEED_ITEMS,
+  //     formDisplayed : false
+  //   }
+  // },
+
   getInitialState: function() {
-    var FEED_ITEMS = [
-      { key: '1', title: 'Realtime data!', description: 'Firebase is cool', voteCount: 49},
-      { key: '2', title: 'JavaScript is fun', description: 'Lexical scoping FTW', voteCount: 34},
-      { key: '3', title: 'Coffee makes you awake', description: 'Drink responsibly', voteCount: 15}
-    ];
     return {
-      items: FEED_ITEMS,
-      formDisplayed : false
+      // tweets: new FIFO(25, this.props.tweets),
+      newTweets: []
     }
+  },
+
+  componentDidMount: function() {
+    var socket = io();
+    var self = this;
+
+    socket.on('tweet', function(tweet) {
+      var tweets = self.state.newTweets
+      tweets.unshift(tweet)
+      self.setState({
+        tweets: self.state.tweets,
+        newTweets: tweets
+      })
+    })
   },
 
   // onToggleForm: function () {
@@ -52,10 +73,11 @@ var Stream = React.createClass({
   //   });
   // },
 
+
   render: function() {
     return (
-      <ToggleYear onToggle={this.onToggle} />
-      <StreamList items={this.state.items} />
+      <div>Current shit. Start shouting!</div>
+      // <StreamList items={this.state.items} />
       // <div>
       //
       //   <div className="container">
