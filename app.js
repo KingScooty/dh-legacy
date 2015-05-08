@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var path = require('path');
 // var favicon = require('static-favicon');
@@ -7,11 +9,32 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var cradle = require('cradle');
+
+var c = new (cradle.Connection)('http://127.0.0.1', 5984, {
+  cache: true,
+  raw: false// ,
+  // forceSave: true
+});
+
+var db = {
+  dh_2012: c.database('digitalheroes-2012'),
+  dh_2013: c.database('digitalheroes-2013'),
+  dh_2014: c.database('digitalheroes-2014'),
+  dh_2015: c.database('digitalheroes-2015')
+};
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var api = require('./routes/api');
 
 var app = express();
+
+// Expose db as a global on handler
+app.use(function(req, res, next) {
+  req.db = db;
+  next();
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
