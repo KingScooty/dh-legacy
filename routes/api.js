@@ -1,7 +1,6 @@
 'use strict';
 
 var express = require('express');
-var Promise = require('bluebird');
 var router = express.Router();
 
 router.get('/', function callback(req, res) {
@@ -21,27 +20,41 @@ router.route('/year/:year')
     .get(function callback(req, res) {
       var db = req.db['dh_' + req.params.year];
 
-      if (db) {
-        db.exists(function callback(err, exists) {
+      try {
+        db.view('tweets/all', function callback(err, response) {
           if (err) {
-            console.log('error', err);
-          } else if (exists) {
-            db.view('tweets/all', function callback(err, response) {
-              if (err) {
-                console.log(err);
-              } else {
-                res.json({response: response});
-              }
-            });
+            console.log(err);
           } else {
-            // err.status = 404;
-            // res.status(404).response('Not found');
-            res.json({response: '404'});
+            res.json({response: response});
           }
         });
-      } else {
+      } catch (exeception) {
+          // response.send(404);
         res.json({response: '404'});
       }
+
+      // if (db) {
+      //   db.exists(function callback(err, exists) {
+      //     if (err) {
+      //       console.log('error', err);
+      //     } else if (exists) {
+      //       db.view('tweets/all', function callback(err, response) {
+      //         if (err) {
+      //           console.log(err);
+      //         } else {
+      //           res.json({response: response});
+      //         }
+      //       });
+      //     } else {
+      //       // err.status = 404;
+      //       // res.status(404).response('Not found');
+      //       res.json({response: '404'});
+      //     }
+      //   });
+      // } else {
+      //   res.json({response: '404'});
+      //   // res.send(404);
+      // }
     });
 
 
