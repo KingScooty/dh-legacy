@@ -29872,24 +29872,13 @@ module.exports = Stream;
 
 var React         = require('react'); //,
 var io            = require('socket.io-client');
-    // FeedForm      = require('./FeedForm'),
-    // FeedList      = require('./FeedList'),
-    // _             = require('lodash');
+
+var Status        = require('./Status.jsx');
 
 var Stream = React.createClass({displayName: "Stream",
 
-  // getInitialState: function() {
-  //   var FEED_ITEMS = [
-  //     { key: '1', title: 'Realtime data!', description: 'Firebase is cool', voteCount: 49},
-  //     { key: '2', title: 'JavaScript is fun', description: 'Lexical scoping FTW', voteCount: 34},
-  //     { key: '3', title: 'Coffee makes you awake', description: 'Drink responsibly', voteCount: 15}
-  //   ];
-  //   return {
-  //     items: FEED_ITEMS,
-  //     formDisplayed : false
-  //   }
-  // },
-
+  // Invoked once before the component is mounted.
+  // The return value will be used as the initial value of this.state.
   getInitialState: function() {
     return {
       // tweets: new FIFO(25, this.props.tweets),
@@ -29946,7 +29935,10 @@ var Stream = React.createClass({displayName: "Stream",
 
   render: function() {
     return (
-      React.createElement("div", null, "Current shit. Start shouting!")
+      React.createElement("div", null, 
+        React.createElement(Status, {onToggle: this.onToggle}), 
+        React.createElement("div", null, "Current shit. Start shouting!")
+      )
       // <StreamList items={this.state.items} />
       // <div>
       //
@@ -29969,7 +29961,7 @@ var Stream = React.createClass({displayName: "Stream",
 
 module.exports = Stream;
 
-},{"react":196,"socket.io-client":197}],249:[function(require,module,exports){
+},{"./Status.jsx":250,"react":196,"socket.io-client":197}],249:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react'); //,
@@ -30001,7 +29993,29 @@ var Feed = React.createClass({displayName: "Feed",
 
 module.exports = Feed;
 
-},{"./ToggleYear.jsx":250,"react":196,"react-router":27}],250:[function(require,module,exports){
+},{"./ToggleYear.jsx":251,"react":196,"react-router":27}],250:[function(require,module,exports){
+var React = require('react');
+
+var Status = React.createClass({displayName: "Status",
+
+  render: function() {
+    return (
+      // var cx = React.addons.classSet;
+      // var connection_up = 'socket-connection__status--up';
+      // var connection_down = 'socket-connection__status--down';
+      // var classes = cx('message', connection_up, connection_down);
+
+      React.createElement("div", {className: "socket-connection"}, "Connection: ", 
+        React.createElement("span", {className: "socket-connection__status socket-connection__status--up"}, "Active")
+      )
+    );
+  }
+
+});
+
+module.exports = Status;
+
+},{"react":196}],251:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router'); // or var Router = ReactRouter; in browsers
 
