@@ -25,12 +25,12 @@ router.route('/year/:year')
           if (err) {
             console.log(err);
           } else {
-            res.json({response: response});
+            res.json(response);
           }
         });
       } catch (exeception) {
-          // response.send(404);
-        res.json({response: '404'});
+          res.send(404);
+        // res.json({response: '404'});
       }
 
       // if (db) {

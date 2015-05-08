@@ -8,13 +8,22 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
 var cradle = require('cradle');
 
-var c = new (cradle.Connection)('http://127.0.0.1', 5984, {
+// routes
+var routes = require('./routes/index');
+var users = require('./routes/users');
+var api = require('./routes/api');
+
+var app = express();
+var config = require('./server/_config').init(app.get('env'));
+
+
+// couchdb-3c369e79-1.kingscooty.cont.tutum.io:5984/_utils/
+var c = new (cradle.Connection)(config.database.host, 5984, {
   cache: true,
-  raw: false// ,
-  // forceSave: true
+  raw: false,
+  auth: config.database.auth
 });
 
 var db = {
@@ -24,11 +33,6 @@ var db = {
   dh_2015: c.database('digitalheroes-2015')
 };
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var api = require('./routes/api');
-
-var app = express();
 
 // Expose db as a global on handler
 app.use(function(req, res, next) {
