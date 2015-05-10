@@ -1,6 +1,9 @@
 /** @jsx React.DOM */
 
-var React         = require('react'); //,
+var React         = require('react');
+var Router = require('react-router');
+
+var StreamItem = require('./StreamItem.jsx');
 // var ToggleYear    = require('./ToggleYear.jsx');
 // var io            = require('socket.io-client');
     // FeedForm      = require('./FeedForm'),
@@ -8,6 +11,18 @@ var React         = require('react'); //,
     // _             = require('lodash');
 
 var Stream = React.createClass({
+  mixins: [ Router.State ],
+
+  // componentWillUpdate: function() {
+  //   console.log('component will update');
+  // },
+  // getInitialState: function() {
+  //   return {
+  //     tweets: [], //new FIFO(25, this.props.tweets),
+  //     newTweets: [],
+  //     data: []
+  //   }
+  // },
 
   // getInitialState: function() {
   //   var FEED_ITEMS = [
@@ -47,11 +62,6 @@ var Stream = React.createClass({
   //     formDisplayed: !this.state.formDisplayed
   //   });
   // },
-
-  onToggle: function() {
-
-  },
-
   // onNewItem: function(newItem) {
   //   var newItems = this.state.items.concat([newItem]);
   //   this.setState({
@@ -76,8 +86,20 @@ var Stream = React.createClass({
 
 
   render: function() {
+    // var name = this.getParams().name;
+    var path = this.getPath();
+    // console.log('hello props?');
+    // console.log(this.props.data);
+
+    var tweetItems = this.props.data.map(function (tweet) {
+      return <div><StreamItem tweet={tweet}/></div>
+    }.bind(this));
+
     return (
-      <div>Archive that shit</div>
+      <div>
+        <div>Archive that shit - {path}</div>
+        {tweetItems}
+      </div>
       // <StreamList items={this.state.items} />
       // <div>
       //

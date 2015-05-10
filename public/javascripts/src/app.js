@@ -1,11 +1,11 @@
 var React = require('react');
 
-var ReactRouter = require('react-router');
-var Route = ReactRouter.Route;
-var Routes = ReactRouter.Routes;
-var Link = ReactRouter.Link;
-var Redirect = ReactRouter.Redirect;
-var DefaultRoute = ReactRouter.DefaultRoute;
+var Router = require('react-router');
+var Route = Router.Route;
+var Routes = Router.Routes;
+var Link = Router.Link;
+var Redirect = Router.Redirect;
+var DefaultRoute = Router.DefaultRoute;
 
 // var Layout = require('./jsx/Layout.jsx');
 var Feed = require('./jsx/Feed.jsx');
@@ -36,6 +36,6 @@ var routes = (
 //   document.getElementById('app')
 // );
 
-ReactRouter.run(routes, function(Handler) {
+Router.run(routes, Router.HistoryLocation, function(Handler) {
   React.render(<Handler/>, document.getElementById('app'));
 });

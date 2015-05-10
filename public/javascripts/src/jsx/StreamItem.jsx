@@ -24,7 +24,7 @@ var StreamItem = React.createClass({
   // },
 
   render: function() {
-
+    // console.log(this.props.tweet.value.text);
     // var positiveNegativeClassName = this.props.voteCount >= 0 ?
     //                                 'label label-success pull-right' :
     //                                 'label label-danger pull-right';
@@ -44,28 +44,20 @@ var StreamItem = React.createClass({
 
         <div className="tweet__container">
           <div className="tweet__profile_picture">
-            <img src="{{{changeImageSize tweet.user.profile_image_url }}}">
+            <img src="" />
           </div>
-          <div className="tweet__screen_name"><a href="http://twitter.com/{{ tweet.user.screen_name }}">@{{ tweet.user.screen_name }}</a></div>
+          <div className="tweet__screen_name"><a href="http://twitter.com/">@</a></div>
 
-          <div className="tweet__body">{{ tweet.text }}</div>
+          <div className="tweet__body">{this.props.tweet.value.text}</div>
 
           <div className="tweet__meta">
-            <a href="https://twitter.com/{{ tweet.user.screen_name}}/status/{{ tweet.id_str }}"><time className="tweet__time timeago" datetime="{{ tweet.created_at }}">
-              {{ tweet.created_at }}
+            <a href="https://twitter.com//status/"><time className="tweet__time timeago" datetime="">
+
             </time></a>
           </div>
         </div>
 
-        {{#if tweet.entities.media}}
-        <div className="tweet__entities">
-          <a href="https://twitter.com/{{ tweet.user.screen_name}}/status/{{ tweet.id_str }}">
-            {{#each tweet.entities.media }}
-              <img className="tweet__media" src="{{ this.media_url }}">
-            {{/each}}
-          </a>
-        </div>
-        {{/if}}
+
       </div>
 
     );

@@ -9,25 +9,26 @@ var Stream = React.createClass({
 
   // Invoked once before the component is mounted.
   // The return value will be used as the initial value of this.state.
-  getInitialState: function() {
-    return {
-      // tweets: new FIFO(25, this.props.tweets),
-      newTweets: []
-    }
-  },
+  // getInitialState: function() {
+  //   return {
+  //     tweets: [], //new FIFO(25, this.props.tweets),
+  //     newTweets: [],
+  //     data: []
+  //   }
+  // },
 
   componentDidMount: function() {
-    var socket = io();
-    var self = this;
-
-    socket.on('tweet', function(tweet) {
-      var tweets = self.state.newTweets
-      tweets.unshift(tweet)
-      self.setState({
-        tweets: self.state.tweets,
-        newTweets: tweets
-      })
-    })
+    // var socket = io();
+    // var self = this;
+    //
+    // socket.on('tweet', function(tweet) {
+    //   var tweets = self.state.newTweets
+    //   tweets.unshift(tweet)
+    //   self.setState({
+    //     tweets: self.state.tweets,
+    //     newTweets: tweets
+    //   })
+    // })
   },
 
   // onToggleForm: function () {
@@ -64,6 +65,9 @@ var Stream = React.createClass({
 
 
   render: function() {
+    console.log('hello props?');
+    console.log(this.props.data);
+
     return (
       <div>
         <Status onToggle={this.onToggle} />
