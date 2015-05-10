@@ -29,7 +29,7 @@ router.get('/:year', function(req, res) {
   // var payload;
 
   try {
-    db.view('tweets/all', function callback(err, response) {
+    db.view('tweets/all', {descending: true}, function callback(err, response) {
       if (err) {
         console.log(err);
       } else {

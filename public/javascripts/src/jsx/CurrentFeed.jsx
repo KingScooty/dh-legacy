@@ -71,23 +71,10 @@ var Stream = React.createClass({
     return (
       <div>
         <Status onToggle={this.onToggle} />
-        <div>Current shit. Start shouting!</div>
+        <div className="tweet-list">
+          <div>Current shit. Start shouting!</div>
+        </div>
       </div>
-      // <StreamList items={this.state.items} />
-      // <div>
-      //
-      //   <div className="container">
-      //     <ShowAddButton displayed={this.state.formDisplayed} onToggleForm={this.onToggleForm} />
-      //   </div>
-      //
-      //   <FeedForm displayed={this.state.formDisplayed} onNewItem={this.onNewItem} />
-      //   <br />
-      //   <br />
-      //
-      //   <FeedList items={this.state.items} onVote={this.onVote} />
-      //
-      // </div>
-
     );
   }
 
