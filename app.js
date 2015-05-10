@@ -12,8 +12,8 @@ var cradle = require('cradle');
 
 // routes
 var routes = require('./routes/index');
-var users = require('./routes/users');
-var api = require('./routes/api');
+// var users = require('./routes/users');
+// var api = require('./routes/api');
 
 var app = express();
 var config = require('./server/_config').init(app.get('env'));
@@ -34,9 +34,20 @@ var db = {
 };
 
 
-// Expose db as a global on handler
+// Expose database object as a global on handler
 app.use(function(req, res, next) {
   req.db = db;
+  next();
+});
+
+// middleware for json headers
+app.use(function (req, res, next) {
+  var format = req.param('format');
+
+  if (format) {
+    req.headers.accept = 'application/' + format;
+  }
+
   next();
 });
 
@@ -53,8 +64,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
-app.use('/api', api);
+// app.use('/users', users);
+// app.use('/api', api);
 
 
 // catch 404 and forward to error handler

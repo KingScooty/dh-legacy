@@ -1,8 +1,6 @@
-console.log('PRODUCTION.');
-
 var settings = {
-  database : {
-    host : process.env.DB_HOST,
+  database: {
+    host: process.env.DB_HOST,
     name: 'digitalheroes-2014',
     auth: {
       username: process.env.DB_USER,
@@ -15,7 +13,9 @@ var settings = {
     access_token: process.env.ACCESS_TOKEN,
     access_token_secret: process.env.ACCESS_TOKEN_SECRET
   }
-}
+};
+
+console.log('PRODUCTION.');
 
 // exports.settings = settings;
 module.exports = settings;

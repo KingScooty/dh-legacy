@@ -29,7 +29,7 @@ router.route('/year/:year')
           }
         });
       } catch (exeception) {
-          res.send(404);
+        res.send(404);
         // res.json({response: '404'});
       }
 
