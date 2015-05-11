@@ -4,35 +4,31 @@ var moment = require('moment');
 
 var StreamItemMedia = require('./StreamItemMedia.jsx');
 
-var StreamItem = React.createClass({
+var StreamItemLegacy = React.createClass({
   mixins: [ Router.State ],
 
   componentDidMount: function () {
-      var self = this;
-      var img = new Image();
-      img.onerror = function () {
-        // 404 image.
-        self.setState({ profile_img_src: '/images/icon__twitter.png' });
-      };
 
-      // img.src = this.state.src;
-
-
-      img.src = this.state.profile_img_src;
+      // var self = this;
+      // var img = new Image();
+      // img.onerror = function () {
+      //   self.setState({ src: '/404image.jpg' });
+      // };
+      //
+      // // img.src = this.state.src;
+      // if (this.getPath() !== '/2014/') {
+      //   profile_image = tweet.profile_image_url;
+      // } else {
+      //   profile_image = tweet.profile_image_url;
+      //   profile_image = tweet.user.profile_image_url;
+      // }
+      // img.src = this.props.tweet.value
 
   },
 
-  getInitialState: function () {
-    var profile_image;
-
-    if (this.getPath() !== '/2014/') {
-      profile_image = this.props.tweet.value.profile_image_url;
-    } else {
-      profile_image = this.props.tweet.value.user.profile_image_url;
-    }
-
-    return { profile_img_src: profile_image };
-  },
+  // getInitialState: function () {
+  //   return { img_src: '/the_real_image.jpg' };
+  // },
 
   render: function() {
     // console.log('PATH - ', this.getPath());
@@ -47,36 +43,18 @@ var StreamItem = React.createClass({
     // "timestamp": "Wed May 30 20:35:49 +0000 2012",
     // "media": ""
     var tweet = this.props.tweet.value;
-    var tweet_id;
-    var screen_name;
-    var created_at;
-    var tweet_text;
-    var time_ago;
-    var profile_image;
-    var screen_name_href;
-    var tweet_href;
-    var media;
 
-    if (this.getPath() !== '/2014/') {
-      tweet_id = tweet.tweet_id;
-      screen_name = tweet.screen_name;
-      created_at = tweet.timestamp;
-      profile_image = tweet.profile_image_url;
-      media = tweet.media;
-    } else {
-      tweet_id = tweet.id_str;
-      screen_name = tweet.user.screen_name;
-      created_at = tweet.created_at;
-      profile_image = tweet.user.profile_image_url;
-      media = tweet.entities.media;
-    }
+    var tweet_id = tweet.tweet_id;
+    var screen_name = tweet.screen_name;
+    var created_at = tweet.timestamp;
+    var profile_image = tweet.profile_image_url;
+    var media = tweet.media;
 
-    tweet_text = tweet.text;
-    // moment(Date.parse(created_at))
-    time_ago = moment(Date.parse(created_at)).fromNow();
+    var tweet_text = tweet.text;
+    var time_ago = moment(Date.parse(created_at)).fromNow();
 
-    screen_name_href = "http://twitter.com/" + screen_name;
-    tweet_href = "https://twitter.com/" + screen_name + '/status/' + tweet_id;
+    var screen_name_href = "http://twitter.com/" + screen_name;
+    var tweet_href = "https://twitter.com/" + screen_name + '/status/' + tweet_id;
 
     if (profile_image) {
       profile_image = profile_image.replace("normal", "200x200");
@@ -88,7 +66,7 @@ var StreamItem = React.createClass({
 
         <div className="tweet__container">
           <div className="tweet__profile_picture">
-            <img src={this.state.profile_img_src} />
+            <img src={profile_image} />
           </div>
           <div className="tweet__screen_name">
             <a href={screen_name_href}>@{screen_name}</a>
@@ -118,4 +96,4 @@ var StreamItem = React.createClass({
 
 });
 
-module.exports = StreamItem;
+module.exports = StreamItemLegacy;

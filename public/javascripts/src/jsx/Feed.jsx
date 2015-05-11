@@ -19,7 +19,7 @@ var Feed = React.createClass({
     return {
       tweets: [], //new FIFO(25, this.props.tweets),
       newTweets: [],
-      data: []
+      data: null
     }
   },
 
@@ -57,6 +57,8 @@ var Feed = React.createClass({
   },
 
   componentWillReceiveProps: function() {
+    // force loading render per route change
+    this.setState({data: null});
     // console.log('COMPONENT WILL RECEIVE PROPS');
     this.readTweetsFromAPI();
   },
@@ -67,12 +69,17 @@ var Feed = React.createClass({
   },
 
   render: function() {
-    return (
-      <div>
-        <ToggleYear onToggle={this.onToggle} />
-        <RouteHandler data={this.state.data} />
-      </div>
-    );
+
+    if (this.state.data) {
+      return (
+        <div>
+          <ToggleYear onToggle={this.onToggle} />
+          <RouteHandler data={this.state.data} />
+        </div>
+      );
+    } else {
+      return <div>Loading...</div>;
+    }
   }
 
 });

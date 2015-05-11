@@ -33472,16 +33472,32 @@ var React         = require('react');
 var Router = require('react-router');
 
 var StreamItem = require('./StreamItem.jsx');
+// var StreamItemLegacy = require('./StreamItemLegacy.jsx');
 
 var Stream = React.createClass({displayName: "Stream",
   mixins: [ Router.State ],
 
-  render: function() {
-    // var path = this.getPath();
+  // componentDidMount: function() {
+  //   this.props.readTweetsFromAPI();
+  // },
 
+  render: function() {
+    var path = this.getPath();
+    // var tweetItems;
+
+    // if ((path === '/2013/') || (path === '/2012/')) {
+    //   tweetItems = this.props.data.map(function(tweet, index) {
+    //     return <StreamItemLegacy key={index} tweet={tweet}/>
+    //   }.bind(this));
+    // } else {
     var tweetItems = this.props.data.map(function(tweet, index) {
       return React.createElement(StreamItem, {key: index, tweet: tweet})
     }.bind(this));
+    // }
+
+    // if (!this.props.data){
+    //   return <h1 className="spinner">Loading...</h1>
+    // }
 
     return (
       React.createElement("div", {className: "tweet-list"}, 
@@ -33602,7 +33618,7 @@ var Feed = React.createClass({displayName: "Feed",
     return {
       tweets: [], //new FIFO(25, this.props.tweets),
       newTweets: [],
-      data: []
+      data: null
     }
   },
 
@@ -33640,6 +33656,8 @@ var Feed = React.createClass({displayName: "Feed",
   },
 
   componentWillReceiveProps: function() {
+    // force loading render per route change
+    this.setState({data: null});
     // console.log('COMPONENT WILL RECEIVE PROPS');
     this.readTweetsFromAPI();
   },
@@ -33650,12 +33668,17 @@ var Feed = React.createClass({displayName: "Feed",
   },
 
   render: function() {
-    return (
-      React.createElement("div", null, 
-        React.createElement(ToggleYear, {onToggle: this.onToggle}), 
-        React.createElement(RouteHandler, {data: this.state.data})
-      )
-    );
+
+    if (this.state.data) {
+      return (
+        React.createElement("div", null, 
+          React.createElement(ToggleYear, {onToggle: this.onToggle}), 
+          React.createElement(RouteHandler, {data: this.state.data})
+        )
+      );
+    } else {
+      return React.createElement("div", null, "Loading...");
+    }
   }
 
 });
@@ -33691,13 +33714,35 @@ var moment = require('moment');
 
 var StreamItemMedia = require('./StreamItemMedia.jsx');
 
-// var DefaultRoute = Router.DefaultRoute;
-// var Link = Router.Link;
-// var Route = Router.Route;
-// var RouteHandler = Router.RouteHandler;
-
 var StreamItem = React.createClass({displayName: "StreamItem",
   mixins: [ Router.State ],
+
+  componentDidMount: function () {
+      var self = this;
+      var img = new Image();
+      img.onerror = function () {
+        // 404 image.
+        self.setState({ profile_img_src: '/images/icon__twitter.png' });
+      };
+
+      // img.src = this.state.src;
+
+
+      img.src = this.state.profile_img_src;
+
+  },
+
+  getInitialState: function () {
+    var profile_image;
+
+    if (this.getPath() !== '/2014/') {
+      profile_image = this.props.tweet.value.profile_image_url;
+    } else {
+      profile_image = this.props.tweet.value.user.profile_image_url;
+    }
+
+    return { profile_img_src: profile_image };
+  },
 
   render: function() {
     // console.log('PATH - ', this.getPath());
@@ -33743,8 +33788,6 @@ var StreamItem = React.createClass({displayName: "StreamItem",
     screen_name_href = "http://twitter.com/" + screen_name;
     tweet_href = "https://twitter.com/" + screen_name + '/status/' + tweet_id;
 
-    console.log(screen_name);
-
     if (profile_image) {
       profile_image = profile_image.replace("normal", "200x200");
     }
@@ -33755,7 +33798,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
 
         React.createElement("div", {className: "tweet__container"}, 
           React.createElement("div", {className: "tweet__profile_picture"}, 
-            React.createElement("img", {src: profile_image})
+            React.createElement("img", {src: this.state.profile_img_src})
           ), 
           React.createElement("div", {className: "tweet__screen_name"}, 
             React.createElement("a", {href: screen_name_href}, "@", screen_name)
