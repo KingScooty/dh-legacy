@@ -8,14 +8,27 @@
   }
 }
 
+.tweet-list__head {
+  @extend .clearfix;
+  margin-bottom: 3rem;
+}
+
+.tweet-list__live {}
+.tweet-list__archive {
+  .tweet:last-child {
+    border-left: 0;
+    margin-bottom: 0;
+  }
+}
+
 .tweet {
   margin-left: -139px;
   margin-bottom: 1.5rem;
   @extend .clearfix;
-  &:last-child {
-    border-left: 0;
-    margin-bottom: 0;
-  }
+  // &:last-child {
+  //   border-left: 0;
+  //   margin-bottom: 0;
+  // }
 }
 .tweet__container {
   padding-left: 110px;

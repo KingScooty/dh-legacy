@@ -1,0 +1,11 @@
+.stream-nav {
+  list-style: none;
+}
+
+.stream-nav__item {
+  float: left;
+  margin-left: 16px;
+  &:first-child {
+    margin-left: 0;
+  }
+}

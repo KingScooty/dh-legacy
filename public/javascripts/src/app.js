@@ -9,7 +9,6 @@ var DefaultRoute = Router.DefaultRoute;
 
 // var Layout = require('./jsx/Layout.jsx');
 var Feed = require('./jsx/Feed.jsx');
-var CurrentFeed = require('./jsx/CurrentFeed.jsx');
 var ArchiveFeed = require('./jsx/ArchiveFeed.jsx');
 
 // <Route name="users" path="search/users" handler={Search} />
@@ -20,13 +19,8 @@ var ArchiveFeed = require('./jsx/ArchiveFeed.jsx');
 
 var routes = (
   <Route name="layout" path="/" handler={Feed} ignoreScrollBehavior>
-    <Route name="now" path="2015/" handler={CurrentFeed}/>
-    <Route name="2014" path="2014/" handler={ArchiveFeed}/>
-    <Route name="2013" path="2013/" handler={ArchiveFeed}/>
-    <Route name="2012" path="2012/" handler={ArchiveFeed}/>
-    // <Route name="previous" path="/:year" handler={ArchiveFeed} />
-
-    <Redirect from="/" to="now" />
+    <Route name="year" path="/:year/" handler={ArchiveFeed}/>
+    <Redirect from="/" to="/2015/" />
   </Route>
 );
 

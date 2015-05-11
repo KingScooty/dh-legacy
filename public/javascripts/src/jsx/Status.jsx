@@ -1,16 +1,22 @@
 var React = require('react');
+var classNames = require('classnames');
 
 var Status = React.createClass({
 
   render: function() {
-    return (
-      // var cx = React.addons.classSet;
-      // var connection_up = 'socket-connection__status--up';
-      // var connection_down = 'socket-connection__status--down';
-      // var classes = cx('message', connection_up, connection_down);
 
-      <div className="socket-connection">Connection:&nbsp;
-        <span className="socket-connection__status socket-connection__status--up">Active</span>
+    var status_text = this.props.connection ? 'LIVE' : 'Offline';
+    var status_class = classNames(
+      'socket-connection__status',
+      { 'socket-connection__status--up': false },
+      { 'socket-connection__status--down': true }
+    );
+
+    console.log(status);
+
+    return (
+      <div className="socket-connection">Stream:&nbsp;
+        <span className={status_class}>{status_text}</span>
       </div>
     );
   }

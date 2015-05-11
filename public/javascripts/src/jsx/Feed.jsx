@@ -9,6 +9,7 @@ var Link = Router.Link;
 var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 
+var Status        = require('./Status.jsx');
 var ToggleYear    = require('./ToggleYear.jsx');
 
 var Feed = React.createClass({
@@ -19,6 +20,7 @@ var Feed = React.createClass({
     return {
       tweets: [], //new FIFO(25, this.props.tweets),
       newTweets: [],
+      connection: false,
       data: null
     }
   },
@@ -72,9 +74,12 @@ var Feed = React.createClass({
 
     if (this.state.data) {
       return (
-        <div>
-          <ToggleYear onToggle={this.onToggle} />
-          <RouteHandler data={this.state.data} />
+        <div className="tweet-list">
+          <div className="tweet-list__head">
+            <Status />
+            <ToggleYear onToggle={this.onToggle} />
+          </div>
+          <RouteHandler data={this.state.data} connection={this.state.connection} />
         </div>
       );
     } else {

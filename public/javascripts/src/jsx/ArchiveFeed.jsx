@@ -4,6 +4,7 @@ var React         = require('react');
 var Router = require('react-router');
 
 var StreamItem = require('./StreamItem.jsx');
+var SocketFeed = require('./SocketFeed.jsx');
 // var StreamItemLegacy = require('./StreamItemLegacy.jsx');
 
 var Stream = React.createClass({
@@ -32,8 +33,11 @@ var Stream = React.createClass({
     // }
 
     return (
-      <div className="tweet-list">
-        {tweetItems}
+      <div>
+        <SocketFeed connection={this.props.connection}/>
+        <div className="tweet-list__archive">
+          {tweetItems}
+        </div>
       </div>
 
     );

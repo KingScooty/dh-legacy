@@ -57,7 +57,7 @@ var StreamItem = React.createClass({
     var tweet_href;
     var media;
 
-    if (this.getPath() !== '/2014/') {
+    if ((this.getPath() === '/2012/') || this.getPath() === '/2013/') {
       tweet_id = tweet.tweet_id;
       screen_name = tweet.screen_name;
       created_at = tweet.timestamp;

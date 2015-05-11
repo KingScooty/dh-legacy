@@ -3,8 +3,6 @@
 var React         = require('react'); //,
 var io            = require('socket.io-client');
 
-var Status        = require('./Status.jsx');
-
 var Stream = React.createClass({
 
   // Invoked once before the component is mounted.
@@ -69,10 +67,28 @@ var Stream = React.createClass({
     console.log(this.props.data);
 
     return (
-      <div>
-        <Status onToggle={this.onToggle} />
-        <div className="tweet-list">
-          <div>Current shit. Start shouting!</div>
+      <div class="tweet-list__live">
+
+        <div className="tweet">
+
+          <div className="tweet__container">
+            <div className="tweet__profile_picture">
+              <img src="" />
+            </div>
+            <div className="tweet__screen_name">
+              <a href="/"></a>
+            </div>
+
+            <div className="tweet__body">This is a body of text tweet for testing out sockets</div>
+
+            <div className="tweet__meta">
+              <a href="#">
+                <time className="tweet__time timeago" dateTime="{created_at}">
+                  5 seconds ago
+                </time>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     );
