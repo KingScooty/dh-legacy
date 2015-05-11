@@ -33479,8 +33479,8 @@ var Stream = React.createClass({displayName: "Stream",
   render: function() {
     // var path = this.getPath();
 
-    var tweetItems = this.props.data.map(function (tweet) {
-      return React.createElement(StreamItem, {tweet: tweet})
+    var tweetItems = this.props.data.map(function(tweet, index) {
+      return React.createElement(StreamItem, {key: index, tweet: tweet})
     }.bind(this));
 
     return (
@@ -33686,30 +33686,68 @@ module.exports = Status;
 
 },{"react":197}],253:[function(require,module,exports){
 var React = require('react');
+var Router = require('react-router');
 var moment = require('moment');
 
 var StreamItemMedia = require('./StreamItemMedia.jsx');
 
+// var DefaultRoute = Router.DefaultRoute;
+// var Link = Router.Link;
+// var Route = Router.Route;
+// var RouteHandler = Router.RouteHandler;
+
 var StreamItem = React.createClass({displayName: "StreamItem",
+  mixins: [ Router.State ],
 
   render: function() {
+    // console.log('PATH - ', this.getPath());
+    // console.log(this.props.tweet);
+    // 2012 DH DATABASE
+    // "_id": "207933355151458300",
+    // "_rev": "1-36d7dad905efc46b83def9553078f279",
+    // "tweet_id": 207933355151458300,
+    // "screen_name": "KingScooty",
+    // "text": "@AlanBithell Testing persistent storage. #digitalheroes2012",
+    // "profile_image_url": "http://a0.twimg.com/profile_images/1427254999/profile-picture_normal.jpg",
+    // "timestamp": "Wed May 30 20:35:49 +0000 2012",
+    // "media": ""
+    var tweet = this.props.tweet.value;
+    var tweet_id;
+    var screen_name;
+    var created_at;
+    var tweet_text;
+    var time_ago;
+    var profile_image;
+    var screen_name_href;
+    var tweet_href;
+    var media;
 
+    if (this.getPath() !== '/2014/') {
+      tweet_id = tweet.tweet_id;
+      screen_name = tweet.screen_name;
+      created_at = tweet.timestamp;
+      profile_image = tweet.profile_image_url;
+      media = tweet.media;
+    } else {
+      tweet_id = tweet.id_str;
+      screen_name = tweet.user.screen_name;
+      created_at = tweet.created_at;
+      profile_image = tweet.user.profile_image_url;
+      media = tweet.entities.media;
+    }
 
-    // var positiveNegativeClassName = this.props.voteCount >= 0 ?
-    //                                 'label label-success pull-right' :
-    //                                 'label label-danger pull-right';
+    tweet_text = tweet.text;
+    // moment(Date.parse(created_at))
+    time_ago = moment(Date.parse(created_at)).fromNow();
 
-    var tweet_text = this.props.tweet.value.text;
-    var created_at = this.props.tweet.value.created_at;
-    var time_ago = moment(created_at).fromNow();
-    var screen_name = this.props.tweet.value.user.screen_name;
-    var tweet_id = this.props.tweet.value.id_str;
-    var profile_image = this.props.tweet.value.user.profile_image_url;
+    screen_name_href = "http://twitter.com/" + screen_name;
+    tweet_href = "https://twitter.com/" + screen_name + '/status/' + tweet_id;
 
-    profile_image = profile_image.replace("normal", "200x200");
+    console.log(screen_name);
 
-    var screen_name_href = "http://twitter.com/" + screen_name;
-    var tweet_href = "https://twitter.com/" + screen_name + '/status/' + tweet_id;
+    if (profile_image) {
+      profile_image = profile_image.replace("normal", "200x200");
+    }
 
     return (
 
@@ -33734,9 +33772,9 @@ var StreamItem = React.createClass({displayName: "StreamItem",
           )
         ), 
 
-        this.props.tweet.value.entities.media ? (
+        media ? (
           React.createElement("div", null, 
-            React.createElement(StreamItemMedia, {tweet: this.props.tweet})
+            React.createElement(StreamItemMedia, {media: media, tweet_href: tweet_href})
           )
         ) :
         null
@@ -33749,24 +33787,36 @@ var StreamItem = React.createClass({displayName: "StreamItem",
 
 module.exports = StreamItem;
 
-},{"./StreamItemMedia.jsx":254,"moment":3,"react":197}],254:[function(require,module,exports){
+},{"./StreamItemMedia.jsx":254,"moment":3,"react":197,"react-router":28}],254:[function(require,module,exports){
 var React = require('react');
 
 var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
 
   render: function() {
 
-    var screen_name = this.props.tweet.value.user.screen_name;
-    var tweet_id = this.props.tweet.value.id_str;
-    var tweet_href = "https://twitter.com/" + screen_name + '/status/' + tweet_id;
+    // var screen_name = this.props.tweet.value.user.screen_name;
+    // var tweet_id = this.props.tweet.value.id_str;
+    // var tweet_href = "https://twitter.com/" + screen_name + '/status/' + tweet_id;
 
-    var tweet_media_img = this.props.tweet.value.entities.media.map(function(media) {
-      return React.createElement("img", {className: "tweet__media", src: media.media_url})
-    });
+    // var media_url;
+    var media = this.props.media;
+    var tweet_media_img;
+    var media_replace;
+
+    if (typeof media === 'string') {
+      if (media.indexOf(".com/media/") === -1) {
+        media = this.props.media.replace(".com/", ".com/media/")
+      }
+      tweet_media_img = React.createElement("img", {className: "tweet__media", src: media})
+    } else {
+      tweet_media_img = this.props.media.map(function(media, index) {
+        return React.createElement("img", {key: index, className: "tweet__media", src: media.media_url})
+      });
+    }
 
     return (
       React.createElement("div", {className: "tweet__entities"}, 
-        React.createElement("a", {href: tweet_href}, 
+        React.createElement("a", {href: this.props.tweet_href}, 
           tweet_media_img
         )
       )

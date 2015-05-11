@@ -11,8 +11,8 @@ var Stream = React.createClass({
   render: function() {
     // var path = this.getPath();
 
-    var tweetItems = this.props.data.map(function (tweet) {
-      return <StreamItem tweet={tweet}/>
+    var tweetItems = this.props.data.map(function(tweet, index) {
+      return <StreamItem key={index} tweet={tweet}/>
     }.bind(this));
 
     return (
