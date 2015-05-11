@@ -9,6 +9,7 @@ var DefaultRoute = Router.DefaultRoute;
 
 // var Layout = require('./jsx/Layout.jsx');
 var Feed = require('./jsx/Feed.jsx');
+var LiveFeed = require('./jsx/LiveFeed.jsx');
 var ArchiveFeed = require('./jsx/ArchiveFeed.jsx');
 
 // <Route name="users" path="search/users" handler={Search} />
@@ -19,8 +20,9 @@ var ArchiveFeed = require('./jsx/ArchiveFeed.jsx');
 
 var routes = (
   <Route name="layout" path="/" handler={Feed} ignoreScrollBehavior>
+    <Route name="live" path="/2015/" handler={LiveFeed}/>
     <Route name="year" path="/:year/" handler={ArchiveFeed}/>
-    <Redirect from="/" to="/2015/" />
+    <Redirect from="/" to="live" />
   </Route>
 );
 

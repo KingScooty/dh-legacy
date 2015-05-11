@@ -18,10 +18,11 @@ var Feed = React.createClass({
   // The return value will be used as the initial value of this.state.
   getInitialState: function() {
     return {
-      tweets: [], //new FIFO(25, this.props.tweets),
-      newTweets: [],
-      connection: false,
-      data: null
+      // tweets: [], //new FIFO(25, this.props.tweets),
+      // newTweets: [],
+      connected: false,
+      socketFeed: false,
+      data: null,
     }
   },
 
@@ -39,6 +40,18 @@ var Feed = React.createClass({
     });
     console.log('read api called');
   },
+
+  connectToSockets: function() {
+
+  },
+
+  // routeState: function() {
+  //   if (this.getPath() === '/2015/') {
+  //     this.setState({ socketFeed: true });
+  //   } else {
+  //     this.setState({ socketFeed: false });
+  //   }
+  // },
 
   readTweetsFromAPI: function() {
     this.readFromAPI(this.getPath(), function(tweets) {
@@ -62,13 +75,13 @@ var Feed = React.createClass({
     // force loading render per route change
     this.setState({data: null});
     // console.log('COMPONENT WILL RECEIVE PROPS');
+    // this.routeState();
     this.readTweetsFromAPI();
   },
 
-
-  onToggle: function() {
-    this.readTweetsFromAPI();
-  },
+  // onToggle: function() {
+  //   this.readTweetsFromAPI();
+  // },
 
   render: function() {
 
@@ -77,9 +90,9 @@ var Feed = React.createClass({
         <div className="tweet-list">
           <div className="tweet-list__head">
             <Status />
-            <ToggleYear onToggle={this.onToggle} />
+            <ToggleYear />
           </div>
-          <RouteHandler data={this.state.data} connection={this.state.connection} />
+          <RouteHandler data={this.state.data} connected={this.state.connected} />
         </div>
       );
     } else {

@@ -10,6 +10,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cradle = require('cradle');
 
+var twitter_sockets = require('./server/twitter_sockets');
+
 // routes
 var routes = require('./routes/index');
 // var users = require('./routes/users');
@@ -33,6 +35,7 @@ var db = {
   dh_2015: c.database('digitalheroes-2015')
 };
 
+twitter_sockets(config.twitter, db.dh_2015);
 
 // Expose database object as a global on handler
 app.use(function(req, res, next) {

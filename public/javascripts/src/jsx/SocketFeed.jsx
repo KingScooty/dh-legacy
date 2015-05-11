@@ -14,8 +14,17 @@ var Stream = React.createClass({
   //     data: []
   //   }
   // },
+  connectToSockets: function() {
+
+  },
 
   componentDidMount: function() {
+    // var socket = io();
+    // var self = this;
+    //
+    // socket.on('tweet', function(tweet) {
+    //
+    // });
     // var socket = io();
     // var self = this;
     //
@@ -67,7 +76,7 @@ var Stream = React.createClass({
     console.log(this.props.data);
 
     return (
-      <div class="tweet-list__live">
+      <div className="tweet-list__live">
 
         <div className="tweet">
 

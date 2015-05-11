@@ -16,30 +16,20 @@ var Stream = React.createClass({
 
   render: function() {
     var path = this.getPath();
-    // var tweetItems;
+    var socket_feed;
 
-    // if ((path === '/2013/') || (path === '/2012/')) {
-    //   tweetItems = this.props.data.map(function(tweet, index) {
-    //     return <StreamItemLegacy key={index} tweet={tweet}/>
-    //   }.bind(this));
-    // } else {
     var tweetItems = this.props.data.map(function(tweet, index) {
       return <StreamItem key={index} tweet={tweet}/>
     }.bind(this));
-    // }
 
-    // if (!this.props.data){
-    //   return <h1 className="spinner">Loading...</h1>
+    // if (path === '/2015/') {
+    //   socket_feed = <SocketFeed connected={this.props.connected}/>
     // }
 
     return (
-      <div>
-        <SocketFeed connection={this.props.connection}/>
-        <div className="tweet-list__archive">
-          {tweetItems}
-        </div>
+      <div className="tweet-list__archive">
+        {tweetItems}
       </div>
-
     );
   }
 

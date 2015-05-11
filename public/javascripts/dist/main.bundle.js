@@ -33523,6 +33523,7 @@ var DefaultRoute = Router.DefaultRoute;
 
 // var Layout = require('./jsx/Layout.jsx');
 var Feed = require('./jsx/Feed.jsx');
+var LiveFeed = require('./jsx/LiveFeed.jsx');
 var ArchiveFeed = require('./jsx/ArchiveFeed.jsx');
 
 // <Route name="users" path="search/users" handler={Search} />
@@ -33533,8 +33534,9 @@ var ArchiveFeed = require('./jsx/ArchiveFeed.jsx');
 
 var routes = (
   React.createElement(Route, {name: "layout", path: "/", handler: Feed, ignoreScrollBehavior: true}, 
+    React.createElement(Route, {name: "live", path: "/2015/", handler: LiveFeed}), 
     React.createElement(Route, {name: "year", path: "/:year/", handler: ArchiveFeed}), 
-    React.createElement(Redirect, {from: "/", to: "/2015/"})
+    React.createElement(Redirect, {from: "/", to: "live"})
   )
 );
 
@@ -33548,7 +33550,7 @@ Router.run(routes, Router.HistoryLocation, function(Handler) {
   React.render(React.createElement(Handler, null), document.getElementById('app'));
 });
 
-},{"./jsx/ArchiveFeed.jsx":250,"./jsx/Feed.jsx":251,"react":198,"react-router":29}],250:[function(require,module,exports){
+},{"./jsx/ArchiveFeed.jsx":250,"./jsx/Feed.jsx":251,"./jsx/LiveFeed.jsx":252,"react":198,"react-router":29}],250:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react');
@@ -33567,30 +33569,20 @@ var Stream = React.createClass({displayName: "Stream",
 
   render: function() {
     var path = this.getPath();
-    // var tweetItems;
+    var socket_feed;
 
-    // if ((path === '/2013/') || (path === '/2012/')) {
-    //   tweetItems = this.props.data.map(function(tweet, index) {
-    //     return <StreamItemLegacy key={index} tweet={tweet}/>
-    //   }.bind(this));
-    // } else {
     var tweetItems = this.props.data.map(function(tweet, index) {
       return React.createElement(StreamItem, {key: index, tweet: tweet})
     }.bind(this));
-    // }
 
-    // if (!this.props.data){
-    //   return <h1 className="spinner">Loading...</h1>
+    // if (path === '/2015/') {
+    //   socket_feed = <SocketFeed connected={this.props.connected}/>
     // }
 
     return (
-      React.createElement("div", null, 
-        React.createElement(SocketFeed, {connection: this.props.connection}), 
-        React.createElement("div", {className: "tweet-list__archive"}, 
-          tweetItems
-        )
+      React.createElement("div", {className: "tweet-list__archive"}, 
+        tweetItems
       )
-
     );
   }
 
@@ -33598,7 +33590,7 @@ var Stream = React.createClass({displayName: "Stream",
 
 module.exports = Stream;
 
-},{"./SocketFeed.jsx":252,"./StreamItem.jsx":254,"react":198,"react-router":29}],251:[function(require,module,exports){
+},{"./SocketFeed.jsx":253,"./StreamItem.jsx":255,"react":198,"react-router":29}],251:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react'); //,
@@ -33619,10 +33611,11 @@ var Feed = React.createClass({displayName: "Feed",
   // The return value will be used as the initial value of this.state.
   getInitialState: function() {
     return {
-      tweets: [], //new FIFO(25, this.props.tweets),
-      newTweets: [],
-      connection: false,
-      data: null
+      // tweets: [], //new FIFO(25, this.props.tweets),
+      // newTweets: [],
+      connected: false,
+      socketFeed: false,
+      data: null,
     }
   },
 
@@ -33640,6 +33633,18 @@ var Feed = React.createClass({displayName: "Feed",
     });
     console.log('read api called');
   },
+
+  connectToSockets: function() {
+
+  },
+
+  // routeState: function() {
+  //   if (this.getPath() === '/2015/') {
+  //     this.setState({ socketFeed: true });
+  //   } else {
+  //     this.setState({ socketFeed: false });
+  //   }
+  // },
 
   readTweetsFromAPI: function() {
     this.readFromAPI(this.getPath(), function(tweets) {
@@ -33663,13 +33668,13 @@ var Feed = React.createClass({displayName: "Feed",
     // force loading render per route change
     this.setState({data: null});
     // console.log('COMPONENT WILL RECEIVE PROPS');
+    // this.routeState();
     this.readTweetsFromAPI();
   },
 
-
-  onToggle: function() {
-    this.readTweetsFromAPI();
-  },
+  // onToggle: function() {
+  //   this.readTweetsFromAPI();
+  // },
 
   render: function() {
 
@@ -33678,9 +33683,9 @@ var Feed = React.createClass({displayName: "Feed",
         React.createElement("div", {className: "tweet-list"}, 
           React.createElement("div", {className: "tweet-list__head"}, 
             React.createElement(Status, null), 
-            React.createElement(ToggleYear, {onToggle: this.onToggle})
+            React.createElement(ToggleYear, null)
           ), 
-          React.createElement(RouteHandler, {data: this.state.data, connection: this.state.connection})
+          React.createElement(RouteHandler, {data: this.state.data, connected: this.state.connected})
         )
       );
     } else {
@@ -33692,7 +33697,43 @@ var Feed = React.createClass({displayName: "Feed",
 
 module.exports = Feed;
 
-},{"./Status.jsx":253,"./ToggleYear.jsx":256,"react":198,"react-router":29,"reqwest":199}],252:[function(require,module,exports){
+},{"./Status.jsx":254,"./ToggleYear.jsx":257,"react":198,"react-router":29,"reqwest":199}],252:[function(require,module,exports){
+/** @jsx React.DOM */
+
+var React         = require('react');
+var Router = require('react-router');
+
+var ArchiveFeed = require('./ArchiveFeed.jsx');
+var SocketFeed = require('./SocketFeed.jsx');
+
+var Stream = React.createClass({displayName: "Stream",
+  mixins: [ Router.State ],
+
+  // componentDidMount: function() {
+  //   this.props.readTweetsFromAPI();
+  // },
+
+  getInitialState: function() {
+    // this.setState({ connected: false });
+    return {
+      connected: false
+    }
+  },
+
+  render: function() {
+    return (
+      React.createElement("div", null, 
+        React.createElement(SocketFeed, {connected: this.props.connected}), 
+        React.createElement(ArchiveFeed, {data: this.props.data})
+      )
+    );
+  }
+
+});
+
+module.exports = Stream;
+
+},{"./ArchiveFeed.jsx":250,"./SocketFeed.jsx":253,"react":198,"react-router":29}],253:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react'); //,
@@ -33709,8 +33750,17 @@ var Stream = React.createClass({displayName: "Stream",
   //     data: []
   //   }
   // },
+  connectToSockets: function() {
+
+  },
 
   componentDidMount: function() {
+    // var socket = io();
+    // var self = this;
+    //
+    // socket.on('tweet', function(tweet) {
+    //
+    // });
     // var socket = io();
     // var self = this;
     //
@@ -33762,7 +33812,7 @@ var Stream = React.createClass({displayName: "Stream",
     console.log(this.props.data);
 
     return (
-      React.createElement("div", {class: "tweet-list__live"}, 
+      React.createElement("div", {className: "tweet-list__live"}, 
 
         React.createElement("div", {className: "tweet"}, 
 
@@ -33793,7 +33843,7 @@ var Stream = React.createClass({displayName: "Stream",
 
 module.exports = Stream;
 
-},{"react":198,"socket.io-client":200}],253:[function(require,module,exports){
+},{"react":198,"socket.io-client":200}],254:[function(require,module,exports){
 var React = require('react');
 var classNames = require('classnames');
 
@@ -33804,8 +33854,8 @@ var Status = React.createClass({displayName: "Status",
     var status_text = this.props.connection ? 'LIVE' : 'Offline';
     var status_class = classNames(
       'socket-connection__status',
-      { 'socket-connection__status--up': false },
-      { 'socket-connection__status--down': true }
+      { 'socket-connection__status--down': true },
+      { 'socket-connection__status--up': this.props.connection }
     );
 
     console.log(status);
@@ -33821,7 +33871,7 @@ var Status = React.createClass({displayName: "Status",
 
 module.exports = Status;
 
-},{"classnames":1,"react":198}],254:[function(require,module,exports){
+},{"classnames":1,"react":198}],255:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var moment = require('moment');
@@ -33944,7 +33994,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
 
 module.exports = StreamItem;
 
-},{"./StreamItemMedia.jsx":255,"moment":4,"react":198,"react-router":29}],255:[function(require,module,exports){
+},{"./StreamItemMedia.jsx":256,"moment":4,"react":198,"react-router":29}],256:[function(require,module,exports){
 var React = require('react');
 
 var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
@@ -33984,7 +34034,7 @@ var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
 
 module.exports = StreamItemMedia;
 
-},{"react":198}],256:[function(require,module,exports){
+},{"react":198}],257:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router'); // or var Router = ReactRouter; in browsers
 
