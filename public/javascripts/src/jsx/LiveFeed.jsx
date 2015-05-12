@@ -26,7 +26,7 @@ var Stream = React.createClass({
         <SocketFeed
           connected={this.props.connected}
           enableSocketState={this.props.enableSocketState} />
-        <ArchiveFeed />
+        <ArchiveFeed fadeInPage={this.props.fadeInPage} />
       </div>
     );
   }

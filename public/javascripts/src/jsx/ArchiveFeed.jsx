@@ -15,6 +15,7 @@ var Stream = React.createClass({
 
   getInitialState: function() {
     return {
+      // class: 'tweet-list__archive tweet-list__archive--inactive',
       data: null
       // data: [
       //   {
@@ -57,20 +58,22 @@ var Stream = React.createClass({
 
   componentWillMount: function () {
     console.log('> componentWillMount()');
+    this.readTweetsFromAPI();
   },
 
   componentDidMount: function () {
-    console.log('> componentDidMount');
-    if (this.isMounted()) {
-      this.readTweetsFromAPI();
-    }
+    console.log('DID MOUNT. RUN EVERY ROUTE??');
+    // console.log('> componentDidMount');
+    // if (this.isMounted()) {
+    //   this.readTweetsFromAPI();
+    // }
   },
 
   componentWillReceiveProps: function (nextProps) {
     console.log('> componentWillReceiveProps');
-    if (this.isMounted()) {
-      this.readTweetsFromAPI();
-    }
+    // if (this.isMounted()) {
+    //   this.readTweetsFromAPI();
+    // }
   },
 
   // handleChange: function (e) {
@@ -94,30 +97,12 @@ var Stream = React.createClass({
 
   readTweetsFromAPI: function() {
     this.readFromAPI(this.getPath(), function(tweets) {
-      this.setState({data: tweets});
+      this.setState({
+        data: tweets
+      });
+      this.props.fadeInPage();
     }.bind(this));
   },
-
-  // componentWillMount: function() {
-    // console.log('TRIGGER API READ');
-    // this.readTweetsFromAPI();
-  // },
-
-  // componentDidMount: function() {
-  //   this.readTweetsFromAPI();
-  // },
-
-  // shouldComponentUpdate: function() {
-  // },
-
-  // componentWillUpdate: function() {
-  //   this.readTweetsFromAPI();
-  // },
-
-  // componentWillReceiveProps: function() {
-    // console.log('TRIGGER API READ');
-    // this.readTweetsFromAPI();
-  // },
 
   render: function() {
     var path = this.getPath();

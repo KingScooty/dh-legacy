@@ -441,15 +441,17 @@ h1, h2, h3, h4, h5, h6, hgroup, ul, ol, dd, p, figure, pre, table, fieldset, hr,
 .tweet-list__head {
   margin-bottom: 3rem; }
 
-.tweet-list__archive {
+.tweet-list__archive .tweet:last-child {
+  border-left: 0;
+  margin-bottom: 0; }
+
+.tweet-list__body {
+  opacity: 1;
   -webkit-transition: all .3s ease-in-out;
   -o-transition: all .3s ease-in-out;
   transition: all .3s ease-in-out; }
-  .tweet-list__archive .tweet:last-child {
-    border-left: 0;
-    margin-bottom: 0; }
 
-.tweet-list__archive--inactive {
+.tweet-list__body--inactive {
   opacity: 0; }
 
 .tweet {
@@ -600,6 +602,20 @@ h1, h2, h3, h4, h5, h6, hgroup, ul, ol, dd, p, figure, pre, table, fieldset, hr,
   transition: opacity .3s ease-in; }
 
 .fade-leave.fade-leave-active {
+  opacity: 0.01; }
+
+.example-enter {
+  opacity: 0.01;
+  transition: opacity .5s ease-in; }
+
+.example-enter.example-enter-active {
+  opacity: 1; }
+
+.example-leave {
+  opacity: 1;
+  transition: opacity .5s ease-in; }
+
+.example-leave.example-leave-active {
   opacity: 0.01; }
 
 .preload {

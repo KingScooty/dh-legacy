@@ -16,7 +16,7 @@ var Stream = React.createClass({
               <a href="#">@Jarvis</a>
             </div>
 
-            <div className="tweet__body">Prepping feed.</div>
+            <div className="tweet__body">Preparing archive data feed.</div>
 
           </div>
         </div>

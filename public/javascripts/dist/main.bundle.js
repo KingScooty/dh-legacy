@@ -35579,6 +35579,7 @@ var Stream = React.createClass({displayName: "Stream",
 
   getInitialState: function() {
     return {
+      // class: 'tweet-list__archive tweet-list__archive--inactive',
       data: null
       // data: [
       //   {
@@ -35621,20 +35622,22 @@ var Stream = React.createClass({displayName: "Stream",
 
   componentWillMount: function () {
     console.log('> componentWillMount()');
+    this.readTweetsFromAPI();
   },
 
   componentDidMount: function () {
-    console.log('> componentDidMount');
-    if (this.isMounted()) {
-      this.readTweetsFromAPI();
-    }
+    console.log('DID MOUNT. RUN EVERY ROUTE??');
+    // console.log('> componentDidMount');
+    // if (this.isMounted()) {
+    //   this.readTweetsFromAPI();
+    // }
   },
 
   componentWillReceiveProps: function (nextProps) {
     console.log('> componentWillReceiveProps');
-    if (this.isMounted()) {
-      this.readTweetsFromAPI();
-    }
+    // if (this.isMounted()) {
+    //   this.readTweetsFromAPI();
+    // }
   },
 
   // handleChange: function (e) {
@@ -35658,30 +35661,12 @@ var Stream = React.createClass({displayName: "Stream",
 
   readTweetsFromAPI: function() {
     this.readFromAPI(this.getPath(), function(tweets) {
-      this.setState({data: tweets});
+      this.setState({
+        data: tweets
+      });
+      this.props.fadeInPage();
     }.bind(this));
   },
-
-  // componentWillMount: function() {
-    // console.log('TRIGGER API READ');
-    // this.readTweetsFromAPI();
-  // },
-
-  // componentDidMount: function() {
-  //   this.readTweetsFromAPI();
-  // },
-
-  // shouldComponentUpdate: function() {
-  // },
-
-  // componentWillUpdate: function() {
-  //   this.readTweetsFromAPI();
-  // },
-
-  // componentWillReceiveProps: function() {
-    // console.log('TRIGGER API READ');
-    // this.readTweetsFromAPI();
-  // },
 
   render: function() {
     var path = this.getPath();
@@ -35711,8 +35696,10 @@ module.exports = Stream;
 },{"./Loading.jsx":271,"./SocketFeed.jsx":272,"./StreamItem.jsx":274,"classnames":1,"react":216,"react-router":29,"reqwest":217}],269:[function(require,module,exports){
 /** @jsx React.DOM */
 
-var React         = require('react'); //,
+var React         = require('react/addons'); //,
 var Router = require('react-router'); // or var Router = ReactRouter; in browsers
+
+// var TransitionGroup = React.addons.CSSTransitionGroup;
 
 var DefaultRoute = Router.DefaultRoute;
 var Link = Router.Link;
@@ -35725,11 +35712,17 @@ var ToggleYear    = require('./ToggleYear.jsx');
 var Feed = React.createClass({displayName: "Feed",
   mixins: [ Router.State ],
 
+  // contextTypes: {
+  //   router: React.PropTypes.func
+  // },
+
   // Invoked once before the component is mounted.
   // The return value will be used as the initial value of this.state.
   getInitialState: function() {
     return {
-      connected: false
+      connected: false,
+      // loaded: false,
+      body_class: 'tweet-list__body tweet-list__body--inactive'
       // data: [
       //   {
       //     value: {
@@ -35756,6 +35749,12 @@ var Feed = React.createClass({displayName: "Feed",
 
   enableSocketState: function() {
     this.setState({ connected: true });
+  },
+
+  fadeInPage: function() {
+    this.setState({
+      body_class: 'tweet-list__body'
+    });
   },
 
   // connectToSockets: function() {
@@ -35798,13 +35797,15 @@ var Feed = React.createClass({displayName: "Feed",
   componentWillReceiveProps: function() {
     // force loading render per route change
     this.setState({
-      connected: false
+      connected: false,
+      body_class: 'tweet-list__body tweet-list__body--inactive'
     });
   },
 
   render: function() {
 
     var path = this.getPath().replace('/', '');
+    // var name = this.context.router.getCurrentPath();
 
     // if (this.state.data) {
       return (
@@ -35813,8 +35814,11 @@ var Feed = React.createClass({displayName: "Feed",
             React.createElement(Status, {connected: this.state.connected}), 
             React.createElement(ToggleYear, null)
           ), 
-          React.createElement(RouteHandler, {key: path, 
-            enableSocketState: this.enableSocketState})
+          React.createElement("div", {className: ""}, 
+            React.createElement(RouteHandler, {key: path, 
+              enableSocketState: this.enableSocketState, 
+              fadeInPage: this.fadeInPage})
+          )
         )
       );
     // } else {
@@ -35826,7 +35830,7 @@ var Feed = React.createClass({displayName: "Feed",
 
 module.exports = Feed;
 
-},{"./Status.jsx":273,"./ToggleYear.jsx":276,"react":216,"react-router":29}],270:[function(require,module,exports){
+},{"./Status.jsx":273,"./ToggleYear.jsx":276,"react-router":29,"react/addons":44}],270:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react');
@@ -35855,7 +35859,7 @@ var Stream = React.createClass({displayName: "Stream",
         React.createElement(SocketFeed, {
           connected: this.props.connected, 
           enableSocketState: this.props.enableSocketState}), 
-        React.createElement(ArchiveFeed, null)
+        React.createElement(ArchiveFeed, {fadeInPage: this.props.fadeInPage})
       )
     );
   }
@@ -35880,10 +35884,10 @@ var Stream = React.createClass({displayName: "Stream",
               React.createElement("img", {src: "/images/icon__download.png"})
             ), 
             React.createElement("div", {className: "tweet__screen_name"}, 
-              React.createElement("a", {href: "#"}, "@TonyStark")
+              React.createElement("a", {href: "#"}, "@Jarvis")
             ), 
 
-            React.createElement("div", {className: "tweet__body"}, "Prepping feed.")
+            React.createElement("div", {className: "tweet__body"}, "Preparing archive data feed.")
 
           )
         )

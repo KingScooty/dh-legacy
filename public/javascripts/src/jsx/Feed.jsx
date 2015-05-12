@@ -1,7 +1,9 @@
 /** @jsx React.DOM */
 
-var React         = require('react'); //,
+var React         = require('react/addons'); //,
 var Router = require('react-router'); // or var Router = ReactRouter; in browsers
+
+// var TransitionGroup = React.addons.CSSTransitionGroup;
 
 var DefaultRoute = Router.DefaultRoute;
 var Link = Router.Link;
@@ -14,11 +16,17 @@ var ToggleYear    = require('./ToggleYear.jsx');
 var Feed = React.createClass({
   mixins: [ Router.State ],
 
+  // contextTypes: {
+  //   router: React.PropTypes.func
+  // },
+
   // Invoked once before the component is mounted.
   // The return value will be used as the initial value of this.state.
   getInitialState: function() {
     return {
-      connected: false
+      connected: false,
+      // loaded: false,
+      body_class: 'tweet-list__body tweet-list__body--inactive'
       // data: [
       //   {
       //     value: {
@@ -45,6 +53,12 @@ var Feed = React.createClass({
 
   enableSocketState: function() {
     this.setState({ connected: true });
+  },
+
+  fadeInPage: function() {
+    this.setState({
+      body_class: 'tweet-list__body'
+    });
   },
 
   // connectToSockets: function() {
@@ -87,13 +101,15 @@ var Feed = React.createClass({
   componentWillReceiveProps: function() {
     // force loading render per route change
     this.setState({
-      connected: false
+      connected: false,
+      body_class: 'tweet-list__body tweet-list__body--inactive'
     });
   },
 
   render: function() {
 
     var path = this.getPath().replace('/', '');
+    // var name = this.context.router.getCurrentPath();
 
     // if (this.state.data) {
       return (
@@ -102,8 +118,11 @@ var Feed = React.createClass({
             <Status connected={this.state.connected}/>
             <ToggleYear />
           </div>
-          <RouteHandler key={path}
-            enableSocketState={this.enableSocketState} />
+          <div className="">
+            <RouteHandler key={path}
+              enableSocketState={this.enableSocketState}
+              fadeInPage={this.fadeInPage} />
+          </div>
         </div>
       );
     // } else {
