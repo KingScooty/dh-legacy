@@ -1,9 +1,10 @@
 /** @jsx React.DOM */
 
 var React         = require('react/addons'); //,
-var Router = require('react-router'); // or var Router = ReactRouter; in browsers
+var Router = require('react-router');
+var classNames = require('classnames');
 
-// var TransitionGroup = React.addons.CSSTransitionGroup;
+var TransitionGroup = React.addons.CSSTransitionGroup;
 
 var DefaultRoute = Router.DefaultRoute;
 var Link = Router.Link;
@@ -26,7 +27,7 @@ var Feed = React.createClass({
     return {
       connected: false,
       // loaded: false,
-      body_class: 'tweet-list__body tweet-list__body--inactive'
+      view_ready: false
       // data: [
       //   {
       //     value: {
@@ -57,7 +58,7 @@ var Feed = React.createClass({
 
   fadeInPage: function() {
     this.setState({
-      body_class: 'tweet-list__body'
+      view_ready: true
     });
   },
 
@@ -102,14 +103,17 @@ var Feed = React.createClass({
     // force loading render per route change
     this.setState({
       connected: false,
-      body_class: 'tweet-list__body tweet-list__body--inactive'
+      view_ready: false
     });
   },
 
   render: function() {
 
     var path = this.getPath().replace('/', '');
-    // var name = this.context.router.getCurrentPath();
+    var body_class = classNames(
+      'tweet-list__body',
+      { 'tweet-list__body--inactive': !this.state.view_ready }
+    );
 
     // if (this.state.data) {
       return (
@@ -118,10 +122,14 @@ var Feed = React.createClass({
             <Status connected={this.state.connected}/>
             <ToggleYear />
           </div>
-          <div className="">
-            <RouteHandler key={path}
-              enableSocketState={this.enableSocketState}
-              fadeInPage={this.fadeInPage} />
+          <div className={body_class}>
+            <div>
+              <TransitionGroup transitionName="example">
+                <RouteHandler key={path}
+                  enableSocketState={this.enableSocketState}
+                  fadeInPage={this.fadeInPage} />
+              </TransitionGroup>
+            </div>
           </div>
         </div>
       );

@@ -3,11 +3,11 @@
 var React  = require('react');
 var Router = require('react-router');
 var Reqwest = require('reqwest');
-var classNames = require('classnames');
+// var classNames = require('classnames');
 
 var StreamItem = require('./StreamItem.jsx');
-var SocketFeed = require('./SocketFeed.jsx');
-var Loading = require('./Loading.jsx');
+// var SocketFeed = require('./SocketFeed.jsx');
+// var Loading = require('./Loading.jsx');
 // var StreamItemLegacy = require('./StreamItemLegacy.jsx');
 
 var Stream = React.createClass({
@@ -57,50 +57,37 @@ var Stream = React.createClass({
   },
 
   componentWillMount: function () {
-    console.log('> componentWillMount()');
+    // console.log('> componentWillMount()');
     this.readTweetsFromAPI();
   },
 
   componentDidMount: function () {
-    console.log('DID MOUNT. RUN EVERY ROUTE??');
-    // console.log('> componentDidMount');
-    // if (this.isMounted()) {
-    //   this.readTweetsFromAPI();
-    // }
+    // console.log('DID MOUNT. RUN EVERY ROUTE??');
   },
 
   componentWillReceiveProps: function (nextProps) {
-    console.log('> componentWillReceiveProps');
-    // if (this.isMounted()) {
-    //   this.readTweetsFromAPI();
-    // }
+    // console.log('> componentWillReceiveProps');
   },
 
-  // handleChange: function (e) {
-      // console.log(e.target.value);
-      // this.setState({user: e.target.value});
-  // },
-
-  // shouldComponentUpdate: function (nextProps, nextState) {
-  //     console.log('> shouldComponentUpdate(nextProps, nextState)');
-  //     console.log('  nextProps: ' + JSON.stringify(nextProps));
-  //     console.log('  nextState: ' + JSON.stringify(nextState));
-  //     return true; /* need return true/false */
-  // },
   componentWillUpdate: function (nextProps, nextState) {
-    console.log('> componentWillUpdate');
+    // console.log('> componentWillUpdate');
     // this.readTweetsFromAPI();
   },
   componentWillUnmount: function () {
-    console.log('> componentWillUnmount()');
+    // console.log('> componentWillUnmount()');
   },
 
   readTweetsFromAPI: function() {
+    var self = this;
+
     this.readFromAPI(this.getPath(), function(tweets) {
-      this.setState({
-        data: tweets
-      });
-      this.props.fadeInPage();
+      setTimeout(function() {
+        self.setState({
+          data: tweets
+        });
+        self.props.fadeInPage();
+      }, 300);
+
     }.bind(this));
   },
 
@@ -108,21 +95,22 @@ var Stream = React.createClass({
     var path = this.getPath();
     var socket_feed;
 
-    console.log(this.state.data);
+    // console.log(this.state.data);
 
     if (this.state.data) {
       var tweetItems = this.state.data.map(function(tweet, index) {
         return <StreamItem key={tweet.id} tweet={tweet}/>
       }.bind(this));
-
-      return (
-        <div className="tweet-list__archive">
-          {tweetItems}
-        </div>
-      );
-    } else {
-      return <Loading />;
     }
+
+    return (
+      <div className="tweet-list__archive">
+        {tweetItems}
+      </div>
+    );
+    // } else {
+    //   return <Loading />;
+    // }
   }
 
 });
