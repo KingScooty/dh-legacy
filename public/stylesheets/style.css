@@ -531,6 +531,15 @@ h1, h2, h3, h4, h5, h6, hgroup, ul, ol, dd, p, figure, pre, table, fieldset, hr,
   margin-left: 16px; }
   .stream-nav__item:first-child {
     margin-left: 0; }
+  .stream-nav__item a {
+    display: block;
+    padding: 5px 10px;
+    transition: all .3s ease-in-out;
+    border-radius: 10px; }
+
+.stream-nav__item .active {
+  background-color: white;
+  color: #00223E; }
 
 @-webkit-keyframes shake_x {
   0% {
