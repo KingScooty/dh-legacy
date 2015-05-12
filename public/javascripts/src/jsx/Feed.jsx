@@ -3,6 +3,7 @@
 var React         = require('react'); //,
 var Router = require('react-router'); // or var Router = ReactRouter; in browsers
 var Reqwest = require('reqwest');
+var io = require('socket.io-client');
 
 var DefaultRoute = Router.DefaultRoute;
 var Link = Router.Link;
@@ -14,14 +15,12 @@ var ToggleYear    = require('./ToggleYear.jsx');
 
 var Feed = React.createClass({
   mixins: [ Router.State ],
+
   // Invoked once before the component is mounted.
   // The return value will be used as the initial value of this.state.
   getInitialState: function() {
     return {
-      // tweets: [], //new FIFO(25, this.props.tweets),
-      // newTweets: [],
       connected: false,
-      socketFeed: false,
       data: null,
     }
   },
@@ -42,7 +41,14 @@ var Feed = React.createClass({
   },
 
   connectToSockets: function() {
+    var socket = io('http://localhost:3001');
+    var self = this;
 
+    socket.on('connect', function () {
+      // console.log(response);
+      console.log('connected!');
+      self.setState({connected: true });
+    });
   },
 
   // routeState: function() {
@@ -64,6 +70,9 @@ var Feed = React.createClass({
 
   componentDidMount: function() {
     this.readTweetsFromAPI();
+    // if (this.getPath() === '2015') {
+    //   this.connectToSockets();
+    // }
   },
 
   componentWillUpdate: function() {
@@ -73,15 +82,11 @@ var Feed = React.createClass({
 
   componentWillReceiveProps: function() {
     // force loading render per route change
-    this.setState({data: null});
+    this.setState({data: null, connected: false});
     // console.log('COMPONENT WILL RECEIVE PROPS');
     // this.routeState();
     this.readTweetsFromAPI();
   },
-
-  // onToggle: function() {
-  //   this.readTweetsFromAPI();
-  // },
 
   render: function() {
 
@@ -89,10 +94,13 @@ var Feed = React.createClass({
       return (
         <div className="tweet-list">
           <div className="tweet-list__head">
-            <Status />
+            <Status connected={this.state.connected}/>
             <ToggleYear />
           </div>
-          <RouteHandler data={this.state.data} connected={this.state.connected} />
+          <RouteHandler
+            data={this.state.data}
+            connected={this.state.connected}
+            connectToSockets={this.connectToSockets} />
         </div>
       );
     } else {

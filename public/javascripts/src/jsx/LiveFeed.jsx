@@ -9,21 +9,15 @@ var SocketFeed = require('./SocketFeed.jsx');
 var Stream = React.createClass({
   mixins: [ Router.State ],
 
-  // componentDidMount: function() {
-  //   this.props.readTweetsFromAPI();
-  // },
-
-  getInitialState: function() {
-    // this.setState({ connected: false });
-    return {
-      connected: false
-    }
+  componentDidMount: function() {
   },
 
   render: function() {
     return (
       <div>
-        <SocketFeed connected={this.props.connected} />
+        <SocketFeed
+          connected={this.props.connected}
+          connectToSockets={this.props.connectToSockets} />
         <ArchiveFeed data={this.props.data} />
       </div>
     );

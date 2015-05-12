@@ -33596,6 +33596,7 @@ module.exports = Stream;
 var React         = require('react'); //,
 var Router = require('react-router'); // or var Router = ReactRouter; in browsers
 var Reqwest = require('reqwest');
+var io = require('socket.io-client');
 
 var DefaultRoute = Router.DefaultRoute;
 var Link = Router.Link;
@@ -33607,14 +33608,12 @@ var ToggleYear    = require('./ToggleYear.jsx');
 
 var Feed = React.createClass({displayName: "Feed",
   mixins: [ Router.State ],
+
   // Invoked once before the component is mounted.
   // The return value will be used as the initial value of this.state.
   getInitialState: function() {
     return {
-      // tweets: [], //new FIFO(25, this.props.tweets),
-      // newTweets: [],
       connected: false,
-      socketFeed: false,
       data: null,
     }
   },
@@ -33635,7 +33634,14 @@ var Feed = React.createClass({displayName: "Feed",
   },
 
   connectToSockets: function() {
+    var socket = io('http://localhost:3001');
+    var self = this;
 
+    socket.on('connect', function () {
+      // console.log(response);
+      console.log('connected!');
+      self.setState({connected: true });
+    });
   },
 
   // routeState: function() {
@@ -33657,6 +33663,9 @@ var Feed = React.createClass({displayName: "Feed",
 
   componentDidMount: function() {
     this.readTweetsFromAPI();
+    // if (this.getPath() === '2015') {
+    //   this.connectToSockets();
+    // }
   },
 
   componentWillUpdate: function() {
@@ -33666,15 +33675,11 @@ var Feed = React.createClass({displayName: "Feed",
 
   componentWillReceiveProps: function() {
     // force loading render per route change
-    this.setState({data: null});
+    this.setState({data: null, connected: false});
     // console.log('COMPONENT WILL RECEIVE PROPS');
     // this.routeState();
     this.readTweetsFromAPI();
   },
-
-  // onToggle: function() {
-  //   this.readTweetsFromAPI();
-  // },
 
   render: function() {
 
@@ -33682,10 +33687,13 @@ var Feed = React.createClass({displayName: "Feed",
       return (
         React.createElement("div", {className: "tweet-list"}, 
           React.createElement("div", {className: "tweet-list__head"}, 
-            React.createElement(Status, null), 
+            React.createElement(Status, {connected: this.state.connected}), 
             React.createElement(ToggleYear, null)
           ), 
-          React.createElement(RouteHandler, {data: this.state.data, connected: this.state.connected})
+          React.createElement(RouteHandler, {
+            data: this.state.data, 
+            connected: this.state.connected, 
+            connectToSockets: this.connectToSockets})
         )
       );
     } else {
@@ -33697,7 +33705,7 @@ var Feed = React.createClass({displayName: "Feed",
 
 module.exports = Feed;
 
-},{"./Status.jsx":254,"./ToggleYear.jsx":257,"react":198,"react-router":29,"reqwest":199}],252:[function(require,module,exports){
+},{"./Status.jsx":254,"./ToggleYear.jsx":257,"react":198,"react-router":29,"reqwest":199,"socket.io-client":200}],252:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react');
@@ -33709,21 +33717,15 @@ var SocketFeed = require('./SocketFeed.jsx');
 var Stream = React.createClass({displayName: "Stream",
   mixins: [ Router.State ],
 
-  // componentDidMount: function() {
-  //   this.props.readTweetsFromAPI();
-  // },
-
-  getInitialState: function() {
-    // this.setState({ connected: false });
-    return {
-      connected: false
-    }
+  componentDidMount: function() {
   },
 
   render: function() {
     return (
       React.createElement("div", null, 
-        React.createElement(SocketFeed, {connected: this.props.connected}), 
+        React.createElement(SocketFeed, {
+          connected: this.props.connected, 
+          connectToSockets: this.props.connectToSockets}), 
         React.createElement(ArchiveFeed, {data: this.props.data})
       )
     );
@@ -33737,79 +33739,18 @@ module.exports = Stream;
 /** @jsx React.DOM */
 
 var React         = require('react'); //,
-var io            = require('socket.io-client');
+// var io            = require('socket.io-client');
 
 var Stream = React.createClass({displayName: "Stream",
 
-  // Invoked once before the component is mounted.
-  // The return value will be used as the initial value of this.state.
-  // getInitialState: function() {
-  //   return {
-  //     tweets: [], //new FIFO(25, this.props.tweets),
-  //     newTweets: [],
-  //     data: []
-  //   }
-  // },
-  connectToSockets: function() {
-
-  },
-
   componentDidMount: function() {
-    // var socket = io();
-    // var self = this;
-    //
-    // socket.on('tweet', function(tweet) {
-    //
-    // });
-    // var socket = io();
-    // var self = this;
-    //
-    // socket.on('tweet', function(tweet) {
-    //   var tweets = self.state.newTweets
-    //   tweets.unshift(tweet)
-    //   self.setState({
-    //     tweets: self.state.tweets,
-    //     newTweets: tweets
-    //   })
-    // })
+    this.props.connectToSockets();
   },
-
-  // onToggleForm: function () {
-  //   this.setState({
-  //     formDisplayed: !this.state.formDisplayed
-  //   });
-  // },
-
-  onToggle: function() {
-
-  },
-
-  // onNewItem: function(newItem) {
-  //   var newItems = this.state.items.concat([newItem]);
-  //   this.setState({
-  //     items: newItems,
-  //     formDisplayed: false,
-  //     key: this.state.items.length
-  //   });
-  // },
-
-  // onVote: function(item) {
-  //   var items = _.uniq(this.state.items);
-  //   var index = _.findIndex(items, function(feedItems) {
-  //     return feedItems.key === item.key;
-  //   });
-  //   var oldObj = items[index];
-  //   var newItems = _.pull(items, oldObj);
-  //   newItems.push(item);
-  //   this.setState({
-  //     items: newItems
-  //   });
-  // },
-
 
   render: function() {
-    console.log('hello props?');
-    console.log(this.props.data);
+    // console.log('hello props?');
+    // console.log(this.props.data);
+    // console.log(this.props.connected);
 
     return (
       React.createElement("div", {className: "tweet-list__live"}, 
@@ -33843,7 +33784,7 @@ var Stream = React.createClass({displayName: "Stream",
 
 module.exports = Stream;
 
-},{"react":198,"socket.io-client":200}],254:[function(require,module,exports){
+},{"react":198}],254:[function(require,module,exports){
 var React = require('react');
 var classNames = require('classnames');
 
@@ -33851,14 +33792,14 @@ var Status = React.createClass({displayName: "Status",
 
   render: function() {
 
-    var status_text = this.props.connection ? 'LIVE' : 'Offline';
+    var status_text = this.props.connected ? 'LIVE' : 'Offline';
     var status_class = classNames(
       'socket-connection__status',
       { 'socket-connection__status--down': true },
       { 'socket-connection__status--up': this.props.connection }
     );
 
-    console.log(status);
+    console.log('connection status: ', this.props.connected);
 
     return (
       React.createElement("div", {className: "socket-connection"}, "Stream: ", 

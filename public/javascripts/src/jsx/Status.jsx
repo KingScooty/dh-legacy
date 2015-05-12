@@ -5,14 +5,14 @@ var Status = React.createClass({
 
   render: function() {
 
-    var status_text = this.props.connection ? 'LIVE' : 'Offline';
+    var status_text = this.props.connected ? 'LIVE' : 'Offline';
     var status_class = classNames(
       'socket-connection__status',
       { 'socket-connection__status--down': true },
       { 'socket-connection__status--up': this.props.connection }
     );
 
-    console.log(status);
+    console.log('connection status: ', this.props.connected);
 
     return (
       <div className="socket-connection">Stream:&nbsp;
