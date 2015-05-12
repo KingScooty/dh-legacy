@@ -1,9 +1,17 @@
 /** @jsx React.DOM */
 
-var React         = require('react'); //,
+var React         = require('react/addons'); //,
 var io            = require('socket.io-client');
 
+var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
 var Stream = React.createClass({
+
+  getInitialState: function() {
+    return {
+      connected: false
+    }
+  },
 
   connectToSockets: function() {
     console.log('Connect to sockets init!');
@@ -18,7 +26,7 @@ var Stream = React.createClass({
       socket.on('news', function(response) {
         console.log(response);
       });
-      // self.setState({connected: true });
+      self.setState({connected: true });
       self.props.enableSocketState();
     });
   },
@@ -42,32 +50,39 @@ var Stream = React.createClass({
     // console.log('hello props?');
     // console.log(this.props.data);
     // console.log(this.props.connected);
+    if (this.state.connected) {
+      var socket_component = (
+        <div className="tweet-list__live">
 
-    return (
-      <div className="tweet-list__live">
+          <div className="tweet">
 
-        <div className="tweet">
+            <div className="tweet__container">
+              <div className="tweet__profile_picture">
+                <img src="" />
+              </div>
+              <div className="tweet__screen_name">
+                <a href="/"></a>
+              </div>
 
-          <div className="tweet__container">
-            <div className="tweet__profile_picture">
-              <img src="" />
-            </div>
-            <div className="tweet__screen_name">
-              <a href="/"></a>
-            </div>
+              <div className="tweet__body">This is a body of text tweet for testing out sockets</div>
 
-            <div className="tweet__body">This is a body of text tweet for testing out sockets</div>
-
-            <div className="tweet__meta">
-              <a href="#">
-                <time className="tweet__time timeago" dateTime="{created_at}">
-                  5 seconds ago
-                </time>
-              </a>
+              <div className="tweet__meta">
+                <a href="#">
+                  <time className="tweet__time timeago" dateTime="{created_at}">
+                    5 seconds ago
+                  </time>
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      );
+    }
+
+    return (
+      <ReactCSSTransitionGroup transitionName="fade">
+        {socket_component}
+      </ReactCSSTransitionGroup>
     );
   }
 

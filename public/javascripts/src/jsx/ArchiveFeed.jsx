@@ -1,8 +1,9 @@
 /** @jsx React.DOM */
 
-var React         = require('react');
+var React  = require('react');
 var Router = require('react-router');
 var Reqwest = require('reqwest');
+var classNames = require('classnames');
 
 var StreamItem = require('./StreamItem.jsx');
 var SocketFeed = require('./SocketFeed.jsx');

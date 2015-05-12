@@ -435,16 +435,22 @@ h1, h2, h3, h4, h5, h6, hgroup, ul, ol, dd, p, figure, pre, table, fieldset, hr,
   border-left: 3px solid #747f8a;
   -webkit-transition: opacity .3s ease-in-out;
   -o-transition: opacity .3s ease-in-out;
-  transition: opacity .3s ease-in-out; }
-  .tweet-list.inactive {
-    opacity: 0; }
+  transition: opacity .3s ease-in-out;
+  min-height: 800px; }
 
 .tweet-list__head {
   margin-bottom: 3rem; }
 
-.tweet-list__archive .tweet:last-child {
-  border-left: 0;
-  margin-bottom: 0; }
+.tweet-list__archive {
+  -webkit-transition: all .3s ease-in-out;
+  -o-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out; }
+  .tweet-list__archive .tweet:last-child {
+    border-left: 0;
+    margin-bottom: 0; }
+
+.tweet-list__archive--inactive {
+  opacity: 0; }
 
 .tweet {
   margin-left: -139px;
@@ -581,6 +587,20 @@ h1, h2, h3, h4, h5, h6, hgroup, ul, ol, dd, p, figure, pre, table, fieldset, hr,
 .shake_y {
   -webkit-animation-name: shake_y;
   -webkit-animation-duration: 0.12s; }
+
+.fade-enter {
+  opacity: 0.01;
+  transition: opacity .3s ease-in; }
+
+.fade-enter.fade-enter-active {
+  opacity: 1; }
+
+.fade-leave {
+  opacity: 1;
+  transition: opacity .3s ease-in; }
+
+.fade-leave.fade-leave-active {
+  opacity: 0.01; }
 
 .preload {
   display: none; }
