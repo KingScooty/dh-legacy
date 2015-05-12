@@ -22,8 +22,9 @@ app.set('port', port);
 var server = http.createServer(app);
 // sockets
 // app.io.attach(server);
-var io = require('../io');
-io.attach(server);
+var io = require('../io')(server);
+// console.log(io);
+// io.attach(server);
 // server.listen(80);
 
 

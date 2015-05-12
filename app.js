@@ -42,6 +42,9 @@ var db = {
 //   req.io = app.io
 // })
 
+app.locals.config = config;
+app.locals.db = db;
+
 // Expose database object as a global on handler
 app.use(function(req, res, next) {
   req.db = db;
