@@ -1,12 +1,41 @@
 /** @jsx React.DOM */
 
 var React         = require('react'); //,
-// var io            = require('socket.io-client');
+var io            = require('socket.io-client');
 
 var Stream = React.createClass({
 
+  connectToSockets: function() {
+    console.log('Connect to sockets init!');
+    var self = this;
+    // var socket = io('http://localhost/');
+    var socket = io.connect({
+      multiplex: false
+    });
+
+    socket.on('connect', function() {
+      console.log('connected!');
+      socket.on('news', function(response) {
+        console.log(response);
+      });
+      // self.setState({connected: true });
+      self.props.enableSocketState();
+    });
+  },
+
+  // Called each time componented is mounted
+  componentWillMount: function () {
+    this.connectToSockets();
+    console.log('> componentWillMount()');
+  },
+
+  // Called once first time mounted and cached until there are changes
   componentDidMount: function() {
-    this.props.connectToSockets();
+  },
+
+  // Called each time the component is unmounted
+  componentWillUnmount: function () {
+      console.log('> componentWillUnmount()');
   },
 
   render: function() {

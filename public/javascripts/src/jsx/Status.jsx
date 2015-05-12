@@ -8,8 +8,8 @@ var Status = React.createClass({
     var status_text = this.props.connected ? 'LIVE' : 'Offline';
     var status_class = classNames(
       'socket-connection__status',
-      { 'socket-connection__status--down': true },
-      { 'socket-connection__status--up': this.props.connection }
+      { 'socket-connection__status--down': !this.props.connected },
+      { 'socket-connection__status--up': this.props.connected }
     );
 
     console.log('connection status: ', this.props.connected);

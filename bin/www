@@ -20,6 +20,12 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+// sockets
+// app.io.attach(server);
+var io = require('../io');
+io.attach(server);
+// server.listen(80);
+
 
 /**
  * Listen on provided port, on all network interfaces.

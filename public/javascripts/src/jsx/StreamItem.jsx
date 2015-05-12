@@ -16,8 +16,6 @@ var StreamItem = React.createClass({
       };
 
       // img.src = this.state.src;
-
-
       img.src = this.state.profile_img_src;
 
   },
@@ -46,6 +44,7 @@ var StreamItem = React.createClass({
     // "profile_image_url": "http://a0.twimg.com/profile_images/1427254999/profile-picture_normal.jpg",
     // "timestamp": "Wed May 30 20:35:49 +0000 2012",
     // "media": ""
+
     var tweet = this.props.tweet.value;
     var tweet_id;
     var screen_name;
@@ -57,29 +56,37 @@ var StreamItem = React.createClass({
     var tweet_href;
     var media;
 
-    if ((this.getPath() === '/2012') || this.getPath() === '/2013') {
-      tweet_id = tweet.tweet_id;
-      screen_name = tweet.screen_name;
-      created_at = tweet.timestamp;
-      profile_image = tweet.profile_image_url;
-      media = tweet.media;
-    } else {
-      tweet_id = tweet.id_str;
-      screen_name = tweet.user.screen_name;
-      created_at = tweet.created_at;
-      profile_image = tweet.user.profile_image_url;
-      media = tweet.entities.media;
-    }
+    if (this.props.tweet.value) {
 
-    tweet_text = tweet.text;
-    // moment(Date.parse(created_at))
-    time_ago = moment(Date.parse(created_at)).fromNow();
+      tweet = this.props.tweet.value;
 
-    screen_name_href = "http://twitter.com/" + screen_name;
-    tweet_href = "https://twitter.com/" + screen_name + '/status/' + tweet_id;
+      if ((this.getPath() === '/2012') || this.getPath() === '/2013') {
+        tweet_id = tweet.tweet_id;
+        screen_name = tweet.screen_name;
+        created_at = tweet.timestamp;
+        profile_image = tweet.profile_image_url;
+        media = tweet.media;
+      } else {
+        if (this.props.tweet.value.user) {
+          tweet_id = tweet.id_str;
+          screen_name = tweet.user.screen_name;
+          created_at = tweet.created_at;
+          profile_image = tweet.user.profile_image_url;
+          media = tweet.entities.media;
+        }
+      }
 
-    if (profile_image) {
-      profile_image = profile_image.replace("normal", "200x200");
+      tweet_text = tweet.text;
+      // moment(Date.parse(created_at))
+      time_ago = moment(Date.parse(created_at)).fromNow();
+
+      screen_name_href = "http://twitter.com/" + screen_name;
+      tweet_href = "https://twitter.com/" + screen_name + '/status/' + tweet_id;
+
+      if (profile_image) {
+        profile_image = profile_image.replace("normal", "200x200");
+      }
+
     }
 
     return (

@@ -2,8 +2,6 @@
 
 var React         = require('react'); //,
 var Router = require('react-router'); // or var Router = ReactRouter; in browsers
-var Reqwest = require('reqwest');
-var io = require('socket.io-client');
 
 var DefaultRoute = Router.DefaultRoute;
 var Link = Router.Link;
@@ -20,36 +18,49 @@ var Feed = React.createClass({
   // The return value will be used as the initial value of this.state.
   getInitialState: function() {
     return {
-      connected: false,
-      data: null,
+      connected: false//,
+      // data: [
+      //   {
+      //     value: {
+      //       tweet_id: '',
+      //       id_str: '',
+      //       screen_name: '',
+      //       timestamp: '',
+      //       text: '',
+      //       profile_image_url: '',
+      //       created_at: '',
+      //       media: '',
+      //       user: {
+      //         screen_name: '',
+      //         profile_image_url: ''
+      //       },
+      //       entities: {
+      //         media: []
+      //       }
+      //     }
+      //   }
+      // ]
     }
   },
 
-  readFromAPI: function(url, successFunction) {
-    Reqwest({
-      url: url,
-      type: 'json',
-      method: 'get',
-      contentType: 'application/json',
-      success: successFunction,
-      error: function(error) {
-        console.error(url, error['response']);
-        location = '/';
-      }
-    });
-    console.log('read api called');
+  enableSocketState: function() {
+    this.setState({ connected: true });
   },
 
-  connectToSockets: function() {
-    var socket = io('http://localhost:3001');
-    var self = this;
-
-    socket.on('connect', function () {
-      // console.log(response);
-      console.log('connected!');
-      self.setState({connected: true });
-    });
-  },
+  // connectToSockets: function() {
+  //   console.log('Connect to sockets init!');
+  //   var self = this;
+  //   // var socket = io('http://localhost/');
+  //   var socket = io.connect();
+  //
+  //   socket.on('connect', function() {
+  //     console.log('connected!');
+  //     socket.on('news', function(response) {
+  //       console.log(response);
+  //     });
+  //     self.setState({connected: true });
+  //   });
+  // },
 
   // routeState: function() {
   //   if (this.getPath() === '/2015/') {
@@ -59,19 +70,12 @@ var Feed = React.createClass({
   //   }
   // },
 
-  readTweetsFromAPI: function() {
-    this.readFromAPI(this.getPath(), function(tweets) {
-      // console.log('call this api?');
-      // console.log(this.getPath());
-      // console.log(tweets);
-      this.setState({data: tweets});
-    }.bind(this));
-  },
+
 
   componentDidMount: function() {
-    this.readTweetsFromAPI();
-    // if (this.getPath() === '2015') {
-    //   this.connectToSockets();
+    // this.readTweetsFromAPI();
+    // if (this.getPath() === '/2015') {
+    // this.connectToSockets();
     // }
   },
 
@@ -82,15 +86,13 @@ var Feed = React.createClass({
 
   componentWillReceiveProps: function() {
     // force loading render per route change
-    this.setState({data: null, connected: false});
-    // console.log('COMPONENT WILL RECEIVE PROPS');
-    // this.routeState();
-    this.readTweetsFromAPI();
+    this.setState({ connected: false });
+    // this.readTweetsFromAPI();
   },
 
   render: function() {
 
-    if (this.state.data) {
+    // if (this.state.data) {
       return (
         <div className="tweet-list">
           <div className="tweet-list__head">
@@ -98,14 +100,12 @@ var Feed = React.createClass({
             <ToggleYear />
           </div>
           <RouteHandler
-            data={this.state.data}
-            connected={this.state.connected}
-            connectToSockets={this.connectToSockets} />
+            enableSocketState={this.enableSocketState} />
         </div>
       );
-    } else {
-      return <div>Loading...</div>;
-    }
+    // } else {
+    //   return <div>Loading...</div>;
+    // }
   }
 
 });

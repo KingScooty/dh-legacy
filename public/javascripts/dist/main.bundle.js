@@ -10626,7 +10626,7 @@ if ("production" !== process.env.NODE_ENV) {
       if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ === 'undefined') {
         console.debug(
           'Download the React DevTools for a better development experience: ' +
-          'https://fb.me/react-devtools'
+          'http://fb.me/react-devtools'
         );
       }
     }
@@ -10653,7 +10653,7 @@ if ("production" !== process.env.NODE_ENV) {
       if (!expectedFeatures[i]) {
         console.error(
           'One or more ES5 shim/shams expected by React are not available: ' +
-          'https://fb.me/react-warning-polyfills'
+          'http://fb.me/react-warning-polyfills'
         );
         break;
       }
@@ -10661,7 +10661,7 @@ if ("production" !== process.env.NODE_ENV) {
   }
 }
 
-React.version = '0.13.3';
+React.version = '0.13.2';
 
 module.exports = React;
 
@@ -12168,7 +12168,7 @@ var ReactClass = {
         ("production" !== process.env.NODE_ENV ? warning(
           this instanceof Constructor,
           'Something is calling a React component directly. Use a factory or ' +
-          'JSX instead. See: https://fb.me/react-legacyfactory'
+          'JSX instead. See: http://fb.me/react-legacyfactory'
         ) : null);
       }
 
@@ -12380,38 +12380,20 @@ ReactComponent.prototype.forceUpdate = function(callback) {
  */
 if ("production" !== process.env.NODE_ENV) {
   var deprecatedAPIs = {
-    getDOMNode: [
-      'getDOMNode',
-      'Use React.findDOMNode(component) instead.'
-    ],
-    isMounted: [
-      'isMounted',
-      'Instead, make sure to clean up subscriptions and pending requests in ' +
-      'componentWillUnmount to prevent memory leaks.'
-    ],
-    replaceProps: [
-      'replaceProps',
-      'Instead, call React.render again at the top level.'
-    ],
-    replaceState: [
-      'replaceState',
-      'Refactor your code to use setState instead (see ' +
-      'https://github.com/facebook/react/issues/3236).'
-    ],
-    setProps: [
-      'setProps',
-      'Instead, call React.render again at the top level.'
-    ]
+    getDOMNode: 'getDOMNode',
+    isMounted: 'isMounted',
+    replaceProps: 'replaceProps',
+    replaceState: 'replaceState',
+    setProps: 'setProps'
   };
-  var defineDeprecationWarning = function(methodName, info) {
+  var defineDeprecationWarning = function(methodName, displayName) {
     try {
       Object.defineProperty(ReactComponent.prototype, methodName, {
         get: function() {
           ("production" !== process.env.NODE_ENV ? warning(
             false,
-            '%s(...) is deprecated in plain JavaScript React classes. %s',
-            info[0],
-            info[1]
+            '%s(...) is deprecated in plain JavaScript React classes.',
+            displayName
           ) : null);
           return undefined;
         }
@@ -12760,7 +12742,6 @@ var ReactCompositeComponentMixin = {
     this._pendingReplaceState = false;
     this._pendingForceUpdate = false;
 
-    var childContext;
     var renderedElement;
 
     var previouslyMounting = ReactLifeCycle.currentlyMountingInstance;
@@ -12775,8 +12756,7 @@ var ReactCompositeComponentMixin = {
         }
       }
 
-      childContext = this._getValidatedChildContext(context);
-      renderedElement = this._renderValidatedComponent(childContext);
+      renderedElement = this._renderValidatedComponent();
     } finally {
       ReactLifeCycle.currentlyMountingInstance = previouslyMounting;
     }
@@ -12790,7 +12770,7 @@ var ReactCompositeComponentMixin = {
       this._renderedComponent,
       rootID,
       transaction,
-      this._mergeChildContext(context, childContext)
+      this._processChildContext(context)
     );
     if (inst.componentDidMount) {
       transaction.getReactMountReady().enqueue(inst.componentDidMount, inst);
@@ -12920,7 +12900,7 @@ var ReactCompositeComponentMixin = {
    * @return {object}
    * @private
    */
-  _getValidatedChildContext: function(currentContext) {
+  _processChildContext: function(currentContext) {
     var inst = this._instance;
     var childContext = inst.getChildContext && inst.getChildContext();
     if (childContext) {
@@ -12945,13 +12925,6 @@ var ReactCompositeComponentMixin = {
           name
         ) : invariant(name in inst.constructor.childContextTypes));
       }
-      return childContext;
-    }
-    return null;
-  },
-
-  _mergeChildContext: function(currentContext, childContext) {
-    if (childContext) {
       return assign({}, currentContext, childContext);
     }
     return currentContext;
@@ -13211,10 +13184,6 @@ var ReactCompositeComponentMixin = {
       return inst.state;
     }
 
-    if (replace && queue.length === 1) {
-      return queue[0];
-    }
-
     var nextState = assign({}, replace ? queue[0] : inst.state);
     for (var i = replace ? 1 : 0; i < queue.length; i++) {
       var partial = queue[i];
@@ -13284,14 +13253,13 @@ var ReactCompositeComponentMixin = {
   _updateRenderedComponent: function(transaction, context) {
     var prevComponentInstance = this._renderedComponent;
     var prevRenderedElement = prevComponentInstance._currentElement;
-    var childContext = this._getValidatedChildContext();
-    var nextRenderedElement = this._renderValidatedComponent(childContext);
+    var nextRenderedElement = this._renderValidatedComponent();
     if (shouldUpdateReactComponent(prevRenderedElement, nextRenderedElement)) {
       ReactReconciler.receiveComponent(
         prevComponentInstance,
         nextRenderedElement,
         transaction,
-        this._mergeChildContext(context, childContext)
+        this._processChildContext(context)
       );
     } else {
       // These two IDs are actually the same! But nothing should rely on that.
@@ -13307,7 +13275,7 @@ var ReactCompositeComponentMixin = {
         this._renderedComponent,
         thisID,
         transaction,
-        this._mergeChildContext(context, childContext)
+        this._processChildContext(context)
       );
       this._replaceNodeWithMarkupByID(prevComponentID, nextMarkup);
     }
@@ -13345,12 +13313,11 @@ var ReactCompositeComponentMixin = {
   /**
    * @private
    */
-  _renderValidatedComponent: function(childContext) {
+  _renderValidatedComponent: function() {
     var renderedComponent;
     var previousContext = ReactContext.current;
-    ReactContext.current = this._mergeChildContext(
-      this._currentElement._context,
-      childContext
+    ReactContext.current = this._processChildContext(
+      this._currentElement._context
     );
     ReactCurrentOwner.current = this;
     try {
@@ -13719,7 +13686,6 @@ var ReactDOM = mapObject({
 
   // SVG
   circle: 'circle',
-  clipPath: 'clipPath',
   defs: 'defs',
   ellipse: 'ellipse',
   g: 'g',
@@ -13871,13 +13837,11 @@ function assertValidProps(props) {
       'Can only set one of `children` or `props.dangerouslySetInnerHTML`.'
     ) : invariant(props.children == null));
     ("production" !== process.env.NODE_ENV ? invariant(
-      typeof props.dangerouslySetInnerHTML === 'object' &&
-      '__html' in props.dangerouslySetInnerHTML,
+      props.dangerouslySetInnerHTML.__html != null,
       '`props.dangerouslySetInnerHTML` must be in the form `{__html: ...}`. ' +
-      'Please visit https://fb.me/react-invariant-dangerously-set-inner-html ' +
+      'Please visit http://fb.me/react-invariant-dangerously-set-inner-html ' +
       'for more information.'
-    ) : invariant(typeof props.dangerouslySetInnerHTML === 'object' &&
-    '__html' in props.dangerouslySetInnerHTML));
+    ) : invariant(props.dangerouslySetInnerHTML.__html != null));
   }
   if ("production" !== process.env.NODE_ENV) {
     ("production" !== process.env.NODE_ENV ? warning(
@@ -16683,7 +16647,7 @@ function warnAndMonitorForKeyUse(message, element, parentType) {
 
   ("production" !== process.env.NODE_ENV ? warning(
     false,
-    message + '%s%s See https://fb.me/react-warning-keys for more information.',
+    message + '%s%s See http://fb.me/react-warning-keys for more information.',
     parentOrOwnerAddendum,
     childOwnerAddendum
   ) : null);
@@ -21504,7 +21468,6 @@ var MUST_USE_ATTRIBUTE = DOMProperty.injection.MUST_USE_ATTRIBUTE;
 
 var SVGDOMPropertyConfig = {
   Properties: {
-    clipPath: MUST_USE_ATTRIBUTE,
     cx: MUST_USE_ATTRIBUTE,
     cy: MUST_USE_ATTRIBUTE,
     d: MUST_USE_ATTRIBUTE,
@@ -21550,7 +21513,6 @@ var SVGDOMPropertyConfig = {
     y: MUST_USE_ATTRIBUTE
   },
   DOMAttributeNames: {
-    clipPath: 'clip-path',
     fillOpacity: 'fill-opacity',
     fontFamily: 'font-family',
     fontSize: 'font-size',
@@ -24363,7 +24325,6 @@ var shouldWrap = {
   // Force wrapping for SVG elements because if they get created inside a <div>,
   // they will be initialized in the wrong namespace (and will not display).
   'circle': true,
-  'clipPath': true,
   'defs': true,
   'ellipse': true,
   'g': true,
@@ -24406,7 +24367,6 @@ var markupWrap = {
   'th': trWrap,
 
   'circle': svgWrap,
-  'clipPath': svgWrap,
   'defs': svgWrap,
   'ellipse': svgWrap,
   'g': svgWrap,
@@ -33555,6 +33515,7 @@ Router.run(routes, Router.HistoryLocation, function(Handler) {
 
 var React         = require('react');
 var Router = require('react-router');
+var Reqwest = require('reqwest');
 
 var StreamItem = require('./StreamItem.jsx');
 var SocketFeed = require('./SocketFeed.jsx');
@@ -33563,58 +33524,30 @@ var SocketFeed = require('./SocketFeed.jsx');
 var Stream = React.createClass({displayName: "Stream",
   mixins: [ Router.State ],
 
-  // componentDidMount: function() {
-  //   this.props.readTweetsFromAPI();
-  // },
-
-  render: function() {
-    var path = this.getPath();
-    var socket_feed;
-
-    var tweetItems = this.props.data.map(function(tweet, index) {
-      return React.createElement(StreamItem, {key: index, tweet: tweet})
-    }.bind(this));
-
-    // if (path === '/2015/') {
-    //   socket_feed = <SocketFeed connected={this.props.connected}/>
-    // }
-
-    return (
-      React.createElement("div", {className: "tweet-list__archive"}, 
-        tweetItems
-      )
-    );
-  }
-
-});
-
-module.exports = Stream;
-
-},{"./SocketFeed.jsx":253,"./StreamItem.jsx":255,"react":198,"react-router":29}],251:[function(require,module,exports){
-/** @jsx React.DOM */
-
-var React         = require('react'); //,
-var Router = require('react-router'); // or var Router = ReactRouter; in browsers
-var Reqwest = require('reqwest');
-var io = require('socket.io-client');
-
-var DefaultRoute = Router.DefaultRoute;
-var Link = Router.Link;
-var Route = Router.Route;
-var RouteHandler = Router.RouteHandler;
-
-var Status        = require('./Status.jsx');
-var ToggleYear    = require('./ToggleYear.jsx');
-
-var Feed = React.createClass({displayName: "Feed",
-  mixins: [ Router.State ],
-
-  // Invoked once before the component is mounted.
-  // The return value will be used as the initial value of this.state.
   getInitialState: function() {
     return {
-      connected: false,
-      data: null,
+      data: null
+      // data: [
+      //   {
+      //     value: {
+      //       tweet_id: '',
+      //       id_str: '',
+      //       screen_name: '',
+      //       timestamp: '',
+      //       text: '',
+      //       profile_image_url: '',
+      //       created_at: '',
+      //       media: '',
+      //       user: {
+      //         screen_name: '',
+      //         profile_image_url: ''
+      //       },
+      //       entities: {
+      //         media: []
+      //       }
+      //     }
+      //   }
+      // ]
     }
   },
 
@@ -33633,16 +33566,159 @@ var Feed = React.createClass({displayName: "Feed",
     console.log('read api called');
   },
 
-  connectToSockets: function() {
-    var socket = io('http://localhost:3001');
-    var self = this;
-
-    socket.on('connect', function () {
-      // console.log(response);
-      console.log('connected!');
-      self.setState({connected: true });
-    });
+  componentWillMount: function () {
+    console.log('> componentWillMount()');
   },
+
+  componentDidMount: function () {
+    console.log('> componentDidMount');
+    if (this.isMounted()) {
+      this.readTweetsFromAPI();
+    }
+  },
+
+  componentWillReceiveProps: function (nextProps) {
+    console.log('> componentWillReceiveProps');
+    if (this.isMounted()) {
+      this.readTweetsFromAPI();
+    }
+  },
+
+  handleChange: function (e) {
+      // console.log(e.target.value);
+      // this.setState({user: e.target.value});
+  },
+
+  // shouldComponentUpdate: function (nextProps, nextState) {
+  //     console.log('> shouldComponentUpdate(nextProps, nextState)');
+  //     console.log('  nextProps: ' + JSON.stringify(nextProps));
+  //     console.log('  nextState: ' + JSON.stringify(nextState));
+  //     return true; /* need return true/false */
+  // },
+  componentWillUpdate: function (nextProps, nextState) {
+    console.log('> componentWillUpdate');
+    // this.readTweetsFromAPI();
+  },
+  componentWillUnmount: function () {
+    console.log('> componentWillUnmount()');
+  },
+
+  readTweetsFromAPI: function() {
+    this.readFromAPI(this.getPath(), function(tweets) {
+      this.setState({data: tweets});
+    }.bind(this));
+  },
+
+  // componentWillMount: function() {
+    // console.log('TRIGGER API READ');
+    // this.readTweetsFromAPI();
+  // },
+
+  // componentDidMount: function() {
+  //   this.readTweetsFromAPI();
+  // },
+
+  // shouldComponentUpdate: function() {
+  // },
+
+  // componentWillUpdate: function() {
+  //   this.readTweetsFromAPI();
+  // },
+
+  // componentWillReceiveProps: function() {
+    // console.log('TRIGGER API READ');
+    // this.readTweetsFromAPI();
+  // },
+
+  render: function() {
+    var path = this.getPath();
+    var socket_feed;
+
+    console.log(this.state.data);
+
+    if (this.state.data) {
+      var tweetItems = this.state.data.map(function(tweet, index) {
+        return React.createElement(StreamItem, {key: tweet.id, tweet: tweet})
+      }.bind(this));
+
+      return (
+        React.createElement("div", {className: "tweet-list__archive"}, 
+          tweetItems
+        )
+      );
+    } else {
+      return React.createElement("div", null, "Loading...");
+    }
+  }
+
+});
+
+module.exports = Stream;
+
+},{"./SocketFeed.jsx":253,"./StreamItem.jsx":255,"react":198,"react-router":29,"reqwest":199}],251:[function(require,module,exports){
+/** @jsx React.DOM */
+
+var React         = require('react'); //,
+var Router = require('react-router'); // or var Router = ReactRouter; in browsers
+
+var DefaultRoute = Router.DefaultRoute;
+var Link = Router.Link;
+var Route = Router.Route;
+var RouteHandler = Router.RouteHandler;
+
+var Status        = require('./Status.jsx');
+var ToggleYear    = require('./ToggleYear.jsx');
+
+var Feed = React.createClass({displayName: "Feed",
+  mixins: [ Router.State ],
+
+  // Invoked once before the component is mounted.
+  // The return value will be used as the initial value of this.state.
+  getInitialState: function() {
+    return {
+      connected: false//,
+      // data: [
+      //   {
+      //     value: {
+      //       tweet_id: '',
+      //       id_str: '',
+      //       screen_name: '',
+      //       timestamp: '',
+      //       text: '',
+      //       profile_image_url: '',
+      //       created_at: '',
+      //       media: '',
+      //       user: {
+      //         screen_name: '',
+      //         profile_image_url: ''
+      //       },
+      //       entities: {
+      //         media: []
+      //       }
+      //     }
+      //   }
+      // ]
+    }
+  },
+
+  enableSocketState: function() {
+    this.setState({ connected: true });
+  },
+
+  // connectToSockets: function() {
+  //   console.log('Connect to sockets init!');
+  //   var self = this;
+  //   // var socket = io('http://localhost/');
+  //   var socket = io.connect();
+  //
+  //   socket.on('connect', function() {
+  //     console.log('connected!');
+  //     socket.on('news', function(response) {
+  //       console.log(response);
+  //     });
+  //     self.setState({connected: true });
+  //   });
+  // },
 
   // routeState: function() {
   //   if (this.getPath() === '/2015/') {
@@ -33652,19 +33728,12 @@ var Feed = React.createClass({displayName: "Feed",
   //   }
   // },
 
-  readTweetsFromAPI: function() {
-    this.readFromAPI(this.getPath(), function(tweets) {
-      // console.log('call this api?');
-      // console.log(this.getPath());
-      // console.log(tweets);
-      this.setState({data: tweets});
-    }.bind(this));
-  },
+
 
   componentDidMount: function() {
-    this.readTweetsFromAPI();
-    // if (this.getPath() === '2015') {
-    //   this.connectToSockets();
+    // this.readTweetsFromAPI();
+    // if (this.getPath() === '/2015') {
+    // this.connectToSockets();
     // }
   },
 
@@ -33675,15 +33744,13 @@ var Feed = React.createClass({displayName: "Feed",
 
   componentWillReceiveProps: function() {
     // force loading render per route change
-    this.setState({data: null, connected: false});
-    // console.log('COMPONENT WILL RECEIVE PROPS');
-    // this.routeState();
-    this.readTweetsFromAPI();
+    this.setState({ connected: false });
+    // this.readTweetsFromAPI();
   },
 
   render: function() {
 
-    if (this.state.data) {
+    // if (this.state.data) {
       return (
         React.createElement("div", {className: "tweet-list"}, 
           React.createElement("div", {className: "tweet-list__head"}, 
@@ -33691,21 +33758,19 @@ var Feed = React.createClass({displayName: "Feed",
             React.createElement(ToggleYear, null)
           ), 
           React.createElement(RouteHandler, {
-            data: this.state.data, 
-            connected: this.state.connected, 
-            connectToSockets: this.connectToSockets})
+            enableSocketState: this.enableSocketState})
         )
       );
-    } else {
-      return React.createElement("div", null, "Loading...");
-    }
+    // } else {
+    //   return <div>Loading...</div>;
+    // }
   }
 
 });
 
 module.exports = Feed;
 
-},{"./Status.jsx":254,"./ToggleYear.jsx":257,"react":198,"react-router":29,"reqwest":199,"socket.io-client":200}],252:[function(require,module,exports){
+},{"./Status.jsx":254,"./ToggleYear.jsx":257,"react":198,"react-router":29}],252:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react');
@@ -33717,7 +33782,15 @@ var SocketFeed = require('./SocketFeed.jsx');
 var Stream = React.createClass({displayName: "Stream",
   mixins: [ Router.State ],
 
+  componentWillMount: function () {
+      // console.log('> componentWillMount()');
+  },
+
   componentDidMount: function() {
+  },
+
+  componentWillUnmount: function () {
+      // console.log('> componentWillUnmount()');
   },
 
   render: function() {
@@ -33725,8 +33798,8 @@ var Stream = React.createClass({displayName: "Stream",
       React.createElement("div", null, 
         React.createElement(SocketFeed, {
           connected: this.props.connected, 
-          connectToSockets: this.props.connectToSockets}), 
-        React.createElement(ArchiveFeed, {data: this.props.data})
+          enableSocketState: this.props.enableSocketState}), 
+        React.createElement(ArchiveFeed, null)
       )
     );
   }
@@ -33739,12 +33812,41 @@ module.exports = Stream;
 /** @jsx React.DOM */
 
 var React         = require('react'); //,
-// var io            = require('socket.io-client');
+var io            = require('socket.io-client');
 
 var Stream = React.createClass({displayName: "Stream",
 
+  connectToSockets: function() {
+    console.log('Connect to sockets init!');
+    var self = this;
+    // var socket = io('http://localhost/');
+    var socket = io.connect({
+      multiplex: false
+    });
+
+    socket.on('connect', function() {
+      console.log('connected!');
+      socket.on('news', function(response) {
+        console.log(response);
+      });
+      // self.setState({connected: true });
+      self.props.enableSocketState();
+    });
+  },
+
+  // Called each time componented is mounted
+  componentWillMount: function () {
+    this.connectToSockets();
+    console.log('> componentWillMount()');
+  },
+
+  // Called once first time mounted and cached until there are changes
   componentDidMount: function() {
-    this.props.connectToSockets();
+  },
+
+  // Called each time the component is unmounted
+  componentWillUnmount: function () {
+      console.log('> componentWillUnmount()');
   },
 
   render: function() {
@@ -33784,7 +33886,7 @@ var Stream = React.createClass({displayName: "Stream",
 
 module.exports = Stream;
 
-},{"react":198}],254:[function(require,module,exports){
+},{"react":198,"socket.io-client":200}],254:[function(require,module,exports){
 var React = require('react');
 var classNames = require('classnames');
 
@@ -33795,8 +33897,8 @@ var Status = React.createClass({displayName: "Status",
     var status_text = this.props.connected ? 'LIVE' : 'Offline';
     var status_class = classNames(
       'socket-connection__status',
-      { 'socket-connection__status--down': true },
-      { 'socket-connection__status--up': this.props.connection }
+      { 'socket-connection__status--down': !this.props.connected },
+      { 'socket-connection__status--up': this.props.connected }
     );
 
     console.log('connection status: ', this.props.connected);
@@ -33831,8 +33933,6 @@ var StreamItem = React.createClass({displayName: "StreamItem",
       };
 
       // img.src = this.state.src;
-
-
       img.src = this.state.profile_img_src;
 
   },
@@ -33861,6 +33961,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
     // "profile_image_url": "http://a0.twimg.com/profile_images/1427254999/profile-picture_normal.jpg",
     // "timestamp": "Wed May 30 20:35:49 +0000 2012",
     // "media": ""
+
     var tweet = this.props.tweet.value;
     var tweet_id;
     var screen_name;
@@ -33872,29 +33973,37 @@ var StreamItem = React.createClass({displayName: "StreamItem",
     var tweet_href;
     var media;
 
-    if ((this.getPath() === '/2012') || this.getPath() === '/2013') {
-      tweet_id = tweet.tweet_id;
-      screen_name = tweet.screen_name;
-      created_at = tweet.timestamp;
-      profile_image = tweet.profile_image_url;
-      media = tweet.media;
-    } else {
-      tweet_id = tweet.id_str;
-      screen_name = tweet.user.screen_name;
-      created_at = tweet.created_at;
-      profile_image = tweet.user.profile_image_url;
-      media = tweet.entities.media;
-    }
+    if (this.props.tweet.value) {
 
-    tweet_text = tweet.text;
-    // moment(Date.parse(created_at))
-    time_ago = moment(Date.parse(created_at)).fromNow();
+      tweet = this.props.tweet.value;
 
-    screen_name_href = "http://twitter.com/" + screen_name;
-    tweet_href = "https://twitter.com/" + screen_name + '/status/' + tweet_id;
+      if ((this.getPath() === '/2012') || this.getPath() === '/2013') {
+        tweet_id = tweet.tweet_id;
+        screen_name = tweet.screen_name;
+        created_at = tweet.timestamp;
+        profile_image = tweet.profile_image_url;
+        media = tweet.media;
+      } else {
+        if (this.props.tweet.value.user) {
+          tweet_id = tweet.id_str;
+          screen_name = tweet.user.screen_name;
+          created_at = tweet.created_at;
+          profile_image = tweet.user.profile_image_url;
+          media = tweet.entities.media;
+        }
+      }
 
-    if (profile_image) {
-      profile_image = profile_image.replace("normal", "200x200");
+      tweet_text = tweet.text;
+      // moment(Date.parse(created_at))
+      time_ago = moment(Date.parse(created_at)).fromNow();
+
+      screen_name_href = "http://twitter.com/" + screen_name;
+      tweet_href = "https://twitter.com/" + screen_name + '/status/' + tweet_id;
+
+      if (profile_image) {
+        profile_image = profile_image.replace("normal", "200x200");
+      }
+
     }
 
     return (

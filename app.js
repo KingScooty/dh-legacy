@@ -9,8 +9,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cradle = require('cradle');
+// var io = require('socket.io')();
 
-var twitter_sockets = require('./server/twitter_sockets');
+// var twitter_sockets = require('./server/twitter_sockets');
 
 // routes
 var routes = require('./routes/index');
@@ -35,7 +36,11 @@ var db = {
   dh_2015: c.database('digitalheroes-2015')
 };
 
-twitter_sockets(config.twitter, db.dh_2015);
+// app.io = require('socket.io')();
+// twitter_sockets(config.twitter, db.dh_2015);
+// app.use(function(req, res, next) {
+//   req.io = app.io
+// })
 
 // Expose database object as a global on handler
 app.use(function(req, res, next) {
@@ -66,6 +71,7 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Send socket to routes
 app.use('/', routes);
 // app.use('/users', users);
 // app.use('/api', api);

@@ -1,12 +1,12 @@
 'use strict';
 
 var Twit = require('twit');
-var io = require('socket.io')(3001);
+var app = require('../app');
 
 var init = function init(config, db) {
   //
   var init_sockets = function init_sockets() {
-    io.sockets.on('connection', function callback(socket) {
+    app.io.sockets.on('connection', function callback(socket) {
       socket.emit('replyToGreeting', 'connected');
     });
   };
@@ -34,7 +34,7 @@ var init = function init(config, db) {
         }
       });
 
-      io.sockets.emit('incomingTweet', {'tweet': tweet});
+      app.io.sockets.emit('incomingTweet', {'tweet': tweet});
     });
   };
 
