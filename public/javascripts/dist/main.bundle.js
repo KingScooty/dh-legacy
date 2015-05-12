@@ -33534,8 +33534,8 @@ var ArchiveFeed = require('./jsx/ArchiveFeed.jsx');
 
 var routes = (
   React.createElement(Route, {name: "layout", path: "/", handler: Feed, ignoreScrollBehavior: true}, 
-    React.createElement(Route, {name: "live", path: "/2015/", handler: LiveFeed}), 
-    React.createElement(Route, {name: "year", path: "/:year/", handler: ArchiveFeed}), 
+    React.createElement(Route, {name: "live", path: "/2015", handler: LiveFeed}), 
+    React.createElement(Route, {name: "year", path: "/:year", handler: ArchiveFeed}), 
     React.createElement(Redirect, {from: "/", to: "live"})
   )
 );
@@ -33899,7 +33899,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
   getInitialState: function () {
     var profile_image;
 
-    if (this.getPath() !== '/2014/') {
+    if ((this.getPath() === '/2012') || this.getPath() === '/2013') {
       profile_image = this.props.tweet.value.profile_image_url;
     } else {
       profile_image = this.props.tweet.value.user.profile_image_url;
@@ -33931,7 +33931,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
     var tweet_href;
     var media;
 
-    if ((this.getPath() === '/2012/') || this.getPath() === '/2013/') {
+    if ((this.getPath() === '/2012') || this.getPath() === '/2013') {
       tweet_id = tweet.tweet_id;
       screen_name = tweet.screen_name;
       created_at = tweet.timestamp;
@@ -34048,10 +34048,10 @@ var ToggleYear = React.createClass({displayName: "ToggleYear",
   render: function() {
     return (
       React.createElement("ul", {className: "stream-nav"}, 
-        React.createElement("li", {className: "stream-nav__item"}, React.createElement(Link, {to: "/2015/"}, "2015")), 
-        React.createElement("li", {className: "stream-nav__item"}, React.createElement(Link, {to: "/2014/"}, "2014")), 
-        React.createElement("li", {className: "stream-nav__item"}, React.createElement(Link, {to: "/2013/"}, "2013")), 
-        React.createElement("li", {className: "stream-nav__item"}, React.createElement(Link, {to: "/2012/"}, "2012"))
+        React.createElement("li", {className: "stream-nav__item"}, React.createElement(Link, {to: "/2015"}, "2015")), 
+        React.createElement("li", {className: "stream-nav__item"}, React.createElement(Link, {to: "/2014"}, "2014")), 
+        React.createElement("li", {className: "stream-nav__item"}, React.createElement(Link, {to: "/2013"}, "2013")), 
+        React.createElement("li", {className: "stream-nav__item"}, React.createElement(Link, {to: "/2012"}, "2012"))
       )
     );
   }

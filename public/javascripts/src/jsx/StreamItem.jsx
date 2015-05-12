@@ -25,7 +25,7 @@ var StreamItem = React.createClass({
   getInitialState: function () {
     var profile_image;
 
-    if (this.getPath() !== '/2014/') {
+    if ((this.getPath() === '/2012') || this.getPath() === '/2013') {
       profile_image = this.props.tweet.value.profile_image_url;
     } else {
       profile_image = this.props.tweet.value.user.profile_image_url;
@@ -57,7 +57,7 @@ var StreamItem = React.createClass({
     var tweet_href;
     var media;
 
-    if ((this.getPath() === '/2012/') || this.getPath() === '/2013/') {
+    if ((this.getPath() === '/2012') || this.getPath() === '/2013') {
       tweet_id = tweet.tweet_id;
       screen_name = tweet.screen_name;
       created_at = tweet.timestamp;

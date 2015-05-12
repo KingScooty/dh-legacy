@@ -20,8 +20,8 @@ var ArchiveFeed = require('./jsx/ArchiveFeed.jsx');
 
 var routes = (
   <Route name="layout" path="/" handler={Feed} ignoreScrollBehavior>
-    <Route name="live" path="/2015/" handler={LiveFeed}/>
-    <Route name="year" path="/:year/" handler={ArchiveFeed}/>
+    <Route name="live" path="/2015" handler={LiveFeed}/>
+    <Route name="year" path="/:year" handler={ArchiveFeed}/>
     <Redirect from="/" to="live" />
   </Route>
 );
