@@ -17,7 +17,7 @@ var Stream = React.createClass({
   },
 
   connectToSockets: function() {
-    console.log('Connect to sockets init!');
+    // console.log('Connect to sockets init!');
     var self = this;
     // var socket = io('http://localhost/');
     var socket = io.connect({
@@ -25,16 +25,16 @@ var Stream = React.createClass({
     });
 
     socket.on('connect', function() {
-      console.log('connected!');
+      // console.log('connected!');
       socket.on('incomingTweet', function(tweet) {
-        console.log(tweet);
-        console.log(self.state.tweets);
+        // console.log(tweet);
+        // console.log(self.state.tweets);
 
         var newArray = self.state.tweets.slice();
         newArray.push(tweet);
         self.setState({tweets:newArray.reverse()});
 
-        console.log(self.state.tweets);
+        // console.log(self.state.tweets);
       });
       self.setState({connected: true });
       self.props.enableSocketState();
@@ -63,13 +63,13 @@ var Stream = React.createClass({
     // console.log('hello props?');
     // console.log(this.props.data);
     // console.log(this.props.connected);
-    console.log(this.state.tweets);
+    // console.log(this.state.tweets);
 
     if (this.state.connected) {
       if (this.state.tweets.length !== 0) {
-        console.log('tweets updated', this.state.tweets);
+        // console.log('tweets updated', this.state.tweets);
         var tweetItems = this.state.tweets.map(function(tweet, index) {
-          console.log('looping');
+          // console.log('looping');
           return <StreamItem key={tweet.id} tweet={tweet}/>
         }.bind(this));
       }
