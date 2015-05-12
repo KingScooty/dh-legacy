@@ -35571,6 +35571,7 @@ var classNames = require('classnames');
 
 var StreamItem = require('./StreamItem.jsx');
 var SocketFeed = require('./SocketFeed.jsx');
+var Loading = require('./Loading.jsx');
 // var StreamItemLegacy = require('./StreamItemLegacy.jsx');
 
 var Stream = React.createClass({displayName: "Stream",
@@ -35699,7 +35700,7 @@ var Stream = React.createClass({displayName: "Stream",
         )
       );
     } else {
-      return React.createElement("div", null, "Loading...");
+      return React.createElement(Loading, null);
     }
   }
 
@@ -35707,7 +35708,7 @@ var Stream = React.createClass({displayName: "Stream",
 
 module.exports = Stream;
 
-},{"./SocketFeed.jsx":271,"./StreamItem.jsx":273,"classnames":1,"react":216,"react-router":29,"reqwest":217}],269:[function(require,module,exports){
+},{"./Loading.jsx":271,"./SocketFeed.jsx":272,"./StreamItem.jsx":274,"classnames":1,"react":216,"react-router":29,"reqwest":217}],269:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react'); //,
@@ -35825,7 +35826,7 @@ var Feed = React.createClass({displayName: "Feed",
 
 module.exports = Feed;
 
-},{"./Status.jsx":272,"./ToggleYear.jsx":275,"react":216,"react-router":29}],270:[function(require,module,exports){
+},{"./Status.jsx":273,"./ToggleYear.jsx":276,"react":216,"react-router":29}],270:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react');
@@ -35863,7 +35864,38 @@ var Stream = React.createClass({displayName: "Stream",
 
 module.exports = Stream;
 
-},{"./ArchiveFeed.jsx":268,"./SocketFeed.jsx":271,"react":216,"react-router":29}],271:[function(require,module,exports){
+},{"./ArchiveFeed.jsx":268,"./SocketFeed.jsx":272,"react":216,"react-router":29}],271:[function(require,module,exports){
+/** @jsx React.DOM */
+
+var React  = require('react');
+
+var Stream = React.createClass({displayName: "Stream",
+  render: function() {
+    return (
+      React.createElement("div", {className: "tweet-list__loading"}, 
+        React.createElement("div", {className: "tweet"}, 
+
+          React.createElement("div", {className: "tweet__container"}, 
+            React.createElement("div", {className: "tweet__profile_picture"}, 
+              React.createElement("img", {src: "/images/icon__download.png"})
+            ), 
+            React.createElement("div", {className: "tweet__screen_name"}, 
+              React.createElement("a", {href: "#"}, "@TonyStark")
+            ), 
+
+            React.createElement("div", {className: "tweet__body"}, "Prepping feed.")
+
+          )
+        )
+      )
+    );
+  }
+
+});
+
+module.exports = Stream;
+
+},{"react":216}],272:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react/addons'); //,
@@ -35956,7 +35988,7 @@ var Stream = React.createClass({displayName: "Stream",
 
 module.exports = Stream;
 
-},{"react/addons":44,"socket.io-client":218}],272:[function(require,module,exports){
+},{"react/addons":44,"socket.io-client":218}],273:[function(require,module,exports){
 var React = require('react');
 var classNames = require('classnames');
 
@@ -35984,7 +36016,7 @@ var Status = React.createClass({displayName: "Status",
 
 module.exports = Status;
 
-},{"classnames":1,"react":216}],273:[function(require,module,exports){
+},{"classnames":1,"react":216}],274:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var moment = require('moment');
@@ -36115,7 +36147,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
 
 module.exports = StreamItem;
 
-},{"./StreamItemMedia.jsx":274,"moment":4,"react":216,"react-router":29}],274:[function(require,module,exports){
+},{"./StreamItemMedia.jsx":275,"moment":4,"react":216,"react-router":29}],275:[function(require,module,exports){
 var React = require('react');
 
 var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
@@ -36155,7 +36187,7 @@ var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
 
 module.exports = StreamItemMedia;
 
-},{"react":216}],275:[function(require,module,exports){
+},{"react":216}],276:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router'); // or var Router = ReactRouter; in browsers
 

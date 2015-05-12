@@ -7,6 +7,7 @@ var classNames = require('classnames');
 
 var StreamItem = require('./StreamItem.jsx');
 var SocketFeed = require('./SocketFeed.jsx');
+var Loading = require('./Loading.jsx');
 // var StreamItemLegacy = require('./StreamItemLegacy.jsx');
 
 var Stream = React.createClass({
@@ -135,7 +136,7 @@ var Stream = React.createClass({
         </div>
       );
     } else {
-      return <div>Loading...</div>;
+      return <Loading />;
     }
   }
 
