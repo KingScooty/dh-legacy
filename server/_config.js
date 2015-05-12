@@ -1,27 +1,28 @@
+'use strict';
+
 /**
  * Default configuration manager
  * Inject app and express reference
  */
 
-module.exports.init = function(app) {
-
+module.exports.init = function init(env) {
   var envSettings;
 
   // -- DEVELOPMENT
-  if ('development' == app.settings.env) {
-    envSettings = require("./env/development");
+  if (env === 'development') {
+    envSettings = require('./env/development');
   }
 
   // -- PRODUCTION
-  if ('production' == app.settings.env) {
-    envSettings = require("./environment/production");
+  if (env === 'production') {
+    envSettings = require('./environment/production');
   }
 
   // -- TEST
-  if ('test' == app.settings.env) {
-    envSettings = require("./env/test");
+  if (env === 'test') {
+    envSettings = require('./env/test');
   }
 
-  exports.settings = envSettings.settings;
-
+  // exports.settings = envSettings.settings;
+  return envSettings;
 };

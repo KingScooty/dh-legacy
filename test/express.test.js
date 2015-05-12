@@ -14,16 +14,17 @@ var app = require('../app.js');
 // process.env.NODE_ENV = 'test';
 app.settings.env = 'test';
 
-var config = require('../server/_config');
-config.init(app);
+// var config = require('../server/_config');
+// config.init(app);
+var config = require('../server/_config').init(app.get('env'));
 
-var settings = config.settings;
+// var settings = config.settings;
 
 var fixture = require('../server/fixture');
 var tweets = fixture.tweets;
 
 var database = require('../server/database');
-database.connectDatabase(settings);
+database.connectDatabase(config);
 var db = database.db;
 
 

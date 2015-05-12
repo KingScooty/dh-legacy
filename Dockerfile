@@ -2,7 +2,7 @@ FROM node:0.12-onbuild
 
 # Install nodemon
 # RUN npm install -g nodemon
-RUN npm install -g bower grunt-cli
+RUN npm install -g bower # grunt-cli
 
 # WORKDIR src/app
 RUN bower install --allow-root

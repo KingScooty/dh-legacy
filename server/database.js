@@ -1,5 +1,3 @@
-// var db;
-
 module.exports.connectDatabase = function (settings) {
 
   var cradle = require('cradle');
@@ -18,7 +16,6 @@ module.exports.connectDatabase = function (settings) {
   var db = c.database(settings.database.name);
 
   exports.db = db;
-
 }
 
 module.exports.databaseExists = function (db, callback) {
