@@ -71,10 +71,10 @@ var Stream = React.createClass({
     }
   },
 
-  handleChange: function (e) {
+  // handleChange: function (e) {
       // console.log(e.target.value);
       // this.setState({user: e.target.value});
-  },
+  // },
 
   // shouldComponentUpdate: function (nextProps, nextState) {
   //     console.log('> shouldComponentUpdate(nextProps, nextState)');

@@ -8,23 +8,25 @@ var StreamItem = React.createClass({
   mixins: [ Router.State ],
 
   componentDidMount: function () {
-      var self = this;
-      var img = new Image();
-      img.onerror = function () {
-        // 404 image.
-        self.setState({ profile_img_src: '/images/icon__twitter.png' });
-      };
+    var self = this;
+    var img = new Image();
 
-      // img.src = this.state.src;
-      img.src = this.state.profile_img_src;
+    // Replace 404 images with a default image.
+    img.onerror = function () {
+      // 404 image.
+      self.setState({ profile_img_src: '/images/icon__twitter.png' });
+    };
 
+    img.src = this.state.profile_img_src;
   },
 
   getInitialState: function () {
     var profile_image;
 
+    // Catch 404 images for newer feeds.
+    // Replace profile images by default for older feeds.
     if ((this.getPath() === '/2012') || this.getPath() === '/2013') {
-      profile_image = this.props.tweet.value.profile_image_url;
+      profile_image = '/images/icon__twitter.png';
     } else {
       profile_image = this.props.tweet.value.user.profile_image_url;
     }
@@ -77,7 +79,6 @@ var StreamItem = React.createClass({
       }
 
       tweet_text = tweet.text;
-      // moment(Date.parse(created_at))
       time_ago = moment(Date.parse(created_at)).fromNow();
 
       screen_name_href = "http://twitter.com/" + screen_name;

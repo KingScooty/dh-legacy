@@ -18,7 +18,7 @@ var Feed = React.createClass({
   // The return value will be used as the initial value of this.state.
   getInitialState: function() {
     return {
-      connected: false//,
+      connected: false
       // data: [
       //   {
       //     value: {
@@ -86,11 +86,14 @@ var Feed = React.createClass({
 
   componentWillReceiveProps: function() {
     // force loading render per route change
-    this.setState({ connected: false });
-    // this.readTweetsFromAPI();
+    this.setState({
+      connected: false
+    });
   },
 
   render: function() {
+
+    var path = this.getPath().replace('/', '');
 
     // if (this.state.data) {
       return (
@@ -99,7 +102,7 @@ var Feed = React.createClass({
             <Status connected={this.state.connected}/>
             <ToggleYear />
           </div>
-          <RouteHandler
+          <RouteHandler key={path}
             enableSocketState={this.enableSocketState} />
         </div>
       );
