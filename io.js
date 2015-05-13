@@ -32,7 +32,7 @@ var T = new Twit({
 
 module.exports = function(server){
   var io = require('socket.io')(server);
-
+  console.log('Init sockets.');
   // catch errors
   io.on('error', function(err){
     throw err;
@@ -43,10 +43,12 @@ module.exports = function(server){
   // io.use(attachEventlisteners);
 
   io.on('connection', function (socket) {
+    console.log('SOMEONE IS CONNECTED!');
 
     var stream = T.stream('statuses/filter', { track: '#digitalheroes2015' });
 
     stream.on('tweet', function callback(tweet) {
+      console.log('SOMEONE TWEETED!');
       app.locals.db.dh_2015.save(tweet.id_str, tweet, function callback(err, res) {
         if (err) {
           console.log(err);

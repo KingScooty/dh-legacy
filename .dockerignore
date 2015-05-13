@@ -1,4 +1,5 @@
 assets/
 .git
+.DS_Store
 public/bower_components
 public/javascripts/src
