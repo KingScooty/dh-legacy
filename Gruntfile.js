@@ -34,10 +34,24 @@ module.exports = function(grunt) {
           'public/javascripts/dist/main.bundle.js': ['public/javascripts/src/app.js'],
         }
       }
+    },
+    uglify: {
+      my_target: {
+        files: {
+          'public/javascripts/dist/main.bundle.min.js': 'public/javascripts/dist/main.bundle.js'
+        }
+      }
     }
   });
-  grunt.registerTask('default', ['sass:dist', 'watch']);
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+
+  grunt.registerTask('default', ['sass:dist', 'watch']);
+  grunt.registerTask('build', [
+    'sass:dist',
+    'browserify',
+    'uglify'
+  ]);
 };
