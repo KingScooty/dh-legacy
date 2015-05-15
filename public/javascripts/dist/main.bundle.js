@@ -35681,7 +35681,7 @@ var Stream = React.createClass({displayName: "Stream",
 
 module.exports = Stream;
 
-},{"./StreamItem.jsx":273,"react":216,"react-router":29,"reqwest":217}],269:[function(require,module,exports){
+},{"./StreamItem.jsx":274,"react":216,"react-router":29,"reqwest":217}],269:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react/addons'); //,
@@ -35696,6 +35696,7 @@ var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 
 var Status        = require('./Status.jsx');
+var Loading       = require('./Loading.jsx');
 var ToggleYear    = require('./ToggleYear.jsx');
 
 var Feed = React.createClass({displayName: "Feed",
@@ -35747,7 +35748,10 @@ var Feed = React.createClass({displayName: "Feed",
         React.createElement("div", {className: "tweet-list"}, 
           React.createElement("div", {className: "tweet-list__head"}, 
             React.createElement(Status, {connected: this.state.connected}), 
-            React.createElement(ToggleYear, null)
+            React.createElement("div", {className: "tweet-list__head__nav"}, 
+              React.createElement(Loading, {viewReady: this.state.view_ready}), 
+              React.createElement(ToggleYear, null)
+            )
           ), 
           React.createElement("div", {className: body_class}, 
             React.createElement("div", null, 
@@ -35769,7 +35773,7 @@ var Feed = React.createClass({displayName: "Feed",
 
 module.exports = Feed;
 
-},{"./Status.jsx":272,"./ToggleYear.jsx":275,"classnames":1,"react-router":29,"react/addons":44}],270:[function(require,module,exports){
+},{"./Loading.jsx":271,"./Status.jsx":273,"./ToggleYear.jsx":276,"classnames":1,"react-router":29,"react/addons":44}],270:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react');
@@ -35778,7 +35782,7 @@ var Router = require('react-router');
 var ArchiveFeed = require('./ArchiveFeed.jsx');
 var SocketFeed = require('./SocketFeed.jsx');
 
-var Stream = React.createClass({displayName: "Stream",
+var LiveFeed = React.createClass({displayName: "LiveFeed",
   mixins: [ Router.State ],
 
   componentWillMount: function () {
@@ -35805,9 +35809,34 @@ var Stream = React.createClass({displayName: "Stream",
 
 });
 
-module.exports = Stream;
+module.exports = LiveFeed;
 
-},{"./ArchiveFeed.jsx":268,"./SocketFeed.jsx":271,"react":216,"react-router":29}],271:[function(require,module,exports){
+},{"./ArchiveFeed.jsx":268,"./SocketFeed.jsx":272,"react":216,"react-router":29}],271:[function(require,module,exports){
+/** @jsx React.DOM */
+
+var React  = require('react');
+// var classNames = require('classnames');
+
+var Loading = React.createClass({displayName: "Loading",
+
+  render: function() {
+    var elClass = this.props.viewReady ? 'loader' : 'loader active';
+
+    // var elClass = classNames(
+    //   'loader',
+    //   { 'active': !this.props.viewReady }
+    // );
+
+    return (
+      React.createElement("div", {className: elClass}, "Loading...")
+    );
+  }
+
+});
+
+module.exports = Loading;
+
+},{"react":216}],272:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react/addons'); //,
@@ -35817,7 +35846,7 @@ var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 var StreamItem = require('./StreamItem.jsx');
 
-var Stream = React.createClass({displayName: "Stream",
+var SocketFeed = React.createClass({displayName: "SocketFeed",
 
   getInitialState: function() {
     return {
@@ -35921,9 +35950,9 @@ var Stream = React.createClass({displayName: "Stream",
 
 });
 
-module.exports = Stream;
+module.exports = SocketFeed;
 
-},{"./StreamItem.jsx":273,"react/addons":44,"socket.io-client":218}],272:[function(require,module,exports){
+},{"./StreamItem.jsx":274,"react/addons":44,"socket.io-client":218}],273:[function(require,module,exports){
 var React = require('react');
 var classNames = require('classnames');
 
@@ -35951,7 +35980,7 @@ var Status = React.createClass({displayName: "Status",
 
 module.exports = Status;
 
-},{"classnames":1,"react":216}],273:[function(require,module,exports){
+},{"classnames":1,"react":216}],274:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var moment = require('moment');
@@ -36082,7 +36111,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
 
 module.exports = StreamItem;
 
-},{"./StreamItemMedia.jsx":274,"moment":4,"react":216,"react-router":29}],274:[function(require,module,exports){
+},{"./StreamItemMedia.jsx":275,"moment":4,"react":216,"react-router":29}],275:[function(require,module,exports){
 var React = require('react');
 
 var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
@@ -36122,14 +36151,11 @@ var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
 
 module.exports = StreamItemMedia;
 
-},{"react":216}],275:[function(require,module,exports){
+},{"react":216}],276:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router'); // or var Router = ReactRouter; in browsers
 
-// var DefaultRoute = Router.DefaultRoute;
 var Link = Router.Link;
-// var Route = Router.Route;
-// var RouteHandler = Router.RouteHandler;
 
 var ToggleYear = React.createClass({displayName: "ToggleYear",
 

@@ -6,7 +6,7 @@ var Router = require('react-router');
 var ArchiveFeed = require('./ArchiveFeed.jsx');
 var SocketFeed = require('./SocketFeed.jsx');
 
-var Stream = React.createClass({
+var LiveFeed = React.createClass({
   mixins: [ Router.State ],
 
   componentWillMount: function () {
@@ -33,4 +33,4 @@ var Stream = React.createClass({
 
 });
 
-module.exports = Stream;
+module.exports = LiveFeed;

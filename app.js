@@ -50,6 +50,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // GZIP ALL OF THE THINGS!
+// http://inspiredjw.com/do-not-forget-to-use-gzip-for-express/
 app.use(compress());
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
