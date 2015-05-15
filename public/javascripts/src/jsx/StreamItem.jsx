@@ -1,6 +1,7 @@
 var React = require('react');
 var Router = require('react-router');
 var moment = require('moment');
+var AutoupdateTime = require('react-autoupdate-time');
 
 var StreamItemMedia = require('./StreamItemMedia.jsx');
 
@@ -106,9 +107,7 @@ var StreamItem = React.createClass({
 
           <div className="tweet__meta">
             <a href={tweet_href}>
-              <time className="tweet__time timeago" dateTime="{created_at}">
-                {time_ago}
-              </time>
+              <AutoupdateTime className="tweet_time timeago" value={created_at} />
             </a>
           </div>
         </div>
