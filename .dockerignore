@@ -3,3 +3,5 @@ assets/
 .DS_Store
 public/bower_components
 public/javascripts/src
+public/javascripts/dist/main.bundle.js
+public/stylesheets/style.css
