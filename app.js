@@ -2,8 +2,8 @@
 
 var express = require('express');
 var path = require('path');
-// var favicon = require('static-favicon');
 var favicon = require('serve-favicon');
+var compress = require('compression');
 
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -45,6 +45,22 @@ var db = {
 app.locals.config = config;
 app.locals.db = db;
 
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+// GZIP ALL OF THE THINGS!
+// http://inspiredjw.com/do-not-forget-to-use-gzip-for-express/
+app.use(compress());
+
+app.use(favicon(__dirname + '/public/favicon.ico'));
+// app.use(favicon());
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Expose database object as a global on handler
 app.use(function(req, res, next) {
   req.db = db;
@@ -61,18 +77,6 @@ app.use(function (req, res, next) {
 
   next();
 });
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-app.use(favicon(__dirname + '/public/favicon.ico'));
-// app.use(favicon());
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Send socket to routes
 app.use('/', routes);

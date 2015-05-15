@@ -12,6 +12,7 @@ var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 
 var Status        = require('./Status.jsx');
+var Loading       = require('./Loading.jsx');
 var ToggleYear    = require('./ToggleYear.jsx');
 
 var Feed = React.createClass({
@@ -63,7 +64,10 @@ var Feed = React.createClass({
         <div className="tweet-list">
           <div className="tweet-list__head">
             <Status connected={this.state.connected}/>
-            <ToggleYear />
+            <div className="tweet-list__head__nav">
+              <Loading viewReady={this.state.view_ready} />
+              <ToggleYear />
+            </div>
           </div>
           <div className={body_class}>
             <div>

@@ -14,6 +14,16 @@
   margin-bottom: 3rem;
 }
 
+.tweet-list__head__nav {
+  position: relative;
+  @extend .clearfix;
+  .loader {
+    position: absolute;
+    margin-left: 12px;
+    top: -8px;
+  }
+}
+
 .tweet-list__live {}
 .tweet-list__archive {
   // &, .tweet-list__loading {

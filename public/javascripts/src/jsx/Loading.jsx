@@ -1,29 +1,23 @@
 /** @jsx React.DOM */
 
 var React  = require('react');
+// var classNames = require('classnames');
 
-var Stream = React.createClass({
+var Loading = React.createClass({
+
   render: function() {
+    var elClass = this.props.viewReady ? 'loader' : 'loader active';
+
+    // var elClass = classNames(
+    //   'loader',
+    //   { 'active': !this.props.viewReady }
+    // );
+
     return (
-      <div className="tweet-list__loading">
-        <div className="tweet">
-
-          <div className="tweet__container">
-            <div className="tweet__profile_picture">
-              <img src="/images/icon__download.png" />
-            </div>
-            <div className="tweet__screen_name">
-              <a href="#">@Jarvis</a>
-            </div>
-
-            <div className="tweet__body">Preparing archive data feed.</div>
-
-          </div>
-        </div>
-      </div>
+      <div className={elClass}>Loading...</div>
     );
   }
 
 });
 
-module.exports = Stream;
+module.exports = Loading;

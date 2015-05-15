@@ -7,7 +7,7 @@ var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 var StreamItem = require('./StreamItem.jsx');
 
-var Stream = React.createClass({
+var SocketFeed = React.createClass({
 
   getInitialState: function() {
     return {
@@ -111,4 +111,4 @@ var Stream = React.createClass({
 
 });
 
-module.exports = Stream;
+module.exports = SocketFeed;
