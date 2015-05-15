@@ -6,9 +6,9 @@ FROM node:0.12.2
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-ONBUILD COPY package.json /usr/src/app/
-ONBUILD RUN npm install --production
-ONBUILD COPY . /usr/src/app
+COPY package.json /usr/src/app/
+RUN npm install --production
+COPY . /usr/src/app
 
 # Install bower
 RUN npm install -g bower # grunt-cli
