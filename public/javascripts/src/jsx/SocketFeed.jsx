@@ -29,15 +29,15 @@ var SocketFeed = React.createClass({
       });
 
     } else {
-      console.log('socket exists');
+      // console.log('socket exists');
       socket.connect();
     }
 
     socket.on('connect', function() {
-      console.log('connected! but how many times?');
+      // console.log('connected! but how many times?');
 
       if (self.isMounted()) {
-        console.log('Setting state of connected to true');
+        // console.log('Setting state of connected to true');
         self.setState({connected: true });
       }
 
@@ -45,15 +45,15 @@ var SocketFeed = React.createClass({
     });
 
     socket.on('incomingTweet', function(tweet) {
-      console.log('new tweet: ', tweet);
-      console.log('self state? ', self.state.tweets);
+      // console.log('new tweet: ', tweet);
+      // console.log('self state? ', self.state.tweets);
 
       var newArray = this.state.tweets.slice();
       newArray.push(tweet);
 
-      console.log('newArray: ', newArray);
+      // console.log('newArray: ', newArray);
 
-      console.log('Mounted, updating state.');
+      // console.log('Mounted, updating state.');
       this.setState({tweets:newArray.reverse()});
 
       // console.log(self.state.tweets);
@@ -63,10 +63,6 @@ var SocketFeed = React.createClass({
       // self.setState({connected: false});
       self.props.disableSocketState();
     });
-
-    if (this.isMounted()) {
-      console.log('MOUNTED!!');
-    }
 
   },
 
