@@ -58,6 +58,7 @@ var StreamItem = React.createClass({
     var screen_name_href;
     var tweet_href;
     var media;
+    var timestamp;
 
     if (this.props.tweet.value) {
 
@@ -81,9 +82,10 @@ var StreamItem = React.createClass({
 
       tweet_text = tweet.text;
       time_ago = moment(Date.parse(created_at)).fromNow();
-
-      screen_name_href = "http://twitter.com/" + screen_name;
+      // timestamp = moment(Date.parse(created_at)).format("hh:mm a, Mo MMM");
+      timestamp = moment(Date.parse(created_at)).format("HH:mm a, Mo MMM");
       tweet_href = "https://twitter.com/" + screen_name + '/status/' + tweet_id;
+      screen_name_href = "http://twitter.com/" + screen_name;
 
       if (profile_image) {
         profile_image = profile_image.replace("normal", "200x200");
@@ -92,7 +94,6 @@ var StreamItem = React.createClass({
     }
 
     return (
-
       <div className="tweet">
 
         <div className="tweet__container">
@@ -103,7 +104,10 @@ var StreamItem = React.createClass({
             <a href={screen_name_href}>@{screen_name}</a>
           </div>
 
-          <div className="tweet__body">{tweet_text}</div>
+          <div className="tweet__body">
+            {tweet_text}
+            <div className="tweet__body__footer">{timestamp}</div>
+          </div>
 
           <div className="tweet__meta">
             <a href={tweet_href}>

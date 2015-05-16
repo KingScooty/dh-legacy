@@ -458,6 +458,18 @@ h1, h2, h3, h4, h5, h6, hgroup, ul, ol, dd, p, figure, pre, table, fieldset, hr,
   -o-transition: all .3s ease-in-out;
   transition: all .3s ease-in-out; }
 
+.tweet__body__footer {
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  max-width: 0;
+  transition: all .65s ease-out;
+  color: #3B4B5C; }
+
+.tweet:hover .tweet__body__footer {
+  opacity: 1;
+  max-width: 250px; }
+
 .tweet-list__body--inactive {
   opacity: 0; }
 

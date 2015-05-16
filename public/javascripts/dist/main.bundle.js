@@ -35803,6 +35803,10 @@ var Feed = React.createClass({displayName: "Feed",
     this.setState({ connected: true });
   },
 
+  disableSocketState: function() {
+    this.setState({ connected: false });
+  },
+
   fadeInPage: function() {
     this.setState({
       view_ready: true
@@ -35818,7 +35822,7 @@ var Feed = React.createClass({displayName: "Feed",
   componentWillReceiveProps: function() {
     // force loading render per route change
     this.setState({
-      connected: false,
+      // connected: false,
       view_ready: false
     });
   },
@@ -35846,7 +35850,9 @@ var Feed = React.createClass({displayName: "Feed",
               React.createElement(TransitionGroup, {transitionName: "fade"}, 
                 React.createElement(RouteHandler, {key: path, 
                   enableSocketState: this.enableSocketState, 
-                  fadeInPage: this.fadeInPage})
+                  disableSocketState: this.disableSocketState, 
+                  fadeInPage: this.fadeInPage}
+                )
               )
             )
           )
@@ -35889,7 +35895,9 @@ var LiveFeed = React.createClass({displayName: "LiveFeed",
       React.createElement("div", null, 
         React.createElement(SocketFeed, {
           connected: this.props.connected, 
-          enableSocketState: this.props.enableSocketState}), 
+          enableSocketState: this.props.enableSocketState, 
+          disableSocketState: this.props.disableSocketState}
+        ), 
         React.createElement(ArchiveFeed, {fadeInPage: this.props.fadeInPage})
       )
     );
@@ -35934,6 +35942,8 @@ var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 var StreamItem = require('./StreamItem.jsx');
 
+var socket;
+
 var SocketFeed = React.createClass({displayName: "SocketFeed",
 
   getInitialState: function() {
@@ -35947,25 +35957,41 @@ var SocketFeed = React.createClass({displayName: "SocketFeed",
     // console.log('Connect to sockets init!');
     var self = this;
     // var socket = io('http://localhost/');
-    var socket = io.connect({
-      multiplex: false
-    });
-
-    socket.on('connect', function() {
-      // console.log('connected!');
-      socket.on('incomingTweet', function(tweet) {
-        // console.log(tweet);
-        // console.log(self.state.tweets);
-
-        var newArray = self.state.tweets.slice();
-        newArray.push(tweet);
-        self.setState({tweets:newArray.reverse()});
-
-        // console.log(self.state.tweets);
+    if ( !socket ) {
+      // console.log('socket does not exist');
+      socket = io.connect({
+        // multiplex: false
       });
-      self.setState({connected: true });
-      self.props.enableSocketState();
-    });
+
+      socket.on('connect', function() {
+        // console.log('connected! but how many times?');
+        socket.on('incomingTweet', function(tweet) {
+          // console.log(tweet);
+          // console.log(self.state.tweets);
+
+          var newArray = self.state.tweets.slice();
+          newArray.push(tweet);
+          self.setState({tweets:newArray.reverse()});
+
+          // console.log(self.state.tweets);
+        });
+
+        if (self.isMounted()) {
+          self.setState({connected: true });
+        }
+
+        self.props.enableSocketState();
+      });
+
+      socket.on('disconnect', function() {
+        // self.setState({connected: false});
+        self.props.disableSocketState();
+      });
+
+    } else {
+      console.log('socket exists');
+      socket.connect();
+    }
   },
 
   // Called each time componented is mounted
@@ -35975,6 +36001,7 @@ var SocketFeed = React.createClass({displayName: "SocketFeed",
 
   // Called once first time mounted and cached until there are changes
   componentDidMount: function() {
+    // console.log('how many fucking times is this MOUNTING???');
     this.connectToSockets();
   },
 
@@ -35983,7 +36010,11 @@ var SocketFeed = React.createClass({displayName: "SocketFeed",
 
   // Called each time the component is unmounted
   componentWillUnmount: function () {
-      console.log('> componentWillUnmount()');
+    // console.log('> componentWillUnmount()');
+    // this.setState({connected: false});
+    // this.props.disableSocketState();
+    // socket.close();
+    socket.close();
   },
 
   render: function() {
@@ -36129,6 +36160,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
     var screen_name_href;
     var tweet_href;
     var media;
+    var timestamp;
 
     if (this.props.tweet.value) {
 
@@ -36152,9 +36184,10 @@ var StreamItem = React.createClass({displayName: "StreamItem",
 
       tweet_text = tweet.text;
       time_ago = moment(Date.parse(created_at)).fromNow();
-
-      screen_name_href = "http://twitter.com/" + screen_name;
+      // timestamp = moment(Date.parse(created_at)).format("hh:mm a, Mo MMM");
+      timestamp = moment(Date.parse(created_at)).format("HH:mm a, Mo MMM");
       tweet_href = "https://twitter.com/" + screen_name + '/status/' + tweet_id;
+      screen_name_href = "http://twitter.com/" + screen_name;
 
       if (profile_image) {
         profile_image = profile_image.replace("normal", "200x200");
@@ -36163,7 +36196,6 @@ var StreamItem = React.createClass({displayName: "StreamItem",
     }
 
     return (
-
       React.createElement("div", {className: "tweet"}, 
 
         React.createElement("div", {className: "tweet__container"}, 
@@ -36174,7 +36206,10 @@ var StreamItem = React.createClass({displayName: "StreamItem",
             React.createElement("a", {href: screen_name_href}, "@", screen_name)
           ), 
 
-          React.createElement("div", {className: "tweet__body"}, tweet_text), 
+          React.createElement("div", {className: "tweet__body"}, 
+            tweet_text, 
+            React.createElement("div", {className: "tweet__body__footer"}, timestamp)
+          ), 
 
           React.createElement("div", {className: "tweet__meta"}, 
             React.createElement("a", {href: tweet_href}, 
