@@ -33,6 +33,7 @@ var T = new Twit({
 module.exports = function(server){
   var io = require('socket.io')(server);
   console.log('Init sockets.');
+
   // catch errors
   io.on('error', function(err){
     throw err;

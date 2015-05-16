@@ -25,7 +25,9 @@ var LiveFeed = React.createClass({
       <div>
         <SocketFeed
           connected={this.props.connected}
-          enableSocketState={this.props.enableSocketState} />
+          enableSocketState={this.props.enableSocketState}
+          disableSocketState={this.props.disableSocketState}
+        />
         <ArchiveFeed fadeInPage={this.props.fadeInPage} />
       </div>
     );

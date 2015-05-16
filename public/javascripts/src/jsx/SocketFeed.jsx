@@ -7,6 +7,8 @@ var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 var StreamItem = require('./StreamItem.jsx');
 
+var socket;
+
 var SocketFeed = React.createClass({
 
   getInitialState: function() {
@@ -20,25 +22,41 @@ var SocketFeed = React.createClass({
     // console.log('Connect to sockets init!');
     var self = this;
     // var socket = io('http://localhost/');
-    var socket = io.connect({
-      multiplex: false
-    });
-
-    socket.on('connect', function() {
-      // console.log('connected!');
-      socket.on('incomingTweet', function(tweet) {
-        // console.log(tweet);
-        // console.log(self.state.tweets);
-
-        var newArray = self.state.tweets.slice();
-        newArray.push(tweet);
-        self.setState({tweets:newArray.reverse()});
-
-        // console.log(self.state.tweets);
+    if ( !socket ) {
+      // console.log('socket does not exist');
+      socket = io.connect({
+        // multiplex: false
       });
-      self.setState({connected: true });
-      self.props.enableSocketState();
-    });
+
+      socket.on('connect', function() {
+        // console.log('connected! but how many times?');
+        socket.on('incomingTweet', function(tweet) {
+          // console.log(tweet);
+          // console.log(self.state.tweets);
+
+          var newArray = self.state.tweets.slice();
+          newArray.push(tweet);
+          self.setState({tweets:newArray.reverse()});
+
+          // console.log(self.state.tweets);
+        });
+
+        if (self.isMounted()) {
+          self.setState({connected: true });
+        }
+
+        self.props.enableSocketState();
+      });
+
+      socket.on('disconnect', function() {
+        // self.setState({connected: false});
+        self.props.disableSocketState();
+      });
+
+    } else {
+      console.log('socket exists');
+      socket.connect();
+    }
   },
 
   // Called each time componented is mounted
@@ -48,6 +66,7 @@ var SocketFeed = React.createClass({
 
   // Called once first time mounted and cached until there are changes
   componentDidMount: function() {
+    // console.log('how many fucking times is this MOUNTING???');
     this.connectToSockets();
   },
 
@@ -56,7 +75,11 @@ var SocketFeed = React.createClass({
 
   // Called each time the component is unmounted
   componentWillUnmount: function () {
-      console.log('> componentWillUnmount()');
+    // console.log('> componentWillUnmount()');
+    // this.setState({connected: false});
+    // this.props.disableSocketState();
+    // socket.close();
+    socket.close();
   },
 
   render: function() {

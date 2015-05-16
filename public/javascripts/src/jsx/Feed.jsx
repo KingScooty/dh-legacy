@@ -31,6 +31,10 @@ var Feed = React.createClass({
     this.setState({ connected: true });
   },
 
+  disableSocketState: function() {
+    this.setState({ connected: false });
+  },
+
   fadeInPage: function() {
     this.setState({
       view_ready: true
@@ -46,7 +50,7 @@ var Feed = React.createClass({
   componentWillReceiveProps: function() {
     // force loading render per route change
     this.setState({
-      connected: false,
+      // connected: false,
       view_ready: false
     });
   },
@@ -74,7 +78,9 @@ var Feed = React.createClass({
               <TransitionGroup transitionName="fade">
                 <RouteHandler key={path}
                   enableSocketState={this.enableSocketState}
-                  fadeInPage={this.fadeInPage} />
+                  disableSocketState={this.disableSocketState}
+                  fadeInPage={this.fadeInPage}
+                />
               </TransitionGroup>
             </div>
           </div>
