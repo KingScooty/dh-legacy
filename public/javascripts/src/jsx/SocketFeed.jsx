@@ -28,35 +28,42 @@ var SocketFeed = React.createClass({
         // multiplex: false
       });
 
-      socket.on('connect', function() {
-        // console.log('connected! but how many times?');
-        socket.on('incomingTweet', function(tweet) {
-          // console.log(tweet);
-          // console.log(self.state.tweets);
-
-          var newArray = self.state.tweets.slice();
-          newArray.push(tweet);
-          self.setState({tweets:newArray.reverse()});
-
-          // console.log(self.state.tweets);
-        });
-
-        if (self.isMounted()) {
-          self.setState({connected: true });
-        }
-
-        self.props.enableSocketState();
-      });
-
-      socket.on('disconnect', function() {
-        // self.setState({connected: false});
-        self.props.disableSocketState();
-      });
-
     } else {
-      console.log('socket exists');
+      // console.log('socket exists');
       socket.connect();
     }
+
+    socket.on('connect', function() {
+      // console.log('connected! but how many times?');
+
+      if (self.isMounted()) {
+        // console.log('Setting state of connected to true');
+        self.setState({connected: true });
+      }
+
+      self.props.enableSocketState();
+    });
+
+    socket.on('incomingTweet', function(tweet) {
+      // console.log('new tweet: ', tweet);
+      // console.log('self state? ', self.state.tweets);
+
+      var newArray = this.state.tweets.slice();
+      newArray.push(tweet);
+
+      // console.log('newArray: ', newArray);
+
+      // console.log('Mounted, updating state.');
+      this.setState({tweets:newArray.reverse()});
+
+      // console.log(self.state.tweets);
+    }.bind(this));
+
+    socket.on('disconnect', function() {
+      // self.setState({connected: false});
+      self.props.disableSocketState();
+    });
+
   },
 
   // Called each time componented is mounted
@@ -80,6 +87,9 @@ var SocketFeed = React.createClass({
     // this.props.disableSocketState();
     // socket.close();
     socket.close();
+    socket.removeListener('connect');
+    socket.removeListener('incomingTweet');
+    socket.removeListener('disconnect');
   },
 
   render: function() {
