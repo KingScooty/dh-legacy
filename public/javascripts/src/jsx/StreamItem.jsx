@@ -81,9 +81,16 @@ var StreamItem = React.createClass({
       }
 
       tweet_text = tweet.text;
-      time_ago = moment(Date.parse(created_at)).fromNow();
+      var time_object = moment(created_at, "ddd MMM DD HH:mm:SS ZZ YYYY");
+
+      // time_ago = moment(Date.parse(created_at)).fromNow();
       // timestamp = moment(Date.parse(created_at)).format("hh:mm a, Mo MMM");
-      timestamp = moment(Date.parse(created_at)).format("HH:mm a, Mo MMM");
+      // timestamp = moment(Date.parse(created_at)).format("HH:mm a, Mo MMM");
+      // moment("Sat Jun 02 05:02:34 +0000 2012", "ddd MMM DD HH:mm:SS ZZ YYYY").format("Do MMM");
+
+      time_ago = time_object.fromNow();
+      timestamp = time_object.format("HH:mm a, Do MMM");
+
       tweet_href = "https://twitter.com/" + screen_name + '/status/' + tweet_id;
       screen_name_href = "http://twitter.com/" + screen_name;
 
