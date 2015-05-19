@@ -34,9 +34,18 @@ $wood: url(/images/dark_wood.jpg);
 
 a {
   color: white;
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
+  // text-decoration: none;
+  // &:hover {
+  //   text-decoration: underline;
+  // }
+}
+
+.tweets-wrapper {
+  a {
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }    
   }
 }
 
