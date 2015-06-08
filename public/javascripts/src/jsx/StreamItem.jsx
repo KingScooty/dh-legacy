@@ -5,6 +5,7 @@ var AutoupdateTime = require('react-autoupdate-time');
 var twitter = require('twitter-text');
 
 var StreamItemMedia = require('./StreamItemMedia.jsx');
+var StreamItemVine = require('./StreamItemVine.jsx');
 
 var StreamItem = React.createClass({
   mixins: [ Router.State ],
@@ -61,6 +62,9 @@ var StreamItem = React.createClass({
     var media;
     var extended_entities;
     var timestamp;
+    var tweet_source;
+    var vine;
+    var entities;
 
     if (this.props.tweet.value) {
 
@@ -80,10 +84,13 @@ var StreamItem = React.createClass({
           profile_image = tweet.user.profile_image_url;
           media = tweet.entities.media;
           extended_entities = tweet.extended_entities;
+
+          entities = tweet.entities;
+          tweet_source = tweet.source;
+          vine = tweet_source.indexOf('vine') > -1;
         }
       }
 
-      // tweet_text = tweet.text;
       tweet_text = twitter.autoLink(twitter.htmlEscape(tweet.text));
       var time_object = moment(created_at, "ddd MMM DD HH:mm:SS ZZ YYYY");
 
@@ -130,6 +137,13 @@ var StreamItem = React.createClass({
         {media ? (
           <div>
             <StreamItemMedia media={media} extended_entities={extended_entities} tweet_href={tweet_href} />
+          </div>
+        ) :
+        null}
+
+        {vine ? (
+          <div>
+            <StreamItemVine entities={entities} />
           </div>
         ) :
         null}

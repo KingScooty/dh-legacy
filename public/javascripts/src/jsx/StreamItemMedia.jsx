@@ -34,6 +34,7 @@ var StreamItemMedia = React.createClass({
         });
         break;
 
+      // 2015 and beyond... (provided Twitter don't change the API... again.)
       default:
         tweet_media_img = this.props.extended_entities.media.map(function(media, index) {
           return <img key={index} className="tweet__media" src={media.media_url} />

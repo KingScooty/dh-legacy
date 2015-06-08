@@ -37216,7 +37216,7 @@ var Feed = React.createClass({displayName: "Feed",
 
 module.exports = Feed;
 
-},{"./Loading.jsx":274,"./Status.jsx":276,"./ToggleYear.jsx":279,"classnames":1,"react-router":31,"react/addons":46}],273:[function(require,module,exports){
+},{"./Loading.jsx":274,"./Status.jsx":276,"./ToggleYear.jsx":280,"classnames":1,"react-router":31,"react/addons":46}],273:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react');
@@ -37466,6 +37466,7 @@ var AutoupdateTime = require('react-autoupdate-time');
 var twitter = require('twitter-text');
 
 var StreamItemMedia = require('./StreamItemMedia.jsx');
+var StreamItemVine = require('./StreamItemVine.jsx');
 
 var StreamItem = React.createClass({displayName: "StreamItem",
   mixins: [ Router.State ],
@@ -37522,6 +37523,9 @@ var StreamItem = React.createClass({displayName: "StreamItem",
     var media;
     var extended_entities;
     var timestamp;
+    var tweet_source;
+    var vine;
+    var entities;
 
     if (this.props.tweet.value) {
 
@@ -37541,10 +37545,13 @@ var StreamItem = React.createClass({displayName: "StreamItem",
           profile_image = tweet.user.profile_image_url;
           media = tweet.entities.media;
           extended_entities = tweet.extended_entities;
+
+          entities = tweet.entities;
+          tweet_source = tweet.source;
+          vine = tweet_source.indexOf('vine') > -1;
         }
       }
 
-      // tweet_text = tweet.text;
       tweet_text = twitter.autoLink(twitter.htmlEscape(tweet.text));
       var time_object = moment(created_at, "ddd MMM DD HH:mm:SS ZZ YYYY");
 
@@ -37593,6 +37600,13 @@ var StreamItem = React.createClass({displayName: "StreamItem",
             React.createElement(StreamItemMedia, {media: media, extended_entities: extended_entities, tweet_href: tweet_href})
           )
         ) :
+        null, 
+
+        vine ? (
+          React.createElement("div", null, 
+            React.createElement(StreamItemVine, {entities: entities})
+          )
+        ) :
         null
       )
 
@@ -37603,7 +37617,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
 
 module.exports = StreamItem;
 
-},{"./StreamItemMedia.jsx":278,"moment":4,"react":218,"react-autoupdate-time":5,"react-router":31,"twitter-text":269}],278:[function(require,module,exports){
+},{"./StreamItemMedia.jsx":278,"./StreamItemVine.jsx":279,"moment":4,"react":218,"react-autoupdate-time":5,"react-router":31,"twitter-text":269}],278:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 
@@ -37640,6 +37654,7 @@ var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
         });
         break;
 
+      // 2015 and beyond... (provided Twitter don't change the API... again.)
       default:
         tweet_media_img = this.props.extended_entities.media.map(function(media, index) {
           return React.createElement("img", {key: index, className: "tweet__media", src: media.media_url})
@@ -37661,6 +37676,27 @@ var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
 module.exports = StreamItemMedia;
 
 },{"react":218,"react-router":31}],279:[function(require,module,exports){
+var React = require('react');
+
+var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
+
+  render: function() {
+
+    var url = this.props.entities.urls[0].expanded_url + "/embed/simple";
+
+    return (
+      React.createElement("div", {className: "tweet__entities"}, 
+        React.createElement("iframe", {src: url, width: "600", height: "600", frameBorder: "0"}), 
+        React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"})
+      )
+    );
+  }
+
+});
+
+module.exports = StreamItemMedia;
+
+},{"react":218}],280:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router'); // or var Router = ReactRouter; in browsers
 
