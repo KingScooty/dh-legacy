@@ -2,6 +2,7 @@ var React = require('react');
 var Router = require('react-router');
 var moment = require('moment');
 var AutoupdateTime = require('react-autoupdate-time');
+var twitter = require('twitter-text');
 
 var StreamItemMedia = require('./StreamItemMedia.jsx');
 
@@ -82,7 +83,8 @@ var StreamItem = React.createClass({
         }
       }
 
-      tweet_text = tweet.text;
+      // tweet_text = tweet.text;
+      tweet_text = twitter.autoLink(twitter.htmlEscape(tweet.text));
       var time_object = moment(created_at, "ddd MMM DD HH:mm:SS ZZ YYYY");
 
       // time_ago = moment(Date.parse(created_at)).fromNow();
@@ -114,7 +116,7 @@ var StreamItem = React.createClass({
           </div>
 
           <div className="tweet__body">
-            {tweet_text}
+            <div dangerouslySetInnerHTML={{__html: tweet_text}}></div>
             <div className="tweet__body__footer">{timestamp}</div>
           </div>
 

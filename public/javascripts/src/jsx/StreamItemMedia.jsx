@@ -19,12 +19,21 @@ var StreamItemMedia = React.createClass({
         media = this.props.media.replace(".com/", ".com/media/")
       }
       tweet_media_img = <img className="tweet__media" src={media} />
+
+    // TODO: MAJOR CLEANUP!
     } else {
-      // 2014 and beyond...
+      // 2015 and beyond...
       // Use extended entities, in order to pull in multiple images per tweet
-      tweet_media_img = this.props.extended_entities.media.map(function(media, index) {
-        return <img key={index} className="tweet__media" src={media.media_url} />
-      });
+      if (this.props.extended_entities) {
+        tweet_media_img = this.props.extended_entities.media.map(function(media, index) {
+          return <img key={index} className="tweet__media" src={media.media_url} />
+        });
+      // 2014 API didn't have extended entities.
+      } else {
+        tweet_media_img = this.props.media.map(function(media, index) {
+          return <img key={index} className="tweet__media" src={media.media_url} />
+        });
+      }
     }
 
     return (
