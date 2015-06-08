@@ -37605,8 +37605,10 @@ module.exports = StreamItem;
 
 },{"./StreamItemMedia.jsx":278,"moment":4,"react":218,"react-autoupdate-time":5,"react-router":31,"twitter-text":269}],278:[function(require,module,exports){
 var React = require('react');
+var Router = require('react-router');
 
 var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
+  mixins: [ Router.State ],
 
   render: function() {
 
@@ -37619,27 +37621,30 @@ var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
     var tweet_media_img;
     var media_replace;
 
-    if (typeof media === 'string') {
-      // API change between 2012/2013 breaks media URLS.
-      if (media.indexOf(".com/media/") === -1) {
-        media = this.props.media.replace(".com/", ".com/media/")
-      }
-      tweet_media_img = React.createElement("img", {className: "tweet__media", src: media})
+    var path = this.getPath()
 
-    // TODO: MAJOR CLEANUP!
-    } else {
-      // 2015 and beyond...
-      // Use extended entities, in order to pull in multiple images per tweet
-      if (this.props.extended_entities) {
-        tweet_media_img = this.props.extended_entities.media.map(function(media, index) {
-          return React.createElement("img", {key: index, className: "tweet__media", src: media.media_url})
-        });
-      // 2014 API didn't have extended entities.
-      } else {
+    switch (path) {
+
+      case '/2012':
+        media = this.props.media.replace(".com/", ".com/media/");
+        tweet_media_img = React.createElement("img", {className: "tweet__media", src: media})
+        break;
+
+      case '/2013':
+        tweet_media_img = React.createElement("img", {className: "tweet__media", src: media})
+        break;
+
+      case '/2014':
         tweet_media_img = this.props.media.map(function(media, index) {
           return React.createElement("img", {key: index, className: "tweet__media", src: media.media_url})
         });
-      }
+        break;
+
+      default:
+        tweet_media_img = this.props.extended_entities.media.map(function(media, index) {
+          return React.createElement("img", {key: index, className: "tweet__media", src: media.media_url})
+        });
+        break;
     }
 
     return (
@@ -37655,7 +37660,7 @@ var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
 
 module.exports = StreamItemMedia;
 
-},{"react":218}],279:[function(require,module,exports){
+},{"react":218,"react-router":31}],279:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router'); // or var Router = ReactRouter; in browsers
 
