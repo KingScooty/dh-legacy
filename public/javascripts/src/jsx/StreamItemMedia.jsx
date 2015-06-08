@@ -14,12 +14,15 @@ var StreamItemMedia = React.createClass({
     var media_replace;
 
     if (typeof media === 'string') {
+      // API change between 2012/2013 breaks media URLS.
       if (media.indexOf(".com/media/") === -1) {
         media = this.props.media.replace(".com/", ".com/media/")
       }
       tweet_media_img = <img className="tweet__media" src={media} />
     } else {
-      tweet_media_img = this.props.media.map(function(media, index) {
+      // 2014 and beyond...
+      // Use extended entities, in order to pull in multiple images per tweet
+      tweet_media_img = this.props.extended_entities.media.map(function(media, index) {
         return <img key={index} className="tweet__media" src={media.media_url} />
       });
     }

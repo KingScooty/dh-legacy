@@ -58,6 +58,7 @@ var StreamItem = React.createClass({
     var screen_name_href;
     var tweet_href;
     var media;
+    var extended_entities;
     var timestamp;
 
     if (this.props.tweet.value) {
@@ -77,6 +78,7 @@ var StreamItem = React.createClass({
           created_at = tweet.created_at;
           profile_image = tweet.user.profile_image_url;
           media = tweet.entities.media;
+          extended_entities = tweet.extended_entities;
         }
       }
 
@@ -125,7 +127,7 @@ var StreamItem = React.createClass({
 
         {media ? (
           <div>
-            <StreamItemMedia media={media} tweet_href={tweet_href} />
+            <StreamItemMedia media={media} extended_entities={extended_entities} tweet_href={tweet_href} />
           </div>
         ) :
         null}

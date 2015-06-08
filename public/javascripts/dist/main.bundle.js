@@ -36170,6 +36170,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
     var screen_name_href;
     var tweet_href;
     var media;
+    var extended_entities;
     var timestamp;
 
     if (this.props.tweet.value) {
@@ -36189,6 +36190,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
           created_at = tweet.created_at;
           profile_image = tweet.user.profile_image_url;
           media = tweet.entities.media;
+          extended_entities = tweet.extended_entities;
         }
       }
 
@@ -36237,7 +36239,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
 
         media ? (
           React.createElement("div", null, 
-            React.createElement(StreamItemMedia, {media: media, tweet_href: tweet_href})
+            React.createElement(StreamItemMedia, {media: media, extended_entities: extended_entities, tweet_href: tweet_href})
           )
         ) :
         null
@@ -36267,12 +36269,15 @@ var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
     var media_replace;
 
     if (typeof media === 'string') {
+      // API change between 2012/2013 breaks media URLS.
       if (media.indexOf(".com/media/") === -1) {
         media = this.props.media.replace(".com/", ".com/media/")
       }
       tweet_media_img = React.createElement("img", {className: "tweet__media", src: media})
     } else {
-      tweet_media_img = this.props.media.map(function(media, index) {
+      // 2014 and beyond...
+      // Use extended entities, in order to pull in multiple images per tweet
+      tweet_media_img = this.props.extended_entities.media.map(function(media, index) {
         return React.createElement("img", {key: index, className: "tweet__media", src: media.media_url})
       });
     }
