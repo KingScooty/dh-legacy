@@ -37682,12 +37682,12 @@ var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
 
   render: function() {
 
-    var url = this.props.entities.urls[0].expanded_url + "/embed/simple";
+    // var url = this.props.entities.urls[0].expanded_url + "/embed/simple";
+    var url = this.props.entities.urls[0].expanded_url + "/card?mute=0";
 
     return (
       React.createElement("div", {className: "tweet__entities"}, 
-        React.createElement("iframe", {src: url, width: "600", height: "600", frameBorder: "0"}), 
-        React.createElement("script", {src: "https://platform.vine.co/static/scripts/embed.js"})
+        React.createElement("iframe", {src: url, width: "590", height: "590", frameBorder: "0", scrolling: "no", seamless: "seamless"})
       )
     );
   }
