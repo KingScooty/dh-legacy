@@ -33,7 +33,8 @@ var db = {
   dh_2012: c.database('digitalheroes-2012'),
   dh_2013: c.database('digitalheroes-2013'),
   dh_2014: c.database('digitalheroes-2014'),
-  dh_2015: c.database('digitalheroes-2015')
+  dh_2015: c.database('digitalheroes-2015'),
+  dh_2015hw: c.database('digitalheroes-halloween-2015')
 };
 
 // app.io = require('socket.io')();
