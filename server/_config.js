@@ -10,7 +10,7 @@ module.exports.init = function init(env) {
 
   // -- DEVELOPMENT
   if (env === 'development') {
-    envSettings = require('./env/development');
+    envSettings = require('./environment/development');
   }
 
   // -- PRODUCTION
