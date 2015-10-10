@@ -21,7 +21,7 @@ router.route('/year/:year')
       var db = req.db['dh_' + req.params.year];
 
       try {
-        db.view('tweets/all', function callback(err, response) {
+        db.view('tweets/all_tweets', function callback(err, response) {
           if (err) {
             console.log(err);
           } else {
