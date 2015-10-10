@@ -15,6 +15,6 @@ var settings = {
   }
 };
 
-console.log('PRODUCTION.');
+console.log('DEVELOPMENT.');
 
 module.exports = settings;
