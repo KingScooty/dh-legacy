@@ -4,48 +4,49 @@
   Licensed under the MIT License (MIT), see
   http://jedwatson.github.io/classnames
 */
+/* global define */
 
-function classNames () {
+(function () {
 	'use strict';
 
-	var classes = '';
+	var hasOwn = {}.hasOwnProperty;
 
-	for (var i = 0; i < arguments.length; i++) {
-		var arg = arguments[i];
-		if (!arg) continue;
+	function classNames () {
+		var classes = '';
 
-		var argType = typeof arg;
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (!arg) continue;
 
-		if ('string' === argType || 'number' === argType) {
-			classes += ' ' + arg;
+			var argType = typeof arg;
 
-		} else if (Array.isArray(arg)) {
-			classes += ' ' + classNames.apply(null, arg);
-
-		} else if ('object' === argType) {
-			for (var key in arg) {
-				if (arg.hasOwnProperty(key) && arg[key]) {
-					classes += ' ' + key;
+			if (argType === 'string' || argType === 'number') {
+				classes += ' ' + arg;
+			} else if (Array.isArray(arg)) {
+				classes += ' ' + classNames.apply(null, arg);
+			} else if (argType === 'object') {
+				for (var key in arg) {
+					if (hasOwn.call(arg, key) && arg[key]) {
+						classes += ' ' + key;
+					}
 				}
 			}
 		}
+
+		return classes.substr(1);
 	}
 
-	return classes.substr(1);
-}
-
-// safely export classNames for node / browserify
-if (typeof module !== 'undefined' && module.exports) {
-	module.exports = classNames;
-}
-
-/* global define */
-// safely export classNames for RequireJS
-if (typeof define !== 'undefined' && define.amd) {
-	define('classnames', [], function() {
-		return classNames;
-	});
-}
+	if (typeof module !== 'undefined' && module.exports) {
+		module.exports = classNames;
+	} else if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
+		// register as 'classnames', consistent with npm package name
+		define('classnames', function () {
+			return classNames;
+		});
+	} else {
+		window.classNames = classNames;
+	}
+}());
 
 },{}],2:[function(require,module,exports){
 
@@ -219,7 +220,9 @@ function drainQueue() {
         currentQueue = queue;
         queue = [];
         while (++queueIndex < len) {
-            currentQueue[queueIndex].run();
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
         }
         queueIndex = -1;
         len = queue.length;
@@ -237,7 +240,7 @@ process.nextTick = function (fun) {
         }
     }
     queue.push(new Item(fun, args));
-    if (!draining) {
+    if (queue.length === 1 && !draining) {
         setTimeout(drainQueue, 0);
     }
 };
@@ -271,7 +274,6 @@ process.binding = function (name) {
     throw new Error('process.binding is not supported');
 };
 
-// TODO(shtylman)
 process.cwd = function () { return '/' };
 process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
@@ -280,7 +282,7 @@ process.umask = function() { return 0; };
 
 },{}],4:[function(require,module,exports){
 //! moment.js
-//! version : 2.10.2
+//! version : 2.10.6
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -303,28 +305,12 @@ process.umask = function() { return 0; };
         hookCallback = callback;
     }
 
-    function defaultParsingFlags() {
-        // We need to deep clone this object.
-        return {
-            empty           : false,
-            unusedTokens    : [],
-            unusedInput     : [],
-            overflow        : -2,
-            charsLeftOver   : 0,
-            nullInput       : false,
-            invalidMonth    : null,
-            invalidFormat   : false,
-            userInvalidated : false,
-            iso             : false
-        };
-    }
-
     function isArray(input) {
         return Object.prototype.toString.call(input) === '[object Array]';
     }
 
     function isDate(input) {
-        return Object.prototype.toString.call(input) === '[object Date]' || input instanceof Date;
+        return input instanceof Date || Object.prototype.toString.call(input) === '[object Date]';
     }
 
     function map(arr, fn) {
@@ -361,21 +347,46 @@ process.umask = function() { return 0; };
         return createLocalOrUTC(input, format, locale, strict, true).utc();
     }
 
+    function defaultParsingFlags() {
+        // We need to deep clone this object.
+        return {
+            empty           : false,
+            unusedTokens    : [],
+            unusedInput     : [],
+            overflow        : -2,
+            charsLeftOver   : 0,
+            nullInput       : false,
+            invalidMonth    : null,
+            invalidFormat   : false,
+            userInvalidated : false,
+            iso             : false
+        };
+    }
+
+    function getParsingFlags(m) {
+        if (m._pf == null) {
+            m._pf = defaultParsingFlags();
+        }
+        return m._pf;
+    }
+
     function valid__isValid(m) {
         if (m._isValid == null) {
+            var flags = getParsingFlags(m);
             m._isValid = !isNaN(m._d.getTime()) &&
-                m._pf.overflow < 0 &&
-                !m._pf.empty &&
-                !m._pf.invalidMonth &&
-                !m._pf.nullInput &&
-                !m._pf.invalidFormat &&
-                !m._pf.userInvalidated;
+                flags.overflow < 0 &&
+                !flags.empty &&
+                !flags.invalidMonth &&
+                !flags.invalidWeekday &&
+                !flags.nullInput &&
+                !flags.invalidFormat &&
+                !flags.userInvalidated;
 
             if (m._strict) {
                 m._isValid = m._isValid &&
-                    m._pf.charsLeftOver === 0 &&
-                    m._pf.unusedTokens.length === 0 &&
-                    m._pf.bigHour === undefined;
+                    flags.charsLeftOver === 0 &&
+                    flags.unusedTokens.length === 0 &&
+                    flags.bigHour === undefined;
             }
         }
         return m._isValid;
@@ -384,10 +395,10 @@ process.umask = function() { return 0; };
     function valid__createInvalid (flags) {
         var m = create_utc__createUTC(NaN);
         if (flags != null) {
-            extend(m._pf, flags);
+            extend(getParsingFlags(m), flags);
         }
         else {
-            m._pf.userInvalidated = true;
+            getParsingFlags(m).userInvalidated = true;
         }
 
         return m;
@@ -423,7 +434,7 @@ process.umask = function() { return 0; };
             to._offset = from._offset;
         }
         if (typeof from._pf !== 'undefined') {
-            to._pf = from._pf;
+            to._pf = getParsingFlags(from);
         }
         if (typeof from._locale !== 'undefined') {
             to._locale = from._locale;
@@ -447,7 +458,7 @@ process.umask = function() { return 0; };
     // Moment prototype object
     function Moment(config) {
         copyConfig(this, config);
-        this._d = new Date(+config._d);
+        this._d = new Date(config._d != null ? config._d.getTime() : NaN);
         // Prevent infinite loop in case updateOffset creates new moment
         // objects.
         if (updateInProgress === false) {
@@ -458,7 +469,15 @@ process.umask = function() { return 0; };
     }
 
     function isMoment (obj) {
-        return obj instanceof Moment || (obj != null && hasOwnProp(obj, '_isAMomentObject'));
+        return obj instanceof Moment || (obj != null && obj._isAMomentObject != null);
+    }
+
+    function absFloor (number) {
+        if (number < 0) {
+            return Math.ceil(number);
+        } else {
+            return Math.floor(number);
+        }
     }
 
     function toInt(argumentForCoercion) {
@@ -466,11 +485,7 @@ process.umask = function() { return 0; };
             value = 0;
 
         if (coercedNumber !== 0 && isFinite(coercedNumber)) {
-            if (coercedNumber >= 0) {
-                value = Math.floor(coercedNumber);
-            } else {
-                value = Math.ceil(coercedNumber);
-            }
+            value = absFloor(coercedNumber);
         }
 
         return value;
@@ -568,9 +583,7 @@ process.umask = function() { return 0; };
     function defineLocale (name, values) {
         if (values !== null) {
             values.abbr = name;
-            if (!locales[name]) {
-                locales[name] = new Locale();
-            }
+            locales[name] = locales[name] || new Locale();
             locales[name].set(values);
 
             // backwards compat for now: also set the locale
@@ -674,16 +687,14 @@ process.umask = function() { return 0; };
     }
 
     function zeroFill(number, targetLength, forceSign) {
-        var output = '' + Math.abs(number),
+        var absNumber = '' + Math.abs(number),
+            zerosToFill = targetLength - absNumber.length,
             sign = number >= 0;
-
-        while (output.length < targetLength) {
-            output = '0' + output;
-        }
-        return (sign ? (forceSign ? '+' : '') : '-') + output;
+        return (sign ? (forceSign ? '+' : '') : '-') +
+            Math.pow(10, Math.max(0, zerosToFill)).toString().substr(1) + absNumber;
     }
 
-    var formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,4}|x|X|zz?|ZZ?|.)/g;
+    var formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
 
     var localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g;
 
@@ -751,10 +762,7 @@ process.umask = function() { return 0; };
         }
 
         format = expandFormat(format, m.localeData());
-
-        if (!formatFunctions[format]) {
-            formatFunctions[format] = makeFormatFunction(format);
-        }
+        formatFunctions[format] = formatFunctions[format] || makeFormatFunction(format);
 
         return formatFunctions[format](m);
     }
@@ -798,8 +806,15 @@ process.umask = function() { return 0; };
 
     var regexes = {};
 
+    function isFunction (sth) {
+        // https://github.com/moment/moment/issues/2325
+        return typeof sth === 'function' &&
+            Object.prototype.toString.call(sth) === '[object Function]';
+    }
+
+
     function addRegexToken (token, regex, strictRegex) {
-        regexes[token] = typeof regex === 'function' ? regex : function (isStrict) {
+        regexes[token] = isFunction(regex) ? regex : function (isStrict) {
             return (isStrict && strictRegex) ? strictRegex : regex;
         };
     }
@@ -896,7 +911,7 @@ process.umask = function() { return 0; };
         if (month != null) {
             array[MONTH] = month;
         } else {
-            config._pf.invalidMonth = input;
+            getParsingFlags(config).invalidMonth = input;
         }
     });
 
@@ -980,7 +995,7 @@ process.umask = function() { return 0; };
         var overflow;
         var a = m._a;
 
-        if (a && m._pf.overflow === -2) {
+        if (a && getParsingFlags(m).overflow === -2) {
             overflow =
                 a[MONTH]       < 0 || a[MONTH]       > 11  ? MONTH :
                 a[DATE]        < 1 || a[DATE]        > daysInMonth(a[YEAR], a[MONTH]) ? DATE :
@@ -990,11 +1005,11 @@ process.umask = function() { return 0; };
                 a[MILLISECOND] < 0 || a[MILLISECOND] > 999 ? MILLISECOND :
                 -1;
 
-            if (m._pf._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
+            if (getParsingFlags(m)._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
                 overflow = DATE;
             }
 
-            m._pf.overflow = overflow;
+            getParsingFlags(m).overflow = overflow;
         }
 
         return m;
@@ -1008,9 +1023,10 @@ process.umask = function() { return 0; };
 
     function deprecate(msg, fn) {
         var firstTime = true;
+
         return extend(function () {
             if (firstTime) {
-                warn(msg);
+                warn(msg + '\n' + (new Error()).stack);
                 firstTime = false;
             }
             return fn.apply(this, arguments);
@@ -1055,17 +1071,17 @@ process.umask = function() { return 0; };
             match = from_string__isoRegex.exec(string);
 
         if (match) {
-            config._pf.iso = true;
+            getParsingFlags(config).iso = true;
             for (i = 0, l = isoDates.length; i < l; i++) {
                 if (isoDates[i][1].exec(string)) {
-                    // match[5] should be 'T' or undefined
-                    config._f = isoDates[i][0] + (match[6] || ' ');
+                    config._f = isoDates[i][0];
                     break;
                 }
             }
             for (i = 0, l = isoTimes.length; i < l; i++) {
                 if (isoTimes[i][1].exec(string)) {
-                    config._f += isoTimes[i][0];
+                    // match[6] should be 'T' or space
+                    config._f += (match[6] || ' ') + isoTimes[i][0];
                     break;
                 }
             }
@@ -1144,7 +1160,10 @@ process.umask = function() { return 0; };
     addRegexToken('YYYYY',  match1to6, match6);
     addRegexToken('YYYYYY', match1to6, match6);
 
-    addParseToken(['YYYY', 'YYYYY', 'YYYYYY'], YEAR);
+    addParseToken(['YYYYY', 'YYYYYY'], YEAR);
+    addParseToken('YYYY', function (input, array) {
+        array[YEAR] = input.length === 2 ? utils_hooks__hooks.parseTwoDigitYear(input) : toInt(input);
+    });
     addParseToken('YY', function (input, array) {
         array[YEAR] = utils_hooks__hooks.parseTwoDigitYear(input);
     });
@@ -1271,18 +1290,18 @@ process.umask = function() { return 0; };
 
     //http://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year.2C_week_number_and_weekday
     function dayOfYearFromWeeks(year, week, weekday, firstDayOfWeekOfYear, firstDayOfWeek) {
-        var d = createUTCDate(year, 0, 1).getUTCDay();
-        var daysToAdd;
-        var dayOfYear;
+        var week1Jan = 6 + firstDayOfWeek - firstDayOfWeekOfYear, janX = createUTCDate(year, 0, 1 + week1Jan), d = janX.getUTCDay(), dayOfYear;
+        if (d < firstDayOfWeek) {
+            d += 7;
+        }
 
-        d = d === 0 ? 7 : d;
-        weekday = weekday != null ? weekday : firstDayOfWeek;
-        daysToAdd = firstDayOfWeek - d + (d > firstDayOfWeekOfYear ? 7 : 0) - (d < firstDayOfWeek ? 7 : 0);
-        dayOfYear = 7 * (week - 1) + (weekday - firstDayOfWeek) + daysToAdd + 1;
+        weekday = weekday != null ? 1 * weekday : firstDayOfWeek;
+
+        dayOfYear = 1 + week1Jan + 7 * (week - 1) - d + weekday;
 
         return {
-            year      : dayOfYear > 0 ? year      : year - 1,
-            dayOfYear : dayOfYear > 0 ? dayOfYear : daysInYear(year - 1) + dayOfYear
+            year: dayOfYear > 0 ? year : year - 1,
+            dayOfYear: dayOfYear > 0 ?  dayOfYear : daysInYear(year - 1) + dayOfYear
         };
     }
 
@@ -1335,7 +1354,7 @@ process.umask = function() { return 0; };
             yearToUse = defaults(config._a[YEAR], currentDate[YEAR]);
 
             if (config._dayOfYear > daysInYear(yearToUse)) {
-                config._pf._overflowDayOfYear = true;
+                getParsingFlags(config)._overflowDayOfYear = true;
             }
 
             date = createUTCDate(yearToUse, 0, config._dayOfYear);
@@ -1431,7 +1450,7 @@ process.umask = function() { return 0; };
         }
 
         config._a = [];
-        config._pf.empty = true;
+        getParsingFlags(config).empty = true;
 
         // This array is used to make a Date, either with `new Date` or `Date.UTC`
         var string = '' + config._i,
@@ -1447,7 +1466,7 @@ process.umask = function() { return 0; };
             if (parsedInput) {
                 skipped = string.substr(0, string.indexOf(parsedInput));
                 if (skipped.length > 0) {
-                    config._pf.unusedInput.push(skipped);
+                    getParsingFlags(config).unusedInput.push(skipped);
                 }
                 string = string.slice(string.indexOf(parsedInput) + parsedInput.length);
                 totalParsedInputLength += parsedInput.length;
@@ -1455,27 +1474,29 @@ process.umask = function() { return 0; };
             // don't parse if it's not a known token
             if (formatTokenFunctions[token]) {
                 if (parsedInput) {
-                    config._pf.empty = false;
+                    getParsingFlags(config).empty = false;
                 }
                 else {
-                    config._pf.unusedTokens.push(token);
+                    getParsingFlags(config).unusedTokens.push(token);
                 }
                 addTimeToArrayFromToken(token, parsedInput, config);
             }
             else if (config._strict && !parsedInput) {
-                config._pf.unusedTokens.push(token);
+                getParsingFlags(config).unusedTokens.push(token);
             }
         }
 
         // add remaining unparsed input length to the string
-        config._pf.charsLeftOver = stringLength - totalParsedInputLength;
+        getParsingFlags(config).charsLeftOver = stringLength - totalParsedInputLength;
         if (string.length > 0) {
-            config._pf.unusedInput.push(string);
+            getParsingFlags(config).unusedInput.push(string);
         }
 
         // clear _12h flag if hour is <= 12
-        if (config._pf.bigHour === true && config._a[HOUR] <= 12) {
-            config._pf.bigHour = undefined;
+        if (getParsingFlags(config).bigHour === true &&
+                config._a[HOUR] <= 12 &&
+                config._a[HOUR] > 0) {
+            getParsingFlags(config).bigHour = undefined;
         }
         // handle meridiem
         config._a[HOUR] = meridiemFixWrap(config._locale, config._a[HOUR], config._meridiem);
@@ -1519,7 +1540,7 @@ process.umask = function() { return 0; };
             currentScore;
 
         if (config._f.length === 0) {
-            config._pf.invalidFormat = true;
+            getParsingFlags(config).invalidFormat = true;
             config._d = new Date(NaN);
             return;
         }
@@ -1530,7 +1551,6 @@ process.umask = function() { return 0; };
             if (config._useUTC != null) {
                 tempConfig._useUTC = config._useUTC;
             }
-            tempConfig._pf = defaultParsingFlags();
             tempConfig._f = config._f[i];
             configFromStringAndFormat(tempConfig);
 
@@ -1539,12 +1559,12 @@ process.umask = function() { return 0; };
             }
 
             // if there is any input that was not parsed add a penalty for that format
-            currentScore += tempConfig._pf.charsLeftOver;
+            currentScore += getParsingFlags(tempConfig).charsLeftOver;
 
             //or tokens
-            currentScore += tempConfig._pf.unusedTokens.length * 10;
+            currentScore += getParsingFlags(tempConfig).unusedTokens.length * 10;
 
-            tempConfig._pf.score = currentScore;
+            getParsingFlags(tempConfig).score = currentScore;
 
             if (scoreToBeat == null || currentScore < scoreToBeat) {
                 scoreToBeat = currentScore;
@@ -1567,9 +1587,19 @@ process.umask = function() { return 0; };
     }
 
     function createFromConfig (config) {
+        var res = new Moment(checkOverflow(prepareConfig(config)));
+        if (res._nextDay) {
+            // Adding is smart enough around DST
+            res.add(1, 'd');
+            res._nextDay = undefined;
+        }
+
+        return res;
+    }
+
+    function prepareConfig (config) {
         var input = config._i,
-            format = config._f,
-            res;
+            format = config._f;
 
         config._locale = config._locale || locale_locales__getLocale(config._l);
 
@@ -1587,18 +1617,13 @@ process.umask = function() { return 0; };
             configFromStringAndArray(config);
         } else if (format) {
             configFromStringAndFormat(config);
+        } else if (isDate(input)) {
+            config._d = input;
         } else {
             configFromInput(config);
         }
 
-        res = new Moment(checkOverflow(config));
-        if (res._nextDay) {
-            // Adding is smart enough around DST
-            res.add(1, 'd');
-            res._nextDay = undefined;
-        }
-
-        return res;
+        return config;
     }
 
     function configFromInput(config) {
@@ -1639,7 +1664,6 @@ process.umask = function() { return 0; };
         c._i = input;
         c._f = format;
         c._strict = strict;
-        c._pf = defaultParsingFlags();
 
         return createFromConfig(c);
     }
@@ -1679,7 +1703,7 @@ process.umask = function() { return 0; };
         }
         res = moments[0];
         for (i = 1; i < moments.length; ++i) {
-            if (moments[i][fn](res)) {
+            if (!moments[i].isValid() || moments[i][fn](res)) {
                 res = moments[i];
             }
         }
@@ -1791,7 +1815,6 @@ process.umask = function() { return 0; };
         } else {
             return local__createLocal(input).local();
         }
-        return model._isUTC ? local__createLocal(input).zone(model._offset || 0) : local__createLocal(input).local();
     }
 
     function getDateOffset (m) {
@@ -1891,12 +1914,7 @@ process.umask = function() { return 0; };
     }
 
     function hasAlignedHourOffset (input) {
-        if (!input) {
-            input = 0;
-        }
-        else {
-            input = local__createLocal(input).utcOffset();
-        }
+        input = input ? local__createLocal(input).utcOffset() : 0;
 
         return (this.utcOffset() - input) % 60 === 0;
     }
@@ -1909,12 +1927,24 @@ process.umask = function() { return 0; };
     }
 
     function isDaylightSavingTimeShifted () {
-        if (this._a) {
-            var other = this._isUTC ? create_utc__createUTC(this._a) : local__createLocal(this._a);
-            return this.isValid() && compareArrays(this._a, other.toArray()) > 0;
+        if (typeof this._isDSTShifted !== 'undefined') {
+            return this._isDSTShifted;
         }
 
-        return false;
+        var c = {};
+
+        copyConfig(c, this);
+        c = prepareConfig(c);
+
+        if (c._a) {
+            var other = c._isUTC ? create_utc__createUTC(c._a) : local__createLocal(c._a);
+            this._isDSTShifted = this.isValid() &&
+                compareArrays(c._a, other.toArray()) > 0;
+        } else {
+            this._isDSTShifted = false;
+        }
+
+        return this._isDSTShifted;
     }
 
     function isLocal () {
@@ -2074,7 +2104,7 @@ process.umask = function() { return 0; };
     var add_subtract__add      = createAdder(1, 'add');
     var add_subtract__subtract = createAdder(-1, 'subtract');
 
-    function moment_calendar__calendar (time) {
+    function moment_calendar__calendar (time, formats) {
         // We want to compare the start of today, vs this.
         // Getting start-of-today depends on whether we're local/utc/offset or not.
         var now = time || local__createLocal(),
@@ -2086,7 +2116,7 @@ process.umask = function() { return 0; };
                 diff < 1 ? 'sameDay' :
                 diff < 2 ? 'nextDay' :
                 diff < 7 ? 'nextWeek' : 'sameElse';
-        return this.format(this.localeData().calendar(format, this, local__createLocal(now)));
+        return this.format(formats && formats[format] || this.localeData().calendar(format, this, local__createLocal(now)));
     }
 
     function clone () {
@@ -2130,14 +2160,6 @@ process.umask = function() { return 0; };
         } else {
             inputMs = +local__createLocal(input);
             return +(this.clone().startOf(units)) <= inputMs && inputMs <= +(this.clone().endOf(units));
-        }
-    }
-
-    function absFloor (number) {
-        if (number < 0) {
-            return Math.ceil(number);
-        } else {
-            return Math.floor(number);
         }
     }
 
@@ -2213,11 +2235,25 @@ process.umask = function() { return 0; };
     }
 
     function from (time, withoutSuffix) {
+        if (!this.isValid()) {
+            return this.localeData().invalidDate();
+        }
         return create__createDuration({to: this, from: time}).locale(this.locale()).humanize(!withoutSuffix);
     }
 
     function fromNow (withoutSuffix) {
         return this.from(local__createLocal(), withoutSuffix);
+    }
+
+    function to (time, withoutSuffix) {
+        if (!this.isValid()) {
+            return this.localeData().invalidDate();
+        }
+        return create__createDuration({from: this, to: time}).locale(this.locale()).humanize(!withoutSuffix);
+    }
+
+    function toNow (withoutSuffix) {
+        return this.to(local__createLocal(), withoutSuffix);
     }
 
     function locale (key) {
@@ -2317,16 +2353,29 @@ process.umask = function() { return 0; };
         return [m.year(), m.month(), m.date(), m.hour(), m.minute(), m.second(), m.millisecond()];
     }
 
+    function toObject () {
+        var m = this;
+        return {
+            years: m.year(),
+            months: m.month(),
+            date: m.date(),
+            hours: m.hours(),
+            minutes: m.minutes(),
+            seconds: m.seconds(),
+            milliseconds: m.milliseconds()
+        };
+    }
+
     function moment_valid__isValid () {
         return valid__isValid(this);
     }
 
     function parsingFlags () {
-        return extend({}, this._pf);
+        return extend({}, getParsingFlags(this));
     }
 
     function invalidAt () {
-        return this._pf.overflow;
+        return getParsingFlags(this).overflow;
     }
 
     addFormatToken(0, ['gg', 2], 0, function () {
@@ -2477,7 +2526,7 @@ process.umask = function() { return 0; };
         if (weekday != null) {
             week.d = weekday;
         } else {
-            config._pf.invalidWeekday = input;
+            getParsingFlags(config).invalidWeekday = input;
         }
     });
 
@@ -2488,18 +2537,20 @@ process.umask = function() { return 0; };
     // HELPERS
 
     function parseWeekday(input, locale) {
-        if (typeof input === 'string') {
-            if (!isNaN(input)) {
-                input = parseInt(input, 10);
-            }
-            else {
-                input = locale.weekdaysParse(input);
-                if (typeof input !== 'number') {
-                    return null;
-                }
-            }
+        if (typeof input !== 'string') {
+            return input;
         }
-        return input;
+
+        if (!isNaN(input)) {
+            return parseInt(input, 10);
+        }
+
+        input = locale.weekdaysParse(input);
+        if (typeof input === 'number') {
+            return input;
+        }
+
+        return null;
     }
 
     // LOCALES
@@ -2522,9 +2573,7 @@ process.umask = function() { return 0; };
     function localeWeekdaysParse (weekdayName) {
         var i, mom, regex;
 
-        if (!this._weekdaysParse) {
-            this._weekdaysParse = [];
-        }
+        this._weekdaysParse = this._weekdaysParse || [];
 
         for (i = 0; i < 7; i++) {
             // make the regex if we don't have it already
@@ -2602,7 +2651,7 @@ process.umask = function() { return 0; };
     });
     addParseToken(['h', 'hh'], function (input, array, config) {
         array[HOUR] = toInt(input);
-        config._pf.bigHour = true;
+        getParsingFlags(config).bigHour = true;
     });
 
     // LOCALES
@@ -2671,12 +2720,26 @@ process.umask = function() { return 0; };
         return ~~(this.millisecond() / 10);
     });
 
-    function millisecond__milliseconds (token) {
-        addFormatToken(0, [token, 3], 0, 'millisecond');
-    }
+    addFormatToken(0, ['SSS', 3], 0, 'millisecond');
+    addFormatToken(0, ['SSSS', 4], 0, function () {
+        return this.millisecond() * 10;
+    });
+    addFormatToken(0, ['SSSSS', 5], 0, function () {
+        return this.millisecond() * 100;
+    });
+    addFormatToken(0, ['SSSSSS', 6], 0, function () {
+        return this.millisecond() * 1000;
+    });
+    addFormatToken(0, ['SSSSSSS', 7], 0, function () {
+        return this.millisecond() * 10000;
+    });
+    addFormatToken(0, ['SSSSSSSS', 8], 0, function () {
+        return this.millisecond() * 100000;
+    });
+    addFormatToken(0, ['SSSSSSSSS', 9], 0, function () {
+        return this.millisecond() * 1000000;
+    });
 
-    millisecond__milliseconds('SSS');
-    millisecond__milliseconds('SSSS');
 
     // ALIASES
 
@@ -2687,11 +2750,19 @@ process.umask = function() { return 0; };
     addRegexToken('S',    match1to3, match1);
     addRegexToken('SS',   match1to3, match2);
     addRegexToken('SSS',  match1to3, match3);
-    addRegexToken('SSSS', matchUnsigned);
-    addParseToken(['S', 'SS', 'SSS', 'SSSS'], function (input, array) {
-        array[MILLISECOND] = toInt(('0.' + input) * 1000);
-    });
 
+    var token;
+    for (token = 'SSSS'; token.length <= 9; token += 'S') {
+        addRegexToken(token, matchUnsigned);
+    }
+
+    function parseMs(input, array) {
+        array[MILLISECOND] = toInt(('0.' + input) * 1000);
+    }
+
+    for (token = 'S'; token.length <= 9; token += 'S') {
+        addParseToken(token, parseMs);
+    }
     // MOMENTS
 
     var getSetMillisecond = makeGetSet('Milliseconds', false);
@@ -2719,6 +2790,8 @@ process.umask = function() { return 0; };
     momentPrototype__proto.format       = format;
     momentPrototype__proto.from         = from;
     momentPrototype__proto.fromNow      = fromNow;
+    momentPrototype__proto.to           = to;
+    momentPrototype__proto.toNow        = toNow;
     momentPrototype__proto.get          = getSet;
     momentPrototype__proto.invalidAt    = invalidAt;
     momentPrototype__proto.isAfter      = isAfter;
@@ -2736,6 +2809,7 @@ process.umask = function() { return 0; };
     momentPrototype__proto.startOf      = startOf;
     momentPrototype__proto.subtract     = add_subtract__subtract;
     momentPrototype__proto.toArray      = toArray;
+    momentPrototype__proto.toObject     = toObject;
     momentPrototype__proto.toDate       = toDate;
     momentPrototype__proto.toISOString  = moment_format__toISOString;
     momentPrototype__proto.toJSON       = moment_format__toISOString;
@@ -2835,19 +2909,23 @@ process.umask = function() { return 0; };
         LT   : 'h:mm A',
         L    : 'MM/DD/YYYY',
         LL   : 'MMMM D, YYYY',
-        LLL  : 'MMMM D, YYYY LT',
-        LLLL : 'dddd, MMMM D, YYYY LT'
+        LLL  : 'MMMM D, YYYY h:mm A',
+        LLLL : 'dddd, MMMM D, YYYY h:mm A'
     };
 
     function longDateFormat (key) {
-        var output = this._longDateFormat[key];
-        if (!output && this._longDateFormat[key.toUpperCase()]) {
-            output = this._longDateFormat[key.toUpperCase()].replace(/MMMM|MM|DD|dddd/g, function (val) {
-                return val.slice(1);
-            });
-            this._longDateFormat[key] = output;
+        var format = this._longDateFormat[key],
+            formatUpper = this._longDateFormat[key.toUpperCase()];
+
+        if (format || !formatUpper) {
+            return format;
         }
-        return output;
+
+        this._longDateFormat[key] = formatUpper.replace(/MMMM|MM|DD|dddd/g, function (val) {
+            return val.slice(1);
+        });
+
+        return this._longDateFormat[key];
     }
 
     var defaultInvalidDate = 'Invalid date';
@@ -2907,7 +2985,7 @@ process.umask = function() { return 0; };
         }
         // Lenient ordinal parsing accepts just a number in addition to
         // number + (possibly) stuff coming from _ordinalParseLenient.
-        this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + /\d{1,2}/.source);
+        this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + (/\d{1,2}/).source);
     }
 
     var prototype__proto = Locale.prototype;
@@ -3056,12 +3134,29 @@ process.umask = function() { return 0; };
         return duration_add_subtract__addSubtract(this, input, value, -1);
     }
 
+    function absCeil (number) {
+        if (number < 0) {
+            return Math.floor(number);
+        } else {
+            return Math.ceil(number);
+        }
+    }
+
     function bubble () {
         var milliseconds = this._milliseconds;
         var days         = this._days;
         var months       = this._months;
         var data         = this._data;
-        var seconds, minutes, hours, years = 0;
+        var seconds, minutes, hours, years, monthsFromDays;
+
+        // if we have a mix of positive and negative values, bubble down first
+        // check: https://github.com/moment/moment/issues/2166
+        if (!((milliseconds >= 0 && days >= 0 && months >= 0) ||
+                (milliseconds <= 0 && days <= 0 && months <= 0))) {
+            milliseconds += absCeil(monthsToDays(months) + days) * 864e5;
+            days = 0;
+            months = 0;
+        }
 
         // The following code bubbles up values, see the tests for
         // examples of what that means.
@@ -3078,17 +3173,13 @@ process.umask = function() { return 0; };
 
         days += absFloor(hours / 24);
 
-        // Accurately convert days to years, assume start from year 0.
-        years = absFloor(daysToYears(days));
-        days -= absFloor(yearsToDays(years));
-
-        // 30 days to a month
-        // TODO (iskren): Use anchor date (like 1st Jan) to compute this.
-        months += absFloor(days / 30);
-        days   %= 30;
+        // convert days to months
+        monthsFromDays = absFloor(daysToMonths(days));
+        months += monthsFromDays;
+        days -= absCeil(monthsToDays(monthsFromDays));
 
         // 12 months -> 1 year
-        years  += absFloor(months / 12);
+        years = absFloor(months / 12);
         months %= 12;
 
         data.days   = days;
@@ -3098,15 +3189,15 @@ process.umask = function() { return 0; };
         return this;
     }
 
-    function daysToYears (days) {
+    function daysToMonths (days) {
         // 400 years have 146097 days (taking into account leap year rules)
-        return days * 400 / 146097;
+        // 400 years have 12 months === 4800
+        return days * 4800 / 146097;
     }
 
-    function yearsToDays (years) {
-        // years * 365 + absFloor(years / 4) -
-        //     absFloor(years / 100) + absFloor(years / 400);
-        return years * 146097 / 400;
+    function monthsToDays (months) {
+        // the reverse of daysToMonths
+        return months * 146097 / 4800;
     }
 
     function as (units) {
@@ -3118,19 +3209,19 @@ process.umask = function() { return 0; };
 
         if (units === 'month' || units === 'year') {
             days   = this._days   + milliseconds / 864e5;
-            months = this._months + daysToYears(days) * 12;
+            months = this._months + daysToMonths(days);
             return units === 'month' ? months : months / 12;
         } else {
             // handle milliseconds separately because of floating point math errors (issue #1867)
-            days = this._days + Math.round(yearsToDays(this._months / 12));
+            days = this._days + Math.round(monthsToDays(this._months));
             switch (units) {
-                case 'week'   : return days / 7            + milliseconds / 6048e5;
-                case 'day'    : return days                + milliseconds / 864e5;
-                case 'hour'   : return days * 24           + milliseconds / 36e5;
-                case 'minute' : return days * 24 * 60      + milliseconds / 6e4;
-                case 'second' : return days * 24 * 60 * 60 + milliseconds / 1000;
+                case 'week'   : return days / 7     + milliseconds / 6048e5;
+                case 'day'    : return days         + milliseconds / 864e5;
+                case 'hour'   : return days * 24    + milliseconds / 36e5;
+                case 'minute' : return days * 1440  + milliseconds / 6e4;
+                case 'second' : return days * 86400 + milliseconds / 1000;
                 // Math.floor prevents floating point math errors here
-                case 'millisecond': return Math.floor(days * 24 * 60 * 60 * 1000) + milliseconds;
+                case 'millisecond': return Math.floor(days * 864e5) + milliseconds;
                 default: throw new Error('Unknown unit ' + units);
             }
         }
@@ -3172,7 +3263,7 @@ process.umask = function() { return 0; };
         };
     }
 
-    var duration_get__milliseconds = makeGetter('milliseconds');
+    var milliseconds = makeGetter('milliseconds');
     var seconds      = makeGetter('seconds');
     var minutes      = makeGetter('minutes');
     var hours        = makeGetter('hours');
@@ -3250,13 +3341,36 @@ process.umask = function() { return 0; };
     var iso_string__abs = Math.abs;
 
     function iso_string__toISOString() {
+        // for ISO strings we do not use the normal bubbling rules:
+        //  * milliseconds bubble up until they become hours
+        //  * days do not bubble at all
+        //  * months bubble up until they become years
+        // This is because there is no context-free conversion between hours and days
+        // (think of clock changes)
+        // and also not between days and months (28-31 days per month)
+        var seconds = iso_string__abs(this._milliseconds) / 1000;
+        var days         = iso_string__abs(this._days);
+        var months       = iso_string__abs(this._months);
+        var minutes, hours, years;
+
+        // 3600 seconds -> 60 minutes -> 1 hour
+        minutes           = absFloor(seconds / 60);
+        hours             = absFloor(minutes / 60);
+        seconds %= 60;
+        minutes %= 60;
+
+        // 12 months -> 1 year
+        years  = absFloor(months / 12);
+        months %= 12;
+
+
         // inspired by https://github.com/dordille/moment-isoduration/blob/master/moment.isoduration.js
-        var Y = iso_string__abs(this.years());
-        var M = iso_string__abs(this.months());
-        var D = iso_string__abs(this.days());
-        var h = iso_string__abs(this.hours());
-        var m = iso_string__abs(this.minutes());
-        var s = iso_string__abs(this.seconds() + this.milliseconds() / 1000);
+        var Y = years;
+        var M = months;
+        var D = days;
+        var h = hours;
+        var m = minutes;
+        var s = seconds;
         var total = this.asSeconds();
 
         if (!total) {
@@ -3293,7 +3407,7 @@ process.umask = function() { return 0; };
     duration_prototype__proto.valueOf        = duration_as__valueOf;
     duration_prototype__proto._bubble        = bubble;
     duration_prototype__proto.get            = duration_get__get;
-    duration_prototype__proto.milliseconds   = duration_get__milliseconds;
+    duration_prototype__proto.milliseconds   = milliseconds;
     duration_prototype__proto.seconds        = seconds;
     duration_prototype__proto.minutes        = minutes;
     duration_prototype__proto.hours          = hours;
@@ -3331,7 +3445,7 @@ process.umask = function() { return 0; };
     // Side effect imports
 
 
-    utils_hooks__hooks.version = '2.10.2';
+    utils_hooks__hooks.version = '2.10.6';
 
     setHookCallback(local__createLocal);
 
@@ -3492,13 +3606,13 @@ var History = {
 
 module.exports = History;
 },{"react/lib/ExecutionEnvironment":67,"react/lib/invariant":196}],9:[function(require,module,exports){
+/* jshint -W084 */
 'use strict';
-
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-/* jshint -W084 */
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
 var PathUtils = require('./PathUtils');
 
 function deepSearch(route, pathname, query) {
@@ -3521,29 +3635,20 @@ function deepSearch(route, pathname, query) {
 
   // No child routes matched; try the default route.
   var defaultRoute = route.defaultRoute;
-  if (defaultRoute && (params = PathUtils.extractParams(defaultRoute.path, pathname))) {
-    return new Match(pathname, params, query, [route, defaultRoute]);
-  } // Does the "not found" route match?
+  if (defaultRoute && (params = PathUtils.extractParams(defaultRoute.path, pathname))) return new Match(pathname, params, query, [route, defaultRoute]);
+
+  // Does the "not found" route match?
   var notFoundRoute = route.notFoundRoute;
-  if (notFoundRoute && (params = PathUtils.extractParams(notFoundRoute.path, pathname))) {
-    return new Match(pathname, params, query, [route, notFoundRoute]);
-  } // Last attempt: check this route.
+  if (notFoundRoute && (params = PathUtils.extractParams(notFoundRoute.path, pathname))) return new Match(pathname, params, query, [route, notFoundRoute]);
+
+  // Last attempt: check this route.
   var params = PathUtils.extractParams(route.path, pathname);
-  if (params) {
-    return new Match(pathname, params, query, [route]);
-  }return null;
+  if (params) return new Match(pathname, params, query, [route]);
+
+  return null;
 }
 
 var Match = (function () {
-  function Match(pathname, params, query, routes) {
-    _classCallCheck(this, Match);
-
-    this.pathname = pathname;
-    this.params = params;
-    this.query = query;
-    this.routes = routes;
-  }
-
   _createClass(Match, null, [{
     key: 'findMatch',
 
@@ -3562,6 +3667,15 @@ var Match = (function () {
       return match;
     }
   }]);
+
+  function Match(pathname, params, query, routes) {
+    _classCallCheck(this, Match);
+
+    this.pathname = pathname;
+    this.params = params;
+    this.query = query;
+    this.routes = routes;
+  }
 
   return Match;
 })();
@@ -3647,7 +3761,7 @@ var qs = require('qs');
 
 var paramCompileMatcher = /:([a-zA-Z_$][a-zA-Z0-9_$]*)|[*.()\[\]\\+|{}^$]/g;
 var paramInjectMatcher = /:([a-zA-Z_$][a-zA-Z0-9_$?]*[?]?)|[*]/g;
-var paramInjectTrailingSlashMatcher = /\/\/\?|\/\?\/|\/\?/g;
+var paramInjectTrailingSlashMatcher = /\/\/\?|\/\?\/|\/\?(?![^\/=]+=.*$)/g;
 var queryMatcher = /\?(.*)$/;
 
 var _compiledPatterns = {};
@@ -3712,9 +3826,9 @@ var PathUtils = {
 
     var match = path.match(matcher);
 
-    if (!match) {
-      return null;
-    }var params = {};
+    if (!match) return null;
+
+    var params = {};
 
     paramNames.forEach(function (paramName, index) {
       params[paramName] = match[index + 1];
@@ -3784,9 +3898,9 @@ var PathUtils = {
 
     var queryString = qs.stringify(query, { arrayFormat: 'brackets' });
 
-    if (queryString) {
-      return PathUtils.withoutQuery(path) + '?' + queryString;
-    }return PathUtils.withoutQuery(path);
+    if (queryString) return PathUtils.withoutQuery(path) + '?' + queryString;
+
+    return PathUtils.withoutQuery(path);
   }
 
 };
@@ -3805,9 +3919,7 @@ var PropTypes = assign({}, ReactPropTypes, {
    * Indicates that a prop should be falsy.
    */
   falsy: function falsy(props, propName, componentName) {
-    if (props[propName]) {
-      return new Error('<' + componentName + '> should not have a "' + propName + '" prop');
-    }
+    if (props[propName]) return new Error('<' + componentName + '> should not have a "' + propName + '" prop');
   },
 
   /**
@@ -3840,9 +3952,9 @@ module.exports = Redirect;
 },{}],14:[function(require,module,exports){
 'use strict';
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var assign = require('react/lib/Object.assign');
 var invariant = require('react/lib/invariant');
@@ -3852,45 +3964,7 @@ var PathUtils = require('./PathUtils');
 var _currentRoute;
 
 var Route = (function () {
-  function Route(name, path, ignoreScrollBehavior, isDefault, isNotFound, onEnter, onLeave, handler) {
-    _classCallCheck(this, Route);
-
-    this.name = name;
-    this.path = path;
-    this.paramNames = PathUtils.extractParamNames(this.path);
-    this.ignoreScrollBehavior = !!ignoreScrollBehavior;
-    this.isDefault = !!isDefault;
-    this.isNotFound = !!isNotFound;
-    this.onEnter = onEnter;
-    this.onLeave = onLeave;
-    this.handler = handler;
-  }
-
-  _createClass(Route, [{
-    key: 'appendChild',
-
-    /**
-     * Appends the given route to this route's child routes.
-     */
-    value: function appendChild(route) {
-      invariant(route instanceof Route, 'route.appendChild must use a valid Route');
-
-      if (!this.childRoutes) this.childRoutes = [];
-
-      this.childRoutes.push(route);
-    }
-  }, {
-    key: 'toString',
-    value: function toString() {
-      var string = '<Route';
-
-      if (this.name) string += ' name="' + this.name + '"';
-
-      string += ' path="' + this.path + '">';
-
-      return string;
-    }
-  }], [{
+  _createClass(Route, null, [{
     key: 'createRoute',
 
     /**
@@ -3989,28 +4063,26 @@ var Route = (function () {
 
       return route;
     }
-  }, {
-    key: 'createDefaultRoute',
 
     /**
      * Creates and returns a route that is rendered when its parent matches
      * the current URL.
      */
+  }, {
+    key: 'createDefaultRoute',
     value: function createDefaultRoute(options) {
       return Route.createRoute(assign({}, options, { isDefault: true }));
     }
-  }, {
-    key: 'createNotFoundRoute',
 
     /**
      * Creates and returns a route that is rendered when its parent matches
      * the current URL but none of its siblings do.
      */
+  }, {
+    key: 'createNotFoundRoute',
     value: function createNotFoundRoute(options) {
       return Route.createRoute(assign({}, options, { isNotFound: true }));
     }
-  }, {
-    key: 'createRedirect',
 
     /**
      * Creates and returns a route that automatically redirects the transition
@@ -4024,6 +4096,8 @@ var Route = (function () {
      * - query        The query to use in the redirect URL. Defaults
      *                to using the current query
      */
+  }, {
+    key: 'createRedirect',
     value: function createRedirect(options) {
       return Route.createRoute(assign({}, options, {
         path: options.path || options.from || '*',
@@ -4031,6 +4105,46 @@ var Route = (function () {
           transition.redirect(options.to, options.params || params, options.query || query);
         }
       }));
+    }
+  }]);
+
+  function Route(name, path, ignoreScrollBehavior, isDefault, isNotFound, onEnter, onLeave, handler) {
+    _classCallCheck(this, Route);
+
+    this.name = name;
+    this.path = path;
+    this.paramNames = PathUtils.extractParamNames(this.path);
+    this.ignoreScrollBehavior = !!ignoreScrollBehavior;
+    this.isDefault = !!isDefault;
+    this.isNotFound = !!isNotFound;
+    this.onEnter = onEnter;
+    this.onLeave = onLeave;
+    this.handler = handler;
+  }
+
+  /**
+   * Appends the given route to this route's child routes.
+   */
+
+  _createClass(Route, [{
+    key: 'appendChild',
+    value: function appendChild(route) {
+      invariant(route instanceof Route, 'route.appendChild must use a valid Route');
+
+      if (!this.childRoutes) this.childRoutes = [];
+
+      this.childRoutes.push(route);
+    }
+  }, {
+    key: 'toString',
+    value: function toString() {
+      var string = '<Route';
+
+      if (this.name) string += ' name="' + this.name + '"';
+
+      string += ' path="' + this.path + '">';
+
+      return string;
     }
   }]);
 
@@ -4046,12 +4160,12 @@ var canUseDOM = require('react/lib/ExecutionEnvironment').canUseDOM;
 var getWindowScrollPosition = require('./getWindowScrollPosition');
 
 function shouldUpdateScroll(state, prevState) {
-  if (!prevState) {
-    return true;
-  } // Don't update scroll position when only the query has changed.
-  if (state.pathname === prevState.pathname) {
-    return false;
-  }var routes = state.routes;
+  if (!prevState) return true;
+
+  // Don't update scroll position when only the query has changed.
+  if (state.pathname === prevState.pathname) return false;
+
+  var routes = state.routes;
   var prevRoutes = prevState.routes;
 
   var sharedAncestorRoutes = routes.filter(function (route) {
@@ -4104,9 +4218,9 @@ var ScrollHistory = {
   },
 
   _updateScroll: function _updateScroll(prevState) {
-    if (!shouldUpdateScroll(this.state, prevState)) {
-      return;
-    }var scrollBehavior = this.constructor.getScrollBehavior();
+    if (!shouldUpdateScroll(this.state, prevState)) return;
+
+    var scrollBehavior = this.constructor.getScrollBehavior();
 
     if (scrollBehavior) scrollBehavior.updateScrollPosition(this.constructor.getScrollPosition(this.state.path), this.state.action);
   }
@@ -4338,32 +4452,32 @@ var ScrollToTopBehavior = {
 
 module.exports = ScrollToTopBehavior;
 },{}],21:[function(require,module,exports){
-'use strict';
-
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
-
 /**
  * This component is necessary to get around a context warning
  * present in React 0.13.0. It sovles this by providing a separation
  * between the "owner" and "parent" contexts.
  */
 
+'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var React = require('react');
 
 var ContextWrapper = (function (_React$Component) {
+  _inherits(ContextWrapper, _React$Component);
+
   function ContextWrapper() {
     _classCallCheck(this, ContextWrapper);
 
-    if (_React$Component != null) {
-      _React$Component.apply(this, arguments);
-    }
+    _get(Object.getPrototypeOf(ContextWrapper.prototype), 'constructor', this).apply(this, arguments);
   }
-
-  _inherits(ContextWrapper, _React$Component);
 
   _createClass(ContextWrapper, [{
     key: 'render',
@@ -4379,9 +4493,11 @@ module.exports = ContextWrapper;
 },{"react":218}],22:[function(require,module,exports){
 'use strict';
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var PropTypes = require('../PropTypes');
 var RouteHandler = require('./RouteHandler');
@@ -4395,22 +4511,20 @@ var Route = require('./Route');
  */
 
 var DefaultRoute = (function (_Route) {
+  _inherits(DefaultRoute, _Route);
+
   function DefaultRoute() {
     _classCallCheck(this, DefaultRoute);
 
-    if (_Route != null) {
-      _Route.apply(this, arguments);
-    }
+    _get(Object.getPrototypeOf(DefaultRoute.prototype), 'constructor', this).apply(this, arguments);
   }
 
-  _inherits(DefaultRoute, _Route);
+  // TODO: Include these in the above class definition
+  // once we can use ES7 property initializers.
+  // https://github.com/babel/babel/issues/619
 
   return DefaultRoute;
 })(Route);
-
-// TODO: Include these in the above class definition
-// once we can use ES7 property initializers.
-// https://github.com/babel/babel/issues/619
 
 DefaultRoute.propTypes = {
   name: PropTypes.string,
@@ -4427,11 +4541,13 @@ module.exports = DefaultRoute;
 },{"../PropTypes":12,"./Route":26,"./RouteHandler":27}],23:[function(require,module,exports){
 'use strict';
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var React = require('react');
 var assign = require('react/lib/Object.assign');
@@ -4465,15 +4581,17 @@ function isModifiedEvent(event) {
  */
 
 var Link = (function (_React$Component) {
+  _inherits(Link, _React$Component);
+
   function Link() {
     _classCallCheck(this, Link);
 
-    if (_React$Component != null) {
-      _React$Component.apply(this, arguments);
-    }
+    _get(Object.getPrototypeOf(Link.prototype), 'constructor', this).apply(this, arguments);
   }
 
-  _inherits(Link, _React$Component);
+  // TODO: Include these in the above class definition
+  // once we can use ES7 property initializers.
+  // https://github.com/babel/babel/issues/619
 
   _createClass(Link, [{
     key: 'handleClick',
@@ -4483,30 +4601,30 @@ var Link = (function (_React$Component) {
 
       if (this.props.onClick) clickResult = this.props.onClick(event);
 
-      if (isModifiedEvent(event) || !isLeftClickEvent(event)) {
-        return;
-      }if (clickResult === false || event.defaultPrevented === true) allowTransition = false;
+      if (isModifiedEvent(event) || !isLeftClickEvent(event)) return;
+
+      if (clickResult === false || event.defaultPrevented === true) allowTransition = false;
 
       event.preventDefault();
 
       if (allowTransition) this.context.router.transitionTo(this.props.to, this.props.params, this.props.query);
     }
-  }, {
-    key: 'getHref',
 
     /**
      * Returns the value of the "href" attribute to use on the DOM element.
      */
+  }, {
+    key: 'getHref',
     value: function getHref() {
       return this.context.router.makeHref(this.props.to, this.props.params, this.props.query);
     }
-  }, {
-    key: 'getClassName',
 
     /**
      * Returns the value of the "class" attribute to use on the DOM element, which contains
      * the value of the activeClassName property when this <Link> is active.
      */
+  }, {
+    key: 'getClassName',
     value: function getClassName() {
       var className = this.props.className;
 
@@ -4537,10 +4655,6 @@ var Link = (function (_React$Component) {
   return Link;
 })(React.Component);
 
-// TODO: Include these in the above class definition
-// once we can use ES7 property initializers.
-// https://github.com/babel/babel/issues/619
-
 Link.contextTypes = {
   router: PropTypes.router.isRequired
 };
@@ -4563,9 +4677,11 @@ module.exports = Link;
 },{"../PropTypes":12,"react":218,"react/lib/Object.assign":74}],24:[function(require,module,exports){
 'use strict';
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var PropTypes = require('../PropTypes');
 var RouteHandler = require('./RouteHandler');
@@ -4580,22 +4696,20 @@ var Route = require('./Route');
  */
 
 var NotFoundRoute = (function (_Route) {
+  _inherits(NotFoundRoute, _Route);
+
   function NotFoundRoute() {
     _classCallCheck(this, NotFoundRoute);
 
-    if (_Route != null) {
-      _Route.apply(this, arguments);
-    }
+    _get(Object.getPrototypeOf(NotFoundRoute.prototype), 'constructor', this).apply(this, arguments);
   }
 
-  _inherits(NotFoundRoute, _Route);
+  // TODO: Include these in the above class definition
+  // once we can use ES7 property initializers.
+  // https://github.com/babel/babel/issues/619
 
   return NotFoundRoute;
 })(Route);
-
-// TODO: Include these in the above class definition
-// once we can use ES7 property initializers.
-// https://github.com/babel/babel/issues/619
 
 NotFoundRoute.propTypes = {
   name: PropTypes.string,
@@ -4612,9 +4726,11 @@ module.exports = NotFoundRoute;
 },{"../PropTypes":12,"./Route":26,"./RouteHandler":27}],25:[function(require,module,exports){
 'use strict';
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var PropTypes = require('../PropTypes');
 var Route = require('./Route');
@@ -4625,22 +4741,20 @@ var Route = require('./Route');
  */
 
 var Redirect = (function (_Route) {
+  _inherits(Redirect, _Route);
+
   function Redirect() {
     _classCallCheck(this, Redirect);
 
-    if (_Route != null) {
-      _Route.apply(this, arguments);
-    }
+    _get(Object.getPrototypeOf(Redirect.prototype), 'constructor', this).apply(this, arguments);
   }
 
-  _inherits(Redirect, _Route);
+  // TODO: Include these in the above class definition
+  // once we can use ES7 property initializers.
+  // https://github.com/babel/babel/issues/619
 
   return Redirect;
 })(Route);
-
-// TODO: Include these in the above class definition
-// once we can use ES7 property initializers.
-// https://github.com/babel/babel/issues/619
 
 Redirect.propTypes = {
   path: PropTypes.string,
@@ -4656,11 +4770,13 @@ module.exports = Redirect;
 },{"../PropTypes":12,"./Route":26}],26:[function(require,module,exports){
 'use strict';
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var React = require('react');
 var invariant = require('react/lib/invariant');
@@ -4698,7 +4814,7 @@ var RouteHandler = require('./RouteHandler');
  *   var App = React.createClass({
  *     render: function () {
  *       return (
- *         <div class="application">
+ *         <div className="application">
  *           <RouteHandler/>
  *         </div>
  *       );
@@ -4709,15 +4825,17 @@ var RouteHandler = require('./RouteHandler');
  */
 
 var Route = (function (_React$Component) {
+  _inherits(Route, _React$Component);
+
   function Route() {
     _classCallCheck(this, Route);
 
-    if (_React$Component != null) {
-      _React$Component.apply(this, arguments);
-    }
+    _get(Object.getPrototypeOf(Route.prototype), 'constructor', this).apply(this, arguments);
   }
 
-  _inherits(Route, _React$Component);
+  // TODO: Include these in the above class definition
+  // once we can use ES7 property initializers.
+  // https://github.com/babel/babel/issues/619
 
   _createClass(Route, [{
     key: 'render',
@@ -4728,10 +4846,6 @@ var Route = (function (_React$Component) {
 
   return Route;
 })(React.Component);
-
-// TODO: Include these in the above class definition
-// once we can use ES7 property initializers.
-// https://github.com/babel/babel/issues/619
 
 Route.propTypes = {
   name: PropTypes.string,
@@ -4748,11 +4862,13 @@ module.exports = Route;
 },{"../PropTypes":12,"./RouteHandler":27,"react":218,"react/lib/invariant":196}],27:[function(require,module,exports){
 'use strict';
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var React = require('react');
 var ContextWrapper = require('./ContextWrapper');
@@ -4767,15 +4883,17 @@ var REF_NAME = '__routeHandler__';
  */
 
 var RouteHandler = (function (_React$Component) {
+  _inherits(RouteHandler, _React$Component);
+
   function RouteHandler() {
     _classCallCheck(this, RouteHandler);
 
-    if (_React$Component != null) {
-      _React$Component.apply(this, arguments);
-    }
+    _get(Object.getPrototypeOf(RouteHandler.prototype), 'constructor', this).apply(this, arguments);
   }
 
-  _inherits(RouteHandler, _React$Component);
+  // TODO: Include these in the above class definition
+  // once we can use ES7 property initializers.
+  // https://github.com/babel/babel/issues/619
 
   _createClass(RouteHandler, [{
     key: 'getChildContext',
@@ -4814,9 +4932,9 @@ var RouteHandler = (function (_React$Component) {
     value: function createChildRouteHandler(props) {
       var route = this.context.router.getRouteAtDepth(this.getRouteDepth());
 
-      if (route == null) {
-        return null;
-      }var childProps = assign({}, props || this.props, {
+      if (route == null) return null;
+
+      var childProps = assign({}, props || this.props, {
         ref: REF_NAME,
         params: this.context.router.getCurrentParams(),
         query: this.context.router.getCurrentQuery()
@@ -4839,10 +4957,6 @@ var RouteHandler = (function (_React$Component) {
 
   return RouteHandler;
 })(React.Component);
-
-// TODO: Include these in the above class definition
-// once we can use ES7 property initializers.
-// https://github.com/babel/babel/issues/619
 
 RouteHandler.contextTypes = {
   routeDepth: PropTypes.number.isRequired,
@@ -4893,9 +5007,9 @@ var DEFAULT_LOCATION = canUseDOM ? HashLocation : '/';
 var DEFAULT_SCROLL_BEHAVIOR = canUseDOM ? ImitateBrowserBehavior : null;
 
 function hasProperties(object, properties) {
-  for (var propertyName in properties) if (properties.hasOwnProperty(propertyName) && object[propertyName] !== properties[propertyName]) {
-    return false;
-  }return true;
+  for (var propertyName in properties) if (properties.hasOwnProperty(propertyName) && object[propertyName] !== properties[propertyName]) return false;
+
+  return true;
 }
 
 function hasMatch(routes, route, prevParams, nextParams, prevQuery, nextQuery) {
@@ -4939,15 +5053,15 @@ function routeIsActive(activeRoutes, routeName) {
 }
 
 function paramsAreActive(activeParams, params) {
-  for (var property in params) if (String(activeParams[property]) !== String(params[property])) {
-    return false;
-  }return true;
+  for (var property in params) if (String(activeParams[property]) !== String(params[property])) return false;
+
+  return true;
 }
 
 function queryIsActive(activeQuery, query) {
-  for (var property in query) if (String(activeQuery[property]) !== String(query[property])) {
-    return false;
-  }return true;
+  for (var property in query) if (String(activeQuery[property]) !== String(query[property])) return false;
+
+  return true;
 }
 
 /**
@@ -5159,9 +5273,7 @@ function createRouter(options) {
         var prevPath = state.path;
         var isRefreshing = action == null;
 
-        if (prevPath === path && !isRefreshing) {
-          return;
-        } // Nothing to do!
+        if (prevPath === path && !isRefreshing) return; // Nothing to do!
 
         // Record the scroll position as early as possible to
         // get it before browsers try update it automatically.
@@ -5318,9 +5430,9 @@ function createRouter(options) {
        * Returns true if the given route, params, and query are active.
        */
       isActive: function isActive(to, params, query) {
-        if (PathUtils.isAbsolute(to)) {
-          return to === state.path;
-        }return routeIsActive(state.routes, to) && paramsAreActive(state.params, params) && (query == null || queryIsActive(state.query, query));
+        if (PathUtils.isAbsolute(to)) return to === state.path;
+
+        return routeIsActive(state.routes, to) && paramsAreActive(state.params, params) && (query == null || queryIsActive(state.query, query));
       }
 
     },
@@ -5408,20 +5520,20 @@ function createRouteOptions(props) {
 }
 
 function createRouteFromReactElement(element) {
-  if (!React.isValidElement(element)) {
-    return;
-  }var type = element.type;
+  if (!React.isValidElement(element)) return;
+
+  var type = element.type;
   var props = assign({}, type.defaultProps, element.props);
 
   if (type.propTypes) checkPropTypes(type.displayName, type.propTypes, props);
 
-  if (type === DefaultRoute) {
-    return Route.createDefaultRoute(createRouteOptions(props));
-  }if (type === NotFoundRoute) {
-    return Route.createNotFoundRoute(createRouteOptions(props));
-  }if (type === Redirect) {
-    return Route.createRedirect(createRouteOptions(props));
-  }return Route.createRoute(createRouteOptions(props), function () {
+  if (type === DefaultRoute) return Route.createDefaultRoute(createRouteOptions(props));
+
+  if (type === NotFoundRoute) return Route.createNotFoundRoute(createRouteOptions(props));
+
+  if (type === Redirect) return Route.createRedirect(createRouteOptions(props));
+
+  return Route.createRoute(createRouteOptions(props), function () {
     if (props.children) createRoutesFromReactChildren(props.children);
   });
 }
@@ -5544,9 +5656,9 @@ function notifyChange(type) {
 function ensureSlash() {
   var path = HashLocation.getCurrentPath();
 
-  if (path.charAt(0) === '/') {
-    return true;
-  }HashLocation.replace('/' + path);
+  if (path.charAt(0) === '/') return true;
+
+  HashLocation.replace('/' + path);
 
   return false;
 }
@@ -5651,9 +5763,7 @@ function notifyChange(type) {
 }
 
 function onPopState(event) {
-  if (event.state === undefined) {
-    return;
-  } // Ignore extraneous popstate events in WebKit.
+  if (event.state === undefined) return; // Ignore extraneous popstate events in WebKit.
 
   notifyChange(LocationActions.POP);
 }
@@ -5752,9 +5862,9 @@ module.exports = RefreshLocation;
 },{"../History":8,"./HistoryLocation":34}],36:[function(require,module,exports){
 'use strict';
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var invariant = require('react/lib/invariant');
 
@@ -5775,6 +5885,10 @@ var StaticLocation = (function () {
     this.path = path;
   }
 
+  // TODO: Include these in the above class definition
+  // once we can use ES7 property initializers.
+  // https://github.com/babel/babel/issues/619
+
   _createClass(StaticLocation, [{
     key: 'getCurrentPath',
     value: function getCurrentPath() {
@@ -5790,10 +5904,6 @@ var StaticLocation = (function () {
   return StaticLocation;
 })();
 
-// TODO: Include these in the above class definition
-// once we can use ES7 property initializers.
-// https://github.com/babel/babel/issues/619
-
 StaticLocation.prototype.push = throwCannotModify;
 StaticLocation.prototype.replace = throwCannotModify;
 StaticLocation.prototype.pop = throwCannotModify;
@@ -5802,9 +5912,9 @@ module.exports = StaticLocation;
 },{"react/lib/invariant":196}],37:[function(require,module,exports){
 'use strict';
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var invariant = require('react/lib/invariant');
 var LocationActions = require('../actions/LocationActions');
@@ -5820,15 +5930,11 @@ var TestLocation = (function () {
 
     this.history = history || [];
     this.listeners = [];
+    this.needsDOM = false;
     this._updateHistoryLength();
   }
 
   _createClass(TestLocation, [{
-    key: 'needsDOM',
-    get: function () {
-      return false;
-    }
-  }, {
     key: '_updateHistoryLength',
     value: function _updateHistoryLength() {
       History.length = this.history.length;
@@ -10870,7 +10976,7 @@ if ("production" !== process.env.NODE_ENV) {
       if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ === 'undefined') {
         console.debug(
           'Download the React DevTools for a better development experience: ' +
-          'http://fb.me/react-devtools'
+          'https://fb.me/react-devtools'
         );
       }
     }
@@ -10897,7 +11003,7 @@ if ("production" !== process.env.NODE_ENV) {
       if (!expectedFeatures[i]) {
         console.error(
           'One or more ES5 shim/shams expected by React are not available: ' +
-          'http://fb.me/react-warning-polyfills'
+          'https://fb.me/react-warning-polyfills'
         );
         break;
       }
@@ -10905,7 +11011,7 @@ if ("production" !== process.env.NODE_ENV) {
   }
 }
 
-React.version = '0.13.2';
+React.version = '0.13.3';
 
 module.exports = React;
 
@@ -12630,7 +12736,7 @@ var ReactClass = {
         ("production" !== process.env.NODE_ENV ? warning(
           this instanceof Constructor,
           'Something is calling a React component directly. Use a factory or ' +
-          'JSX instead. See: http://fb.me/react-legacyfactory'
+          'JSX instead. See: https://fb.me/react-legacyfactory'
         ) : null);
       }
 
@@ -12842,20 +12948,38 @@ ReactComponent.prototype.forceUpdate = function(callback) {
  */
 if ("production" !== process.env.NODE_ENV) {
   var deprecatedAPIs = {
-    getDOMNode: 'getDOMNode',
-    isMounted: 'isMounted',
-    replaceProps: 'replaceProps',
-    replaceState: 'replaceState',
-    setProps: 'setProps'
+    getDOMNode: [
+      'getDOMNode',
+      'Use React.findDOMNode(component) instead.'
+    ],
+    isMounted: [
+      'isMounted',
+      'Instead, make sure to clean up subscriptions and pending requests in ' +
+      'componentWillUnmount to prevent memory leaks.'
+    ],
+    replaceProps: [
+      'replaceProps',
+      'Instead, call React.render again at the top level.'
+    ],
+    replaceState: [
+      'replaceState',
+      'Refactor your code to use setState instead (see ' +
+      'https://github.com/facebook/react/issues/3236).'
+    ],
+    setProps: [
+      'setProps',
+      'Instead, call React.render again at the top level.'
+    ]
   };
-  var defineDeprecationWarning = function(methodName, displayName) {
+  var defineDeprecationWarning = function(methodName, info) {
     try {
       Object.defineProperty(ReactComponent.prototype, methodName, {
         get: function() {
           ("production" !== process.env.NODE_ENV ? warning(
             false,
-            '%s(...) is deprecated in plain JavaScript React classes.',
-            displayName
+            '%s(...) is deprecated in plain JavaScript React classes. %s',
+            info[0],
+            info[1]
           ) : null);
           return undefined;
         }
@@ -13253,6 +13377,7 @@ var ReactCompositeComponentMixin = {
     this._pendingReplaceState = false;
     this._pendingForceUpdate = false;
 
+    var childContext;
     var renderedElement;
 
     var previouslyMounting = ReactLifeCycle.currentlyMountingInstance;
@@ -13267,7 +13392,8 @@ var ReactCompositeComponentMixin = {
         }
       }
 
-      renderedElement = this._renderValidatedComponent();
+      childContext = this._getValidatedChildContext(context);
+      renderedElement = this._renderValidatedComponent(childContext);
     } finally {
       ReactLifeCycle.currentlyMountingInstance = previouslyMounting;
     }
@@ -13281,7 +13407,7 @@ var ReactCompositeComponentMixin = {
       this._renderedComponent,
       rootID,
       transaction,
-      this._processChildContext(context)
+      this._mergeChildContext(context, childContext)
     );
     if (inst.componentDidMount) {
       transaction.getReactMountReady().enqueue(inst.componentDidMount, inst);
@@ -13411,7 +13537,7 @@ var ReactCompositeComponentMixin = {
    * @return {object}
    * @private
    */
-  _processChildContext: function(currentContext) {
+  _getValidatedChildContext: function(currentContext) {
     var inst = this._instance;
     var childContext = inst.getChildContext && inst.getChildContext();
     if (childContext) {
@@ -13436,6 +13562,13 @@ var ReactCompositeComponentMixin = {
           name
         ) : invariant(name in inst.constructor.childContextTypes));
       }
+      return childContext;
+    }
+    return null;
+  },
+
+  _mergeChildContext: function(currentContext, childContext) {
+    if (childContext) {
       return assign({}, currentContext, childContext);
     }
     return currentContext;
@@ -13695,6 +13828,10 @@ var ReactCompositeComponentMixin = {
       return inst.state;
     }
 
+    if (replace && queue.length === 1) {
+      return queue[0];
+    }
+
     var nextState = assign({}, replace ? queue[0] : inst.state);
     for (var i = replace ? 1 : 0; i < queue.length; i++) {
       var partial = queue[i];
@@ -13764,13 +13901,14 @@ var ReactCompositeComponentMixin = {
   _updateRenderedComponent: function(transaction, context) {
     var prevComponentInstance = this._renderedComponent;
     var prevRenderedElement = prevComponentInstance._currentElement;
-    var nextRenderedElement = this._renderValidatedComponent();
+    var childContext = this._getValidatedChildContext();
+    var nextRenderedElement = this._renderValidatedComponent(childContext);
     if (shouldUpdateReactComponent(prevRenderedElement, nextRenderedElement)) {
       ReactReconciler.receiveComponent(
         prevComponentInstance,
         nextRenderedElement,
         transaction,
-        this._processChildContext(context)
+        this._mergeChildContext(context, childContext)
       );
     } else {
       // These two IDs are actually the same! But nothing should rely on that.
@@ -13786,7 +13924,7 @@ var ReactCompositeComponentMixin = {
         this._renderedComponent,
         thisID,
         transaction,
-        this._processChildContext(context)
+        this._mergeChildContext(context, childContext)
       );
       this._replaceNodeWithMarkupByID(prevComponentID, nextMarkup);
     }
@@ -13824,11 +13962,12 @@ var ReactCompositeComponentMixin = {
   /**
    * @private
    */
-  _renderValidatedComponent: function() {
+  _renderValidatedComponent: function(childContext) {
     var renderedComponent;
     var previousContext = ReactContext.current;
-    ReactContext.current = this._processChildContext(
-      this._currentElement._context
+    ReactContext.current = this._mergeChildContext(
+      this._currentElement._context,
+      childContext
     );
     ReactCurrentOwner.current = this;
     try {
@@ -14197,6 +14336,7 @@ var ReactDOM = mapObject({
 
   // SVG
   circle: 'circle',
+  clipPath: 'clipPath',
   defs: 'defs',
   ellipse: 'ellipse',
   g: 'g',
@@ -14348,11 +14488,13 @@ function assertValidProps(props) {
       'Can only set one of `children` or `props.dangerouslySetInnerHTML`.'
     ) : invariant(props.children == null));
     ("production" !== process.env.NODE_ENV ? invariant(
-      props.dangerouslySetInnerHTML.__html != null,
+      typeof props.dangerouslySetInnerHTML === 'object' &&
+      '__html' in props.dangerouslySetInnerHTML,
       '`props.dangerouslySetInnerHTML` must be in the form `{__html: ...}`. ' +
-      'Please visit http://fb.me/react-invariant-dangerously-set-inner-html ' +
+      'Please visit https://fb.me/react-invariant-dangerously-set-inner-html ' +
       'for more information.'
-    ) : invariant(props.dangerouslySetInnerHTML.__html != null));
+    ) : invariant(typeof props.dangerouslySetInnerHTML === 'object' &&
+    '__html' in props.dangerouslySetInnerHTML));
   }
   if ("production" !== process.env.NODE_ENV) {
     ("production" !== process.env.NODE_ENV ? warning(
@@ -17158,7 +17300,7 @@ function warnAndMonitorForKeyUse(message, element, parentType) {
 
   ("production" !== process.env.NODE_ENV ? warning(
     false,
-    message + '%s%s See http://fb.me/react-warning-keys for more information.',
+    message + '%s%s See https://fb.me/react-warning-keys for more information.',
     parentOrOwnerAddendum,
     childOwnerAddendum
   ) : null);
@@ -21694,6 +21836,7 @@ var ReactUpdates = require("./ReactUpdates");
 var SyntheticEvent = require("./SyntheticEvent");
 
 var assign = require("./Object.assign");
+var emptyObject = require("./emptyObject");
 
 var topLevelTypes = EventConstants.topLevelTypes;
 
@@ -22035,6 +22178,9 @@ assign(
 );
 
 ReactShallowRenderer.prototype.render = function(element, context) {
+  if (!context) {
+    context = emptyObject;
+  }
   var transaction = ReactUpdates.ReactReconcileTransaction.getPooled();
   this._render(element, transaction, context);
   ReactUpdates.ReactReconcileTransaction.release(transaction);
@@ -22175,7 +22321,7 @@ for (eventType in topLevelTypes) {
 
 module.exports = ReactTestUtils;
 
-},{"./EventConstants":61,"./EventPluginHub":63,"./EventPropagators":66,"./Object.assign":74,"./React":76,"./ReactBrowserEventEmitter":78,"./ReactCompositeComponent":88,"./ReactElement":108,"./ReactEmptyComponent":110,"./ReactInstanceHandles":117,"./ReactInstanceMap":118,"./ReactMount":122,"./ReactUpdates":145,"./SyntheticEvent":154}],141:[function(require,module,exports){
+},{"./EventConstants":61,"./EventPluginHub":63,"./EventPropagators":66,"./Object.assign":74,"./React":76,"./ReactBrowserEventEmitter":78,"./ReactCompositeComponent":88,"./ReactElement":108,"./ReactEmptyComponent":110,"./ReactInstanceHandles":117,"./ReactInstanceMap":118,"./ReactMount":122,"./ReactUpdates":145,"./SyntheticEvent":154,"./emptyObject":176}],141:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -23280,6 +23426,7 @@ var MUST_USE_ATTRIBUTE = DOMProperty.injection.MUST_USE_ATTRIBUTE;
 
 var SVGDOMPropertyConfig = {
   Properties: {
+    clipPath: MUST_USE_ATTRIBUTE,
     cx: MUST_USE_ATTRIBUTE,
     cy: MUST_USE_ATTRIBUTE,
     d: MUST_USE_ATTRIBUTE,
@@ -23325,6 +23472,7 @@ var SVGDOMPropertyConfig = {
     y: MUST_USE_ATTRIBUTE
   },
   DOMAttributeNames: {
+    clipPath: 'clip-path',
     fillOpacity: 'fill-opacity',
     fontFamily: 'font-family',
     fontSize: 'font-size',
@@ -26252,6 +26400,7 @@ var shouldWrap = {
   // Force wrapping for SVG elements because if they get created inside a <div>,
   // they will be initialized in the wrong namespace (and will not display).
   'circle': true,
+  'clipPath': true,
   'defs': true,
   'ellipse': true,
   'g': true,
@@ -26294,6 +26443,7 @@ var markupWrap = {
   'th': trWrap,
 
   'circle': svgWrap,
+  'clipPath': svgWrap,
   'defs': svgWrap,
   'ellipse': svgWrap,
   'g': svgWrap,
@@ -28845,7 +28995,7 @@ exports.connect = lookup;
 exports.Manager = require('./manager');
 exports.Socket = require('./socket');
 
-},{"./manager":222,"./socket":224,"./url":225,"debug":2,"socket.io-parser":264}],222:[function(require,module,exports){
+},{"./manager":222,"./socket":224,"./url":225,"debug":2,"socket.io-parser":262}],222:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -29350,7 +29500,7 @@ Manager.prototype.onreconnect = function(){
   this.emitAll('reconnect', attempt);
 };
 
-},{"./on":223,"./socket":224,"./url":225,"backo2":226,"component-bind":227,"component-emitter":228,"debug":2,"engine.io-client":229,"indexof":260,"object-component":261,"socket.io-parser":264}],223:[function(require,module,exports){
+},{"./on":223,"./socket":224,"./url":225,"backo2":226,"component-bind":227,"component-emitter":228,"debug":2,"engine.io-client":229,"indexof":258,"object-component":259,"socket.io-parser":262}],223:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -29763,7 +29913,7 @@ Socket.prototype.disconnect = function(){
   return this;
 };
 
-},{"./on":223,"component-bind":227,"component-emitter":228,"debug":2,"has-binary":258,"socket.io-parser":264,"to-array":268}],225:[function(require,module,exports){
+},{"./on":223,"component-bind":227,"component-emitter":228,"debug":2,"has-binary":256,"socket.io-parser":262,"to-array":266}],225:[function(require,module,exports){
 (function (global){
 
 /**
@@ -29840,7 +29990,7 @@ function url(uri, loc){
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"debug":2,"parseuri":262}],226:[function(require,module,exports){
+},{"debug":2,"parseuri":260}],226:[function(require,module,exports){
 
 /**
  * Expose `Backoff`.
@@ -30843,7 +30993,7 @@ Socket.prototype.filterUpgrades = function (upgrades) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./transport":232,"./transports":233,"component-emitter":228,"debug":240,"engine.io-parser":243,"indexof":260,"parsejson":254,"parseqs":255,"parseuri":256}],232:[function(require,module,exports){
+},{"./transport":232,"./transports":233,"component-emitter":228,"debug":240,"engine.io-parser":243,"indexof":258,"parsejson":252,"parseqs":253,"parseuri":254}],232:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -31933,7 +32083,7 @@ Polling.prototype.uri = function(){
   return schema + '://' + this.hostname + port + this.path + query;
 };
 
-},{"../transport":232,"component-inherit":239,"debug":240,"engine.io-parser":243,"parseqs":255,"xmlhttprequest":238}],237:[function(require,module,exports){
+},{"../transport":232,"component-inherit":239,"debug":240,"engine.io-parser":243,"parseqs":253,"xmlhttprequest":238}],237:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -32173,7 +32323,7 @@ WS.prototype.check = function(){
   return !!WebSocket && !('__initialize' in WebSocket && this.name === WS.prototype.name);
 };
 
-},{"../transport":232,"component-inherit":239,"debug":240,"engine.io-parser":243,"parseqs":255,"ws":257}],238:[function(require,module,exports){
+},{"../transport":232,"component-inherit":239,"debug":240,"engine.io-parser":243,"parseqs":253,"ws":255}],238:[function(require,module,exports){
 // browser shim for xmlhttprequest module
 var hasCORS = require('has-cors');
 
@@ -32211,7 +32361,7 @@ module.exports = function(opts) {
   }
 }
 
-},{"has-cors":252}],239:[function(require,module,exports){
+},{"has-cors":250}],239:[function(require,module,exports){
 
 module.exports = function(a, b){
   var fn = function(){};
@@ -33278,7 +33428,7 @@ exports.decodePayloadAsBinary = function (data, binaryType, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./keys":244,"after":245,"arraybuffer.slice":246,"base64-arraybuffer":247,"blob":248,"has-binary":249,"utf8":251}],244:[function(require,module,exports){
+},{"./keys":244,"after":245,"arraybuffer.slice":246,"base64-arraybuffer":247,"blob":248,"has-binary":256,"utf8":249}],244:[function(require,module,exports){
 
 /**
  * Gets the keys for an object.
@@ -33438,8 +33588,22 @@ var BlobBuilder = global.BlobBuilder
 
 var blobSupported = (function() {
   try {
-    var b = new Blob(['hi']);
-    return b.size == 2;
+    var a = new Blob(['hi']);
+    return a.size === 2;
+  } catch(e) {
+    return false;
+  }
+})();
+
+/**
+ * Check if Blob constructor supports ArrayBufferViews
+ * Fails in Safari 6, so we need to map to ArrayBuffers there.
+ */
+
+var blobSupportsArrayBufferView = blobSupported && (function() {
+  try {
+    var b = new Blob([new Uint8Array([1,2])]);
+    return b.size === 2;
   } catch(e) {
     return false;
   }
@@ -33453,19 +33617,52 @@ var blobBuilderSupported = BlobBuilder
   && BlobBuilder.prototype.append
   && BlobBuilder.prototype.getBlob;
 
+/**
+ * Helper function that maps ArrayBufferViews to ArrayBuffers
+ * Used by BlobBuilder constructor and old browsers that didn't
+ * support it in the Blob constructor.
+ */
+
+function mapArrayBufferViews(ary) {
+  for (var i = 0; i < ary.length; i++) {
+    var chunk = ary[i];
+    if (chunk.buffer instanceof ArrayBuffer) {
+      var buf = chunk.buffer;
+
+      // if this is a subarray, make a copy so we only
+      // include the subarray region from the underlying buffer
+      if (chunk.byteLength !== buf.byteLength) {
+        var copy = new Uint8Array(chunk.byteLength);
+        copy.set(new Uint8Array(buf, chunk.byteOffset, chunk.byteLength));
+        buf = copy.buffer;
+      }
+
+      ary[i] = buf;
+    }
+  }
+}
+
 function BlobBuilderConstructor(ary, options) {
   options = options || {};
 
   var bb = new BlobBuilder();
+  mapArrayBufferViews(ary);
+
   for (var i = 0; i < ary.length; i++) {
     bb.append(ary[i]);
   }
+
   return (options.type) ? bb.getBlob(options.type) : bb.getBlob();
+};
+
+function BlobConstructor(ary, options) {
+  mapArrayBufferViews(ary);
+  return new Blob(ary, options || {});
 };
 
 module.exports = (function() {
   if (blobSupported) {
-    return global.Blob;
+    return blobSupportsArrayBufferView ? global.Blob : BlobConstructor;
   } else if (blobBuilderSupported) {
     return BlobBuilderConstructor;
   } else {
@@ -33476,74 +33673,7 @@ module.exports = (function() {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],249:[function(require,module,exports){
 (function (global){
-
-/*
- * Module requirements.
- */
-
-var isArray = require('isarray');
-
-/**
- * Module exports.
- */
-
-module.exports = hasBinary;
-
-/**
- * Checks for binary data.
- *
- * Right now only Buffer and ArrayBuffer are supported..
- *
- * @param {Object} anything
- * @api public
- */
-
-function hasBinary(data) {
-
-  function _hasBinary(obj) {
-    if (!obj) return false;
-
-    if ( (global.Buffer && global.Buffer.isBuffer(obj)) ||
-         (global.ArrayBuffer && obj instanceof ArrayBuffer) ||
-         (global.Blob && obj instanceof Blob) ||
-         (global.File && obj instanceof File)
-        ) {
-      return true;
-    }
-
-    if (isArray(obj)) {
-      for (var i = 0; i < obj.length; i++) {
-          if (_hasBinary(obj[i])) {
-              return true;
-          }
-      }
-    } else if (obj && 'object' == typeof obj) {
-      if (obj.toJSON) {
-        obj = obj.toJSON();
-      }
-
-      for (var key in obj) {
-        if (obj.hasOwnProperty(key) && _hasBinary(obj[key])) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-
-  return _hasBinary(data);
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"isarray":250}],250:[function(require,module,exports){
-module.exports = Array.isArray || function (arr) {
-  return Object.prototype.toString.call(arr) == '[object Array]';
-};
-
-},{}],251:[function(require,module,exports){
-(function (global){
-/*! http://mths.be/utf8js v2.0.0 by @mathias */
+/*! https://mths.be/utf8js v2.0.0 by @mathias */
 ;(function(root) {
 
 	// Detect free variables `exports`
@@ -33564,7 +33694,7 @@ module.exports = Array.isArray || function (arr) {
 
 	var stringFromCharCode = String.fromCharCode;
 
-	// Taken from http://mths.be/punycode
+	// Taken from https://mths.be/punycode
 	function ucs2decode(string) {
 		var output = [];
 		var counter = 0;
@@ -33591,7 +33721,7 @@ module.exports = Array.isArray || function (arr) {
 		return output;
 	}
 
-	// Taken from http://mths.be/punycode
+	// Taken from https://mths.be/punycode
 	function ucs2encode(array) {
 		var length = array.length;
 		var index = -1;
@@ -33609,6 +33739,14 @@ module.exports = Array.isArray || function (arr) {
 		return output;
 	}
 
+	function checkScalarValue(codePoint) {
+		if (codePoint >= 0xD800 && codePoint <= 0xDFFF) {
+			throw Error(
+				'Lone surrogate U+' + codePoint.toString(16).toUpperCase() +
+				' is not a scalar value'
+			);
+		}
+	}
 	/*--------------------------------------------------------------------------*/
 
 	function createByte(codePoint, shift) {
@@ -33624,6 +33762,7 @@ module.exports = Array.isArray || function (arr) {
 			symbol = stringFromCharCode(((codePoint >> 6) & 0x1F) | 0xC0);
 		}
 		else if ((codePoint & 0xFFFF0000) == 0) { // 3-byte sequence
+			checkScalarValue(codePoint);
 			symbol = stringFromCharCode(((codePoint >> 12) & 0x0F) | 0xE0);
 			symbol += createByte(codePoint, 6);
 		}
@@ -33638,11 +33777,6 @@ module.exports = Array.isArray || function (arr) {
 
 	function utf8encode(string) {
 		var codePoints = ucs2decode(string);
-
-		// console.log(JSON.stringify(codePoints.map(function(x) {
-		// 	return 'U+' + x.toString(16).toUpperCase();
-		// })));
-
 		var length = codePoints.length;
 		var index = -1;
 		var codePoint;
@@ -33713,6 +33847,7 @@ module.exports = Array.isArray || function (arr) {
 			byte3 = readContinuationByte();
 			codePoint = ((byte1 & 0x0F) << 12) | (byte2 << 6) | byte3;
 			if (codePoint >= 0x0800) {
+				checkScalarValue(codePoint);
 				return codePoint;
 			} else {
 				throw Error('Invalid continuation byte');
@@ -33784,7 +33919,7 @@ module.exports = Array.isArray || function (arr) {
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],252:[function(require,module,exports){
+},{}],250:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -33809,7 +33944,7 @@ try {
   module.exports = false;
 }
 
-},{"global":253}],253:[function(require,module,exports){
+},{"global":251}],251:[function(require,module,exports){
 
 /**
  * Returns `this`. Execute this without a "context" (i.e. without it being
@@ -33819,7 +33954,7 @@ try {
 
 module.exports = (function () { return this; })();
 
-},{}],254:[function(require,module,exports){
+},{}],252:[function(require,module,exports){
 (function (global){
 /**
  * JSON parse.
@@ -33854,7 +33989,7 @@ module.exports = function parsejson(data) {
   }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],255:[function(require,module,exports){
+},{}],253:[function(require,module,exports){
 /**
  * Compiles a querystring
  * Returns string representation of the object
@@ -33893,7 +34028,7 @@ exports.decode = function(qs){
   return qry;
 };
 
-},{}],256:[function(require,module,exports){
+},{}],254:[function(require,module,exports){
 /**
  * Parses an URI
  *
@@ -33934,7 +34069,7 @@ module.exports = function parseuri(str) {
     return uri;
 };
 
-},{}],257:[function(require,module,exports){
+},{}],255:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -33979,7 +34114,7 @@ function ws(uri, protocols, opts) {
 
 if (WebSocket) ws.prototype = WebSocket.prototype;
 
-},{}],258:[function(require,module,exports){
+},{}],256:[function(require,module,exports){
 (function (global){
 
 /*
@@ -34041,9 +34176,12 @@ function hasBinary(data) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"isarray":259}],259:[function(require,module,exports){
-arguments[4][250][0].apply(exports,arguments)
-},{"dup":250}],260:[function(require,module,exports){
+},{"isarray":257}],257:[function(require,module,exports){
+module.exports = Array.isArray || function (arr) {
+  return Object.prototype.toString.call(arr) == '[object Array]';
+};
+
+},{}],258:[function(require,module,exports){
 
 var indexOf = [].indexOf;
 
@@ -34054,7 +34192,7 @@ module.exports = function(arr, obj){
   }
   return -1;
 };
-},{}],261:[function(require,module,exports){
+},{}],259:[function(require,module,exports){
 
 /**
  * HOP ref.
@@ -34139,7 +34277,7 @@ exports.length = function(obj){
 exports.isEmpty = function(obj){
   return 0 == exports.length(obj);
 };
-},{}],262:[function(require,module,exports){
+},{}],260:[function(require,module,exports){
 /**
  * Parses an URI
  *
@@ -34166,7 +34304,7 @@ module.exports = function parseuri(str) {
   return uri;
 };
 
-},{}],263:[function(require,module,exports){
+},{}],261:[function(require,module,exports){
 (function (global){
 /*global Blob,File*/
 
@@ -34311,7 +34449,7 @@ exports.removeBlobs = function(data, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./is-buffer":265,"isarray":266}],264:[function(require,module,exports){
+},{"./is-buffer":263,"isarray":264}],262:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -34713,7 +34851,7 @@ function error(data){
   };
 }
 
-},{"./binary":263,"./is-buffer":265,"component-emitter":228,"debug":2,"isarray":266,"json3":267}],265:[function(require,module,exports){
+},{"./binary":261,"./is-buffer":263,"component-emitter":228,"debug":2,"isarray":264,"json3":265}],263:[function(require,module,exports){
 (function (global){
 
 module.exports = isBuf;
@@ -34730,9 +34868,9 @@ function isBuf(obj) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],266:[function(require,module,exports){
-arguments[4][250][0].apply(exports,arguments)
-},{"dup":250}],267:[function(require,module,exports){
+},{}],264:[function(require,module,exports){
+arguments[4][257][0].apply(exports,arguments)
+},{"dup":257}],265:[function(require,module,exports){
 /*! JSON v3.2.6 | http://bestiejs.github.io/json3 | Copyright 2012-2013, Kit Cambridge | http://kit.mit-license.org */
 ;(function (window) {
   // Convenience aliases.
@@ -35595,7 +35733,7 @@ arguments[4][250][0].apply(exports,arguments)
   }
 }(this));
 
-},{}],268:[function(require,module,exports){
+},{}],266:[function(require,module,exports){
 module.exports = toArray
 
 function toArray(list, index) {
@@ -35610,7 +35748,7 @@ function toArray(list, index) {
     return array
 }
 
-},{}],269:[function(require,module,exports){
+},{}],267:[function(require,module,exports){
 (function() {
   if (typeof twttr === "undefined" || twttr === null) {
     var twttr = {};
@@ -35754,7 +35892,7 @@ function toArray(list, index) {
   twttr.txt.regexen.validHashtag = regexSupplant(/(#{hashtagBoundary})(#{hashSigns})(#{hashtagAlphaNumeric}*#{hashtagAlpha}#{hashtagAlphaNumeric}*)/gi);
 
   // Mention related regex collection
-  twttr.txt.regexen.validMentionPrecedingChars = /(?:^|[^a-zA-Z0-9_!#$%&*@＠]|(?:rt|RT|rT|Rt):?)/;
+  twttr.txt.regexen.validMentionPrecedingChars = /(?:^|[^a-zA-Z0-9_!#$%&*@＠]|(?:^|[^a-zA-Z0-9_+~.-])(?:rt|RT|rT|Rt):?)/;
   twttr.txt.regexen.atSigns = /[@＠]/;
   twttr.txt.regexen.validMentionOrList = regexSupplant(
     '(#{validMentionPrecedingChars})' +  // $1: Preceding character
@@ -35774,49 +35912,58 @@ function toArray(list, index) {
   twttr.txt.regexen.validDomainName = regexSupplant(/(?:(?:#{validDomainChars}(?:-|#{validDomainChars})*)?#{validDomainChars}\.)/);
   twttr.txt.regexen.validGTLD = regexSupplant(RegExp(
     '(?:(?:' +
-    'abbott|abogado|academy|accountant|accountants|active|actor|ads|adult|aero|afl|agency|airforce|' +
-    'allfinanz|alsace|amsterdam|android|apartments|aquarelle|archi|army|arpa|asia|associates|' +
-    'attorney|auction|audio|autos|axa|band|bank|bar|barclaycard|barclays|bargains|bauhaus|bayern|bbc|' +
-    'beer|berlin|best|bid|bike|bingo|bio|biz|black|blackfriday|bloomberg|blue|bmw|bnpparibas|boats|' +
-    'bond|boo|boutique|brussels|budapest|build|builders|business|buzz|bzh|cab|cafe|cal|camera|camp|' +
-    'cancerresearch|canon|capetown|capital|caravan|cards|care|career|careers|cartier|casa|cash|' +
-    'casino|cat|catering|cbn|center|ceo|cern|cfd|channel|chat|cheap|chloe|christmas|chrome|church|' +
-    'citic|city|claims|cleaning|click|clinic|clothing|club|coach|codes|coffee|college|cologne|com|' +
-    'community|company|computer|condos|construction|consulting|contractors|cooking|cool|coop|country|' +
-    'courses|credit|creditcard|cricket|crs|cruises|cuisinella|cymru|cyou|dabur|dad|dance|date|dating|' +
-    'datsun|day|dclk|deals|degree|delivery|democrat|dental|dentist|desi|design|dev|diamonds|diet|' +
-    'digital|direct|directory|discount|dnp|docs|doha|domains|doosan|download|durban|dvag|eat|edu|' +
-    'education|email|emerck|energy|engineer|engineering|enterprises|epson|equipment|erni|esq|estate|' +
-    'eurovision|eus|events|everbank|exchange|expert|exposed|express|fail|faith|fan|fans|farm|fashion|' +
-    'feedback|film|finance|financial|firmdale|fish|fishing|fit|fitness|flights|florist|flowers|' +
-    'flsmidth|fly|foo|football|forex|forsale|foundation|frl|frogans|fund|furniture|futbol|gal|' +
-    'gallery|garden|gbiz|gdn|gent|ggee|gift|gifts|gives|glass|gle|global|globo|gmail|gmo|gmx|gold|' +
-    'goldpoint|golf|goo|goog|google|gop|gov|graphics|gratis|green|gripe|guge|guide|guitars|guru|' +
-    'hamburg|hangout|haus|healthcare|help|here|hermes|hiphop|hiv|holdings|holiday|homes|horse|host|' +
-    'hosting|house|how|ibm|ifm|immo|immobilien|industries|infiniti|info|ing|ink|institute|insure|int|' +
-    'international|investments|irish|iwc|java|jcb|jetzt|jewelry|jobs|joburg|juegos|kaufen|kddi|kim|' +
-    'kitchen|kiwi|koeln|komatsu|krd|kred|kyoto|lacaixa|land|lat|latrobe|lawyer|lds|lease|leclerc|' +
-    'legal|lgbt|lidl|life|lighting|limited|limo|link|loan|loans|london|lotte|lotto|love|ltda|luxe|' +
-    'luxury|madrid|maif|maison|management|mango|market|marketing|markets|marriott|media|meet|' +
-    'melbourne|meme|memorial|menu|miami|mil|mini|mma|mobi|moda|moe|monash|money|mormon|mortgage|' +
-    'moscow|motorcycles|mov|movie|mtn|mtpc|museum|nagoya|name|navy|net|network|neustar|new|news|' +
-    'nexus|ngo|nhk|nico|ninja|nissan|nra|nrw|ntt|nyc|okinawa|one|ong|onl|online|ooo|org|organic|' +
-    'osaka|otsuka|ovh|page|panerai|paris|partners|parts|party|pharmacy|photo|photography|photos|' +
-    'physio|piaget|pics|pictet|pictures|pink|pizza|place|plumbing|plus|pohl|poker|porn|post|praxi|' +
-    'press|pro|prod|productions|prof|properties|property|pub|qpon|quebec|racing|realtor|recipes|red|' +
-    'redstone|rehab|reise|reisen|reit|ren|rentals|repair|report|republican|rest|restaurant|review|' +
-    'reviews|rich|rio|rip|rocks|rodeo|rsvp|ruhr|ryukyu|saarland|sale|samsung|sap|sarl|saxo|sca|scb|' +
-    'schmidt|scholarships|school|schule|schwarz|science|scot|seat|services|sew|sex|sexy|shiksha|' +
-    'shoes|show|shriram|singles|site|sky|social|software|sohu|solar|solutions|sony|soy|space|spiegel|' +
-    'spreadbetting|study|style|sucks|supplies|supply|support|surf|surgery|suzuki|sydney|systems|' +
-    'taipei|tatar|tattoo|tax|team|tech|technology|tel|temasek|tennis|tickets|tienda|tips|tires|tirol|' +
-    'today|tokyo|tools|top|toshiba|tours|town|toys|trade|trading|training|travel|trust|tui|' +
-    'university|uno|uol|vacations|vegas|ventures|vermögensberater|vermögensberatung|versicherung|vet|' +
-    'viajes|video|villas|vision|vlaanderen|vodka|vote|voting|voto|voyage|wales|wang|watch|webcam|' +
-    'website|wed|wedding|weir|whoswho|wien|wiki|williamhill|win|wme|work|works|world|wtc|wtf|xerox|' +
-    'xin|xxx|xyz|yachts|yandex|yodobashi|yoga|yokohama|youtube|zip|zone|zuerich|дети|москва|онлайн|' +
-    'орг|рус|сайт|بازار|شبكة|موقع|संगठन|みんな|グーグル|世界|中信|中文网|企业|佛山|信息|健康|八卦|公司|公益|商城|商店|商标|在线|广东|慈善|' +
-    '我爱你|手机|政务|政府|时尚|机构|淡马锡|游戏|移动|组织机构|网址|网店|网络|谷歌|集团|飞利浦|삼성|onion' +
+    'abb|abbott|abogado|academy|accenture|accountant|accountants|aco|active|actor|ads|adult|aeg|aero|' +
+    'afl|agency|aig|airforce|airtel|allfinanz|alsace|amsterdam|android|apartments|app|aquarelle|' +
+    'archi|army|arpa|asia|associates|attorney|auction|audio|auto|autos|axa|azure|band|bank|bar|' +
+    'barcelona|barclaycard|barclays|bargains|bauhaus|bayern|bbc|bbva|bcn|beer|bentley|berlin|best|' +
+    'bet|bharti|bible|bid|bike|bing|bingo|bio|biz|black|blackfriday|bloomberg|blue|bmw|bnl|' +
+    'bnpparibas|boats|bond|boo|boots|boutique|bradesco|bridgestone|broker|brother|brussels|budapest|' +
+    'build|builders|business|buzz|bzh|cab|cafe|cal|camera|camp|cancerresearch|canon|capetown|capital|' +
+    'caravan|cards|care|career|careers|cars|cartier|casa|cash|casino|cat|catering|cba|cbn|ceb|center|' +
+    'ceo|cern|cfa|cfd|chanel|channel|chat|cheap|chloe|christmas|chrome|church|cisco|citic|city|' +
+    'claims|cleaning|click|clinic|clothing|cloud|club|coach|codes|coffee|college|cologne|com|' +
+    'commbank|community|company|computer|condos|construction|consulting|contractors|cooking|cool|' +
+    'coop|corsica|country|coupons|courses|credit|creditcard|cricket|crown|crs|cruises|cuisinella|' +
+    'cymru|cyou|dabur|dad|dance|date|dating|datsun|day|dclk|deals|degree|delivery|delta|democrat|' +
+    'dental|dentist|desi|design|dev|diamonds|diet|digital|direct|directory|discount|dnp|docs|dog|' +
+    'doha|domains|doosan|download|drive|durban|dvag|earth|eat|edu|education|email|emerck|energy|' +
+    'engineer|engineering|enterprises|epson|equipment|erni|esq|estate|eurovision|eus|events|everbank|' +
+    'exchange|expert|exposed|express|fage|fail|faith|family|fan|fans|farm|fashion|feedback|film|' +
+    'finance|financial|firmdale|fish|fishing|fit|fitness|flights|florist|flowers|flsmidth|fly|foo|' +
+    'football|forex|forsale|forum|foundation|frl|frogans|fund|furniture|futbol|fyi|gal|gallery|game|' +
+    'garden|gbiz|gdn|gent|genting|ggee|gift|gifts|gives|giving|glass|gle|global|globo|gmail|gmo|gmx|' +
+    'gold|goldpoint|golf|goo|goog|google|gop|gov|graphics|gratis|green|gripe|group|guge|guide|' +
+    'guitars|guru|hamburg|hangout|haus|healthcare|help|here|hermes|hiphop|hitachi|hiv|hockey|' +
+    'holdings|holiday|homedepot|homes|honda|horse|host|hosting|hoteles|hotmail|house|how|hsbc|ibm|' +
+    'icbc|ice|icu|ifm|iinet|immo|immobilien|industries|infiniti|info|ing|ink|institute|insure|int|' +
+    'international|investments|ipiranga|irish|ist|istanbul|itau|iwc|java|jcb|jetzt|jewelry|jlc|jll|' +
+    'jobs|joburg|jprs|juegos|kaufen|kddi|kim|kitchen|kiwi|koeln|komatsu|krd|kred|kyoto|lacaixa|' +
+    'lancaster|land|lasalle|lat|latrobe|law|lawyer|lds|lease|leclerc|legal|lexus|lgbt|liaison|lidl|' +
+    'life|lighting|limited|limo|link|live|lixil|loan|loans|lol|london|lotte|lotto|love|ltda|lupin|' +
+    'luxe|luxury|madrid|maif|maison|man|management|mango|market|marketing|markets|marriott|mba|media|' +
+    'meet|melbourne|meme|memorial|men|menu|miami|microsoft|mil|mini|mma|mobi|moda|moe|mom|monash|' +
+    'money|montblanc|mormon|mortgage|moscow|motorcycles|mov|movie|movistar|mtn|mtpc|museum|nadex|' +
+    'nagoya|name|navy|nec|net|netbank|network|neustar|new|news|nexus|ngo|nhk|nico|ninja|nissan|nokia|' +
+    'nra|nrw|ntt|nyc|office|okinawa|omega|one|ong|onl|online|ooo|oracle|orange|org|organic|osaka|' +
+    'otsuka|ovh|page|panerai|paris|partners|parts|party|pet|pharmacy|philips|photo|photography|' +
+    'photos|physio|piaget|pics|pictet|pictures|pink|pizza|place|play|plumbing|plus|pohl|poker|porn|' +
+    'post|praxi|press|pro|prod|productions|prof|properties|property|pub|qpon|quebec|racing|realtor|' +
+    'realty|recipes|red|redstone|rehab|reise|reisen|reit|ren|rent|rentals|repair|report|republican|' +
+    'rest|restaurant|review|reviews|rich|ricoh|rio|rip|rocks|rodeo|rsvp|ruhr|run|ryukyu|saarland|' +
+    'sakura|sale|samsung|sandvik|sandvikcoromant|sanofi|sap|sarl|saxo|sca|scb|schmidt|scholarships|' +
+    'school|schule|schwarz|science|scor|scot|seat|seek|sener|services|sew|sex|sexy|shiksha|shoes|' +
+    'show|shriram|singles|site|ski|sky|skype|sncf|soccer|social|software|sohu|solar|solutions|sony|' +
+    'soy|space|spiegel|spreadbetting|srl|starhub|statoil|studio|study|style|sucks|supplies|supply|' +
+    'support|surf|surgery|suzuki|swatch|swiss|sydney|systems|taipei|tatamotors|tatar|tattoo|tax|taxi|' +
+    'team|tech|technology|tel|telefonica|temasek|tennis|thd|theater|tickets|tienda|tips|tires|tirol|' +
+    'today|tokyo|tools|top|toray|toshiba|tours|town|toyota|toys|trade|trading|training|travel|trust|' +
+    'tui|ubs|university|uno|uol|vacations|vegas|ventures|vermögensberater|vermögensberatung|' +
+    'versicherung|vet|viajes|video|villas|vin|vision|vista|vistaprint|vlaanderen|vodka|vote|voting|' +
+    'voto|voyage|wales|walter|wang|watch|webcam|website|wed|wedding|weir|whoswho|wien|wiki|' +
+    'williamhill|win|windows|wine|wme|work|works|world|wtc|wtf|xbox|xerox|xin|xperia|xxx|xyz|yachts|' +
+    'yandex|yodobashi|yoga|yokohama|youtube|zip|zone|zuerich|дети|ком|москва|онлайн|орг|рус|сайт|קום|' +
+    'بازار|شبكة|كوم|موقع|कॉम|नेट|संगठन|คอม|みんな|グーグル|コム|世界|中信|中文网|企业|佛山|信息|健康|八卦|公司|公益|商城|商店|商标|在线|大拿|' +
+    '娱乐|工行|广东|慈善|我爱你|手机|政务|政府|新闻|时尚|机构|淡马锡|游戏|点看|移动|组织机构|网址|网店|网络|谷歌|集团|飞利浦|餐厅|닷넷|닷컴|삼성|onion' +
     ')(?=[^0-9a-zA-Z@]|$))'));
   twttr.txt.regexen.validCCTLD = regexSupplant(RegExp(
     '(?:(?:' +
@@ -35827,7 +35974,7 @@ function toArray(list, index) {
     'la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mf|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|' +
     'my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|' +
     'rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|' +
-    'tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|za|zm|zw|' +
+    'tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|za|zm|zw|ελ|' +
     'бел|мкд|мон|рф|срб|укр|қаз|հայ|الاردن|الجزائر|السعودية|المغرب|امارات|ایران|بھارت|تونس|سودان|' +
     'سورية|عراق|عمان|فلسطين|قطر|مصر|مليسيا|پاکستان|भारत|বাংলা|ভারত|ਭਾਰਤ|ભારત|இந்தியா|இலங்கை|' +
     'சிங்கப்பூர்|భారత్|ලංකා|ไทย|გე|中国|中國|台湾|台灣|新加坡|澳門|香港|한국' +
@@ -36797,7 +36944,7 @@ function toArray(list, index) {
       options = {
           // These come from https://api.twitter.com/1/help/configuration.json
           // described by https://dev.twitter.com/docs/api/1/get/help/configuration
-          short_url_length: 22,
+          short_url_length: 23,
           short_url_length_https: 23
       };
     }
@@ -36810,7 +36957,7 @@ function toArray(list, index) {
       textLength += urlsWithIndices[i].indices[0] - urlsWithIndices[i].indices[1];
 
       // Add 23 characters for URL starting with https://
-      // Otherwise add 22 characters
+      // http:// URLs still use https://t.co so they are 23 characters as well
       if (urlsWithIndices[i].url.toLowerCase().match(twttr.txt.regexen.urlHasHttps)) {
          textLength += options.short_url_length_https;
       } else {
@@ -36959,7 +37106,7 @@ function toArray(list, index) {
   }
 })();
 
-},{}],270:[function(require,module,exports){
+},{}],268:[function(require,module,exports){
 var React = require('react');
 
 var Router = require('react-router');
@@ -36973,6 +37120,9 @@ var DefaultRoute = Router.DefaultRoute;
 var Feed = require('./jsx/Feed.jsx');
 var LiveFeed = require('./jsx/LiveFeed.jsx');
 var ArchiveFeed = require('./jsx/ArchiveFeed.jsx');
+
+var EventInfo = require('./jsx/EventInfo.jsx');
+
 
 // <Route name="users" path="search/users" handler={Search} />
 // <Route name="year" path="/:year" handler={} />
@@ -36988,6 +37138,13 @@ var routes = (
   )
 );
 
+var eventInfoRoutes = (
+  // <Route name="layout" path="/" handler={EventInfo}>
+  //   <Route name="live" path="/2015" handler={LiveFeed}/>
+  //   <Route name="year" path="/:year" handler={ArchiveFeed}/>
+  // </Route>
+  React.createElement(Route, {name: "year", path: "/:year", handler: EventInfo, ignoreScrollBehavior: true})
+)
 
 // React.renderComponent(
 //   <Stream />,
@@ -36998,7 +37155,12 @@ Router.run(routes, Router.HistoryLocation, function(Handler) {
   React.render(React.createElement(Handler, null), document.getElementById('app'));
 });
 
-},{"./jsx/ArchiveFeed.jsx":271,"./jsx/Feed.jsx":272,"./jsx/LiveFeed.jsx":273,"react":218,"react-router":31}],271:[function(require,module,exports){
+
+Router.run(eventInfoRoutes, Router.HistoryLocation, function(Handler) {
+  React.render(React.createElement(Handler, null), document.getElementById('EventInfo'));
+});
+
+},{"./jsx/ArchiveFeed.jsx":269,"./jsx/EventInfo.jsx":270,"./jsx/Feed.jsx":271,"./jsx/LiveFeed.jsx":272,"react":218,"react-router":31}],269:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React  = require('react');
@@ -37081,12 +37243,14 @@ var Stream = React.createClass({displayName: "Stream",
   readTweetsFromAPI: function() {
     var self = this;
 
-    this.readFromAPI(this.getPath(), function(tweets) {
+    this.readFromAPI(this.getPath() + '/tweets', function(tweets) {
       setTimeout(function() {
         self.setState({
           data: tweets
         });
         self.props.fadeInPage();
+      // Can't remember why i have this .3s delay.
+      // Potentially to delay the feed loading in, to create artificial progress
       }, 300);
 
     }.bind(this));
@@ -37118,7 +37282,27 @@ var Stream = React.createClass({displayName: "Stream",
 
 module.exports = Stream;
 
-},{"./StreamItem.jsx":277,"react":218,"react-router":31,"reqwest":219}],272:[function(require,module,exports){
+},{"./StreamItem.jsx":276,"react":218,"react-router":31,"reqwest":219}],270:[function(require,module,exports){
+/** @jsx React.DOM */
+
+var React  = require('react');
+var Router = require('react-router');
+
+var EventInfo = React.createClass({displayName: "EventInfo",
+  mixins: [ Router.State ],
+
+  render: function() {
+
+    return (
+      React.createElement("h1", null, "Hello! Event Info here! ", this.getPath())
+    );
+  }
+
+});
+
+module.exports = EventInfo;
+
+},{"react":218,"react-router":31}],271:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react/addons'); //,
@@ -37216,7 +37400,7 @@ var Feed = React.createClass({displayName: "Feed",
 
 module.exports = Feed;
 
-},{"./Loading.jsx":274,"./Status.jsx":276,"./ToggleYear.jsx":280,"classnames":1,"react-router":31,"react/addons":46}],273:[function(require,module,exports){
+},{"./Loading.jsx":273,"./Status.jsx":275,"./ToggleYear.jsx":279,"classnames":1,"react-router":31,"react/addons":46}],272:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react');
@@ -37256,7 +37440,7 @@ var LiveFeed = React.createClass({displayName: "LiveFeed",
 
 module.exports = LiveFeed;
 
-},{"./ArchiveFeed.jsx":271,"./SocketFeed.jsx":275,"react":218,"react-router":31}],274:[function(require,module,exports){
+},{"./ArchiveFeed.jsx":269,"./SocketFeed.jsx":274,"react":218,"react-router":31}],273:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React  = require('react');
@@ -37281,7 +37465,7 @@ var Loading = React.createClass({displayName: "Loading",
 
 module.exports = Loading;
 
-},{"react":218}],275:[function(require,module,exports){
+},{"react":218}],274:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react/addons'); //,
@@ -37430,7 +37614,7 @@ var SocketFeed = React.createClass({displayName: "SocketFeed",
 
 module.exports = SocketFeed;
 
-},{"./StreamItem.jsx":277,"react/addons":46,"socket.io-client":220}],276:[function(require,module,exports){
+},{"./StreamItem.jsx":276,"react/addons":46,"socket.io-client":220}],275:[function(require,module,exports){
 var React = require('react');
 var classNames = require('classnames');
 
@@ -37458,7 +37642,7 @@ var Status = React.createClass({displayName: "Status",
 
 module.exports = Status;
 
-},{"classnames":1,"react":218}],277:[function(require,module,exports){
+},{"classnames":1,"react":218}],276:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var moment = require('moment');
@@ -37617,7 +37801,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
 
 module.exports = StreamItem;
 
-},{"./StreamItemMedia.jsx":278,"./StreamItemVine.jsx":279,"moment":4,"react":218,"react-autoupdate-time":5,"react-router":31,"twitter-text":269}],278:[function(require,module,exports){
+},{"./StreamItemMedia.jsx":277,"./StreamItemVine.jsx":278,"moment":4,"react":218,"react-autoupdate-time":5,"react-router":31,"twitter-text":267}],277:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 
@@ -37675,7 +37859,7 @@ var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
 
 module.exports = StreamItemMedia;
 
-},{"react":218,"react-router":31}],279:[function(require,module,exports){
+},{"react":218,"react-router":31}],278:[function(require,module,exports){
 var React = require('react');
 
 var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
@@ -37696,7 +37880,7 @@ var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
 
 module.exports = StreamItemMedia;
 
-},{"react":218}],280:[function(require,module,exports){
+},{"react":218}],279:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router'); // or var Router = ReactRouter; in browsers
 
@@ -37719,4 +37903,4 @@ var ToggleYear = React.createClass({displayName: "ToggleYear",
 
 module.exports = ToggleYear;
 
-},{"react":218,"react-router":31}]},{},[270]);
+},{"react":218,"react-router":31}]},{},[268]);

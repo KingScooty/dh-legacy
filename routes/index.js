@@ -21,6 +21,65 @@ router.get('/', function(req, res) {
 });
 
 router.get('/:year', function(req, res) {
+
+  var db = req.db['dh_' + req.params.year];
+
+  try {
+    db.view('tweets/all', {descending: true}, function callback(err, response) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.format({
+          text: function(){
+            res.send('hey');
+          },
+
+          html: function(){
+            res.render('index');
+          },
+
+          json: function(){
+            res.send(response);
+          }
+        });
+      }
+    });
+  } catch (exeception) {
+    res.redirect('/');
+  }
+
+});
+
+router.get('/:year/info', function(req, res) {
+  var db = req.db['dh_' + req.params.year];
+
+  try {
+    db.view('tweets/event_info', function callback(err, response) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.format({
+          text: function(){
+            res.send('hey');
+          },
+
+          html: function(){
+            res.render('index', { title: 'Express' });
+          },
+
+          json: function(){
+            res.send(response);
+          }
+        });
+      }
+    });
+  } catch (exeception) {
+    res.redirect('/');
+  }
+});
+
+
+router.get('/:year/tweets', function(req, res) {
   var db = req.db['dh_' + req.params.year];
 
   try {

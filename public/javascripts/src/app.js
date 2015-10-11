@@ -12,6 +12,9 @@ var Feed = require('./jsx/Feed.jsx');
 var LiveFeed = require('./jsx/LiveFeed.jsx');
 var ArchiveFeed = require('./jsx/ArchiveFeed.jsx');
 
+var EventInfo = require('./jsx/EventInfo.jsx');
+
+
 // <Route name="users" path="search/users" handler={Search} />
 // <Route name="year" path="/:year" handler={} />
 // <Route name="users" path="search/users" handler={Search} />
@@ -26,6 +29,13 @@ var routes = (
   </Route>
 );
 
+var eventInfoRoutes = (
+  // <Route name="layout" path="/" handler={EventInfo}>
+  //   <Route name="live" path="/2015" handler={LiveFeed}/>
+  //   <Route name="year" path="/:year" handler={ArchiveFeed}/>
+  // </Route>
+  <Route name="year" path="/:year" handler={EventInfo} ignoreScrollBehavior/>
+)
 
 // React.renderComponent(
 //   <Stream />,
@@ -34,4 +44,9 @@ var routes = (
 
 Router.run(routes, Router.HistoryLocation, function(Handler) {
   React.render(<Handler/>, document.getElementById('app'));
+});
+
+
+Router.run(eventInfoRoutes, Router.HistoryLocation, function(Handler) {
+  React.render(<Handler/>, document.getElementById('EventInfo'));
 });

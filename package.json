@@ -1,5 +1,5 @@
 {
-  "name": "digital_heroes-2014",
+  "name": "digital_heroes",
   "domains": [
     "digital-heroes.com",
     "digitalheroes.co.uk"
@@ -21,24 +21,24 @@
     "serve-favicon": "^2.0.0",
     "socket.io": "^1.3.5",
     "static-favicon": "~1.0.0",
-    "twit": "^1.1.15"
+    "twit": "^1.1.15",
+    "react": "^0.13.2",
+    "react-router": "*"
   },
   "devDependencies": {
-    "chai": "^1.9.1",
+    "chai": "*",
     "classnames": "^2.1.1",
-    "grunt": "^0.4.5",
-    "grunt-browserify": "^3.8.0",
-    "grunt-contrib-cssmin": "^0.12.3",
-    "grunt-contrib-uglify": "^0.9.1",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-react": "^0.12.2",
-    "grunt-sass": "^0.18.1",
-    "mocha": "^1.19.0",
+    "grunt": "*",
+    "grunt-browserify": "*",
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-react": "*",
+    "grunt-sass": "*",
+    "mocha": "*",
     "moment": "^2.10.2",
-    "node-sass": "^2.1.1",
-    "react": "^0.13.2",
+    "node-sass": "*",
     "react-autoupdate-time": "^1.0.5",
-    "react-router": "^0.13.3",
     "reqwest": "^1.1.5",
     "socket.io-client": "^1.3.5",
     "twitter-text": "^1.12.0"

@@ -80,12 +80,14 @@ var Stream = React.createClass({
   readTweetsFromAPI: function() {
     var self = this;
 
-    this.readFromAPI(this.getPath(), function(tweets) {
+    this.readFromAPI(this.getPath() + '/tweets', function(tweets) {
       setTimeout(function() {
         self.setState({
           data: tweets
         });
         self.props.fadeInPage();
+      // Can't remember why i have this .3s delay.
+      // Potentially to delay the feed loading in, to create artificial progress
       }, 300);
 
     }.bind(this));
