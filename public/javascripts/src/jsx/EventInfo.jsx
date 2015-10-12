@@ -9,7 +9,13 @@ var EventInfo = React.createClass({
 
   getInitialState: function() {
     return {
-      data: null
+      data: [
+        {
+          value: {
+            html: null
+          }
+        }
+      ]
     }
   },
 
@@ -56,11 +62,12 @@ var EventInfo = React.createClass({
   },
 
   render: function() {
+    var html = this.state.data[0].value.html;
 
     return (
       <div>
         <h1>Hello! Event Info here! {this.getPath()}</h1>
-        <div>{ this.state.data }</div>
+        <div dangerouslySetInnerHTML={{__html: html }}></div>
       </div>
     );
   }

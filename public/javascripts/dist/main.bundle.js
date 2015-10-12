@@ -37276,7 +37276,13 @@ var EventInfo = React.createClass({displayName: "EventInfo",
 
   getInitialState: function() {
     return {
-      data: null
+      data: [
+        {
+          value: {
+            html: null
+          }
+        }
+      ]
     }
   },
 
@@ -37323,11 +37329,12 @@ var EventInfo = React.createClass({displayName: "EventInfo",
   },
 
   render: function() {
+    var html = this.state.data[0].value.html;
 
     return (
       React.createElement("div", null, 
         React.createElement("h1", null, "Hello! Event Info here! ", this.getPath()), 
-        React.createElement("div", null,  this.state.data)
+        React.createElement("div", {dangerouslySetInnerHTML: {__html: html}})
       )
     );
   }
