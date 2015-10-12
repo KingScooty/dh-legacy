@@ -3,43 +3,23 @@
 var React  = require('react');
 var Router = require('react-router');
 var Reqwest = require('reqwest');
-// var classNames = require('classnames');
 
 var StreamItem = require('./StreamItem.jsx');
 // var SocketFeed = require('./SocketFeed.jsx');
 // var Loading = require('./Loading.jsx');
-// var StreamItemLegacy = require('./StreamItemLegacy.jsx');
 
 var Stream = React.createClass({
   mixins: [ Router.State ],
 
   getInitialState: function() {
     return {
-      // class: 'tweet-list__archive tweet-list__archive--inactive',
       data: null
-      // data: [
-      //   {
-      //     value: {
-      //       tweet_id: '',
-      //       id_str: '',
-      //       screen_name: '',
-      //       timestamp: '',
-      //       text: '',
-      //       profile_image_url: '',
-      //       created_at: '',
-      //       media: '',
-      //       user: {
-      //         screen_name: '',
-      //         profile_image_url: ''
-      //       },
-      //       entities: {
-      //         media: []
-      //       }
-      //     }
-      //   }
-      // ]
     }
   },
+
+  /**
+   * Break this out into its own lib file.
+   */
 
   readFromAPI: function(url, successFunction) {
     Reqwest({
@@ -56,8 +36,10 @@ var Stream = React.createClass({
     console.log('read api called');
   },
 
+  /**
+  **/
+
   componentWillMount: function () {
-    // console.log('> componentWillMount()');
     this.readTweetsFromAPI();
   },
 

@@ -37166,43 +37166,23 @@ Router.run(eventInfoRoutes, Router.HistoryLocation, function(Handler) {
 var React  = require('react');
 var Router = require('react-router');
 var Reqwest = require('reqwest');
-// var classNames = require('classnames');
 
 var StreamItem = require('./StreamItem.jsx');
 // var SocketFeed = require('./SocketFeed.jsx');
 // var Loading = require('./Loading.jsx');
-// var StreamItemLegacy = require('./StreamItemLegacy.jsx');
 
 var Stream = React.createClass({displayName: "Stream",
   mixins: [ Router.State ],
 
   getInitialState: function() {
     return {
-      // class: 'tweet-list__archive tweet-list__archive--inactive',
       data: null
-      // data: [
-      //   {
-      //     value: {
-      //       tweet_id: '',
-      //       id_str: '',
-      //       screen_name: '',
-      //       timestamp: '',
-      //       text: '',
-      //       profile_image_url: '',
-      //       created_at: '',
-      //       media: '',
-      //       user: {
-      //         screen_name: '',
-      //         profile_image_url: ''
-      //       },
-      //       entities: {
-      //         media: []
-      //       }
-      //     }
-      //   }
-      // ]
     }
   },
+
+  /**
+   * Break this out into its own lib file.
+   */
 
   readFromAPI: function(url, successFunction) {
     Reqwest({
@@ -37219,8 +37199,10 @@ var Stream = React.createClass({displayName: "Stream",
     console.log('read api called');
   },
 
+  /**
+  **/
+
   componentWillMount: function () {
-    // console.log('> componentWillMount()');
     this.readTweetsFromAPI();
   },
 
@@ -37287,14 +37269,66 @@ module.exports = Stream;
 
 var React  = require('react');
 var Router = require('react-router');
+var Reqwest = require('reqwest');
 
 var EventInfo = React.createClass({displayName: "EventInfo",
   mixins: [ Router.State ],
 
+  getInitialState: function() {
+    return {
+      data: null
+    }
+  },
+
+  /**
+   * Break this out into its own lib file.
+   */
+
+  readFromAPI: function(url, successFunction) {
+    Reqwest({
+      url: url,
+      type: 'json',
+      method: 'get',
+      contentType: 'application/json',
+      success: successFunction,
+      error: function(error) {
+        console.error(url, error['response']);
+        location = '/';
+      }
+    });
+    console.log('read api called');
+  },
+
+  /**
+  **/
+
+  componentWillMount: function () {
+    this.readEventInfoFromAPI();
+  },
+
+  componentWillReceiveProps: function (nextProps) {
+    this.readEventInfoFromAPI();
+  },
+
+  readEventInfoFromAPI: function() {
+    var self = this;
+
+    this.readFromAPI(this.getPath() + '/info', function(info) {
+
+      this.setState({
+        data: info
+      });
+
+    }.bind(this));
+  },
+
   render: function() {
 
     return (
-      React.createElement("h1", null, "Hello! Event Info here! ", this.getPath())
+      React.createElement("div", null, 
+        React.createElement("h1", null, "Hello! Event Info here! ", this.getPath()), 
+        React.createElement("div", null,  this.state.data)
+      )
     );
   }
 
@@ -37302,7 +37336,7 @@ var EventInfo = React.createClass({displayName: "EventInfo",
 
 module.exports = EventInfo;
 
-},{"react":218,"react-router":31}],271:[function(require,module,exports){
+},{"react":218,"react-router":31,"reqwest":219}],271:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React         = require('react/addons'); //,
