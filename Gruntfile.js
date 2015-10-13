@@ -32,8 +32,12 @@ module.exports = function(grunt) {
     },
 
     browserify: {
-      options:      {
-        transform:  [ require('grunt-react').browserify ]
+      options: {
+        transform: [[
+          'babelify', {
+            loose: 'all'
+          }
+        ]]
       },
       dist: {
         files: {

@@ -27,6 +27,7 @@
     "reqwest": "^1.1.5"
   },
   "devDependencies": {
+    "babelify": "^6.3.0",
     "chai": "*",
     "classnames": "^2.1.1",
     "grunt": "*",
@@ -34,7 +35,6 @@
     "grunt-contrib-cssmin": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*",
-    "grunt-react": "*",
     "grunt-sass": "*",
     "mocha": "*",
     "moment": "^2.10.2",

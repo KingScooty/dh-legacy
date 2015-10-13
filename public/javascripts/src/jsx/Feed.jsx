@@ -1,6 +1,4 @@
-/** @jsx React.DOM */
-
-var React         = require('react/addons'); //,
+var React  = require('react/addons'); //,
 var Router = require('react-router');
 var classNames = require('classnames');
 

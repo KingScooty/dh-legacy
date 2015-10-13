@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React         = require('react/addons'); //,
 var io            = require('socket.io-client');
 
