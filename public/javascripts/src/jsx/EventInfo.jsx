@@ -12,7 +12,7 @@ var EventInfo = React.createClass({
       data: [
         {
           value: {
-            html: null
+            html: "Loading..."
           }
         }
       ]

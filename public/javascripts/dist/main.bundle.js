@@ -37279,7 +37279,7 @@ var EventInfo = React.createClass({displayName: "EventInfo",
       data: [
         {
           value: {
-            html: null
+            html: "Loading..."
           }
         }
       ]
