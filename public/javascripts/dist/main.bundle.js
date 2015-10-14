@@ -37107,6 +37107,8 @@ function toArray(list, index) {
 })();
 
 },{}],268:[function(require,module,exports){
+'use strict';
+
 var React = require('react');
 
 var Router = require('react-router');
@@ -37123,47 +37125,44 @@ var ArchiveFeed = require('./jsx/ArchiveFeed.jsx');
 
 var EventInfo = require('./jsx/EventInfo.jsx');
 
-
 // <Route name="users" path="search/users" handler={Search} />
 // <Route name="year" path="/:year" handler={} />
 // <Route name="users" path="search/users" handler={Search} />
 // <Route name="user" path="/users/:username" handler={UserDetail} />
 // <DefaultRoute handler={Search} />
 
-var routes = (
-  React.createElement(Route, {name: "layout", path: "/", handler: Feed, ignoreScrollBehavior: true}, 
-    React.createElement(Route, {name: "live", path: "/2015", handler: LiveFeed}), 
-    React.createElement(Route, {name: "year", path: "/:year", handler: ArchiveFeed}), 
-    React.createElement(Redirect, {from: "/", to: "live"})
-  )
+var routes = React.createElement(
+  Route,
+  { name: 'layout', path: '/', handler: Feed, ignoreScrollBehavior: true },
+  React.createElement(Route, { name: 'live', path: '/2015', handler: LiveFeed }),
+  React.createElement(Route, { name: 'year', path: '/:year', handler: ArchiveFeed }),
+  React.createElement(Redirect, { from: '/', to: 'live' })
 );
 
-var eventInfoRoutes = (
-  // <Route name="layout" path="/" handler={EventInfo}>
-  //   <Route name="live" path="/2015" handler={LiveFeed}/>
-  //   <Route name="year" path="/:year" handler={ArchiveFeed}/>
-  // </Route>
-  React.createElement(Route, {name: "year", path: "/:year", handler: EventInfo, ignoreScrollBehavior: true})
-)
+var eventInfoRoutes =
+// <Route name="layout" path="/" handler={EventInfo}>
+//   <Route name="live" path="/2015" handler={LiveFeed}/>
+//   <Route name="year" path="/:year" handler={ArchiveFeed}/>
+// </Route>
+React.createElement(Route, { name: 'year', path: '/:year', handler: EventInfo, ignoreScrollBehavior: true });
 
 // React.renderComponent(
 //   <Stream />,
 //   document.getElementById('app')
 // );
 
-Router.run(routes, Router.HistoryLocation, function(Handler) {
+Router.run(routes, Router.HistoryLocation, function (Handler) {
   React.render(React.createElement(Handler, null), document.getElementById('app'));
 });
 
-
-Router.run(eventInfoRoutes, Router.HistoryLocation, function(Handler) {
+Router.run(eventInfoRoutes, Router.HistoryLocation, function (Handler) {
   React.render(React.createElement(Handler, null), document.getElementById('EventInfo'));
 });
 
 },{"./jsx/ArchiveFeed.jsx":269,"./jsx/EventInfo.jsx":270,"./jsx/Feed.jsx":271,"./jsx/LiveFeed.jsx":272,"react":218,"react-router":31}],269:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
-var React  = require('react');
+var React = require('react');
 var Router = require('react-router');
 var Reqwest = require('reqwest');
 
@@ -37171,28 +37170,30 @@ var StreamItem = require('./StreamItem.jsx');
 // var SocketFeed = require('./SocketFeed.jsx');
 // var Loading = require('./Loading.jsx');
 
-var Stream = React.createClass({displayName: "Stream",
-  mixins: [ Router.State ],
+var Stream = React.createClass({
+  displayName: 'Stream',
 
-  getInitialState: function() {
+  mixins: [Router.State],
+
+  getInitialState: function getInitialState() {
     return {
       data: null
-    }
+    };
   },
 
   /**
    * Break this out into its own lib file.
    */
 
-  readFromAPI: function(url, successFunction) {
+  readFromAPI: function readFromAPI(url, successFunction) {
     Reqwest({
       url: url,
       type: 'json',
       method: 'get',
       contentType: 'application/json',
       success: successFunction,
-      error: function(error) {
-        console.error(url, error['response']);
+      error: function error(_error) {
+        console.error(url, _error['response']);
         location = '/';
       }
     });
@@ -37202,58 +37203,57 @@ var Stream = React.createClass({displayName: "Stream",
   /**
   **/
 
-  componentWillMount: function () {
+  componentWillMount: function componentWillMount() {
     this.readTweetsFromAPI();
   },
 
-  componentDidMount: function () {
+  componentDidMount: function componentDidMount() {
     // console.log('DID MOUNT. RUN EVERY ROUTE??');
   },
 
-  componentWillReceiveProps: function (nextProps) {
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
     // console.log('> componentWillReceiveProps');
   },
 
-  componentWillUpdate: function (nextProps, nextState) {
+  componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
     // console.log('> componentWillUpdate');
     // this.readTweetsFromAPI();
   },
-  componentWillUnmount: function () {
+  componentWillUnmount: function componentWillUnmount() {
     // console.log('> componentWillUnmount()');
   },
 
-  readTweetsFromAPI: function() {
+  readTweetsFromAPI: function readTweetsFromAPI() {
     var self = this;
 
-    this.readFromAPI(this.getPath() + '/tweets', function(tweets) {
-      setTimeout(function() {
+    this.readFromAPI(this.getPath() + '/tweets', (function (tweets) {
+      setTimeout(function () {
         self.setState({
           data: tweets
         });
         self.props.fadeInPage();
-      // Can't remember why i have this .3s delay.
-      // Potentially to delay the feed loading in, to create artificial progress
+        // Can't remember why i have this .3s delay.
+        // Potentially to delay the feed loading in, to create artificial progress
       }, 300);
-
-    }.bind(this));
+    }).bind(this));
   },
 
-  render: function() {
+  render: function render() {
     var path = this.getPath();
     var socket_feed;
 
     // console.log(this.state.data);
 
     if (this.state.data) {
-      var tweetItems = this.state.data.map(function(tweet, index) {
-        return React.createElement(StreamItem, {key: tweet.id, tweet: tweet})
-      }.bind(this));
+      var tweetItems = this.state.data.map((function (tweet, index) {
+        return React.createElement(StreamItem, { key: tweet.id, tweet: tweet });
+      }).bind(this));
     }
 
-    return (
-      React.createElement("div", {className: "tweet-list__archive"}, 
-        tweetItems
-      )
+    return React.createElement(
+      'div',
+      { className: 'tweet-list__archive' },
+      tweetItems
     );
     // } else {
     //   return <Loading />;
@@ -37265,40 +37265,52 @@ var Stream = React.createClass({displayName: "Stream",
 module.exports = Stream;
 
 },{"./StreamItem.jsx":276,"react":218,"react-router":31,"reqwest":219}],270:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
-var React  = require('react');
+var React = require('react');
 var Router = require('react-router');
-var Reqwest = require('reqwest');
+// import { Router, Route, Link } from 'react-router'
 
-var EventInfo = React.createClass({displayName: "EventInfo",
-  mixins: [ Router.State ],
+var EventInfo = React.createClass({
+  displayName: 'EventInfo',
 
-  getInitialState: function() {
+  mixins: [Router.State],
+
+  // getDefaultProps: function() {
+  //   return {
+  //     data: [
+  //       {
+  //         value: {
+  //           html: ""
+  //         }
+  //       }
+  //     ]
+  //   }
+  // },
+
+  getInitialState: function getInitialState() {
     return {
-      data: [
-        {
-          value: {
-            html: "Loading..."
-          }
-        }
-      ]
-    }
+      data: this.props.data
+      // html: this.props.data
+    };
   },
 
   /**
    * Break this out into its own lib file.
    */
 
-  readFromAPI: function(url, successFunction) {
+  readFromAPI: function readFromAPI(url, successFunction) {
+
+    var Reqwest = require('reqwest');
+
     Reqwest({
       url: url,
       type: 'json',
       method: 'get',
       contentType: 'application/json',
       success: successFunction,
-      error: function(error) {
-        console.error(url, error['response']);
+      error: function error(_error) {
+        console.error(url, _error['response']);
         location = '/';
       }
     });
@@ -37308,34 +37320,57 @@ var EventInfo = React.createClass({displayName: "EventInfo",
   /**
   **/
 
-  componentWillMount: function () {
+  componentWillMount: function componentWillMount() {
+    // this.readEventInfoFromAPI();
+  },
+
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
     this.readEventInfoFromAPI();
   },
 
-  componentWillReceiveProps: function (nextProps) {
-    this.readEventInfoFromAPI();
+  componentDidUpdate: function componentDidUpdate() {
+    // this.readEventInfoFromAPI();
   },
 
-  readEventInfoFromAPI: function() {
+  readEventInfoFromAPI: function readEventInfoFromAPI() {
     var self = this;
 
-    this.readFromAPI(this.getPath() + '/info', function(info) {
+    this.readFromAPI(this.getPath() + '/info', (function (info) {
 
       this.setState({
         data: info
       });
-
-    }.bind(this));
+    }).bind(this));
   },
 
-  render: function() {
-    var html = this.state.data[0].value.html;
+  // A utility function to safely escape JSON for embedding in a <script> tag
+  safeStringify: function safeStringify(obj) {
+    return JSON.stringify(obj).replace(/<\/script/g, '<\\/script').replace(/<!--/g, '<\\!--');
+  },
 
-    return (
-      React.createElement("div", null, 
-        React.createElement("h1", null, "Hello! Event Info here! ", this.getPath()), 
-        React.createElement("div", {dangerouslySetInnerHTML: {__html: html}})
-      )
+  render: function render() {
+    //var html = this.state.data; //[0].value.html;
+
+    var json = this.safeStringify(this.props);
+    // var json = this.safeStringify(this.props);
+    var propStore = React.createElement('script', { type: 'application/json', id: 'someId', dangerouslySetInnerHTML: { __html: json } });
+
+    // if (this.state.data) {
+    // html = this.props.data[0].value.html;
+    // }
+
+    return React.createElement(
+      'div',
+      null,
+      React.createElement('hr', null),
+      propStore,
+      React.createElement('hr', null),
+      React.createElement(
+        'h1',
+        null,
+        'Hello! Event Info here!'
+      ),
+      React.createElement('div', { dangerouslySetInnerHTML: { __html: html } })
     );
   }
 
@@ -37344,9 +37379,9 @@ var EventInfo = React.createClass({displayName: "EventInfo",
 module.exports = EventInfo;
 
 },{"react":218,"react-router":31,"reqwest":219}],271:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
-var React         = require('react/addons'); //,
+var React = require('react/addons'); //,
 var Router = require('react-router');
 var classNames = require('classnames');
 
@@ -37357,43 +37392,43 @@ var Link = Router.Link;
 var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 
-var Status        = require('./Status.jsx');
-var Loading       = require('./Loading.jsx');
-var ToggleYear    = require('./ToggleYear.jsx');
+var Status = require('./Status.jsx');
+var Loading = require('./Loading.jsx');
+var ToggleYear = require('./ToggleYear.jsx');
 
-var Feed = React.createClass({displayName: "Feed",
-  mixins: [ Router.State ],
+var Feed = React.createClass({
+  displayName: 'Feed',
+
+  mixins: [Router.State],
 
   // Invoked once before the component is mounted.
   // The return value will be used as the initial value of this.state.
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return {
       connected: false,
       view_ready: false
-    }
+    };
   },
 
-  enableSocketState: function() {
+  enableSocketState: function enableSocketState() {
     this.setState({ connected: true });
   },
 
-  disableSocketState: function() {
+  disableSocketState: function disableSocketState() {
     this.setState({ connected: false });
   },
 
-  fadeInPage: function() {
+  fadeInPage: function fadeInPage() {
     this.setState({
       view_ready: true
     });
   },
 
-  componentDidMount: function() {
-  },
+  componentDidMount: function componentDidMount() {},
 
-  componentWillUpdate: function() {
-  },
+  componentWillUpdate: function componentWillUpdate() {},
 
-  componentWillReceiveProps: function() {
+  componentWillReceiveProps: function componentWillReceiveProps() {
     // force loading render per route change
     this.setState({
       // connected: false,
@@ -37401,37 +37436,44 @@ var Feed = React.createClass({displayName: "Feed",
     });
   },
 
-  render: function() {
+  render: function render() {
 
     var path = this.getPath().replace('/', '');
-    var body_class = classNames(
-      'tweet-list__body',
-      { 'tweet-list__body--inactive': !this.state.view_ready }
-    );
+    var body_class = classNames('tweet-list__body', { 'tweet-list__body--inactive': !this.state.view_ready });
 
     // if (this.state.data) {
-      return (
-        React.createElement("div", {className: "tweet-list"}, 
-          React.createElement("div", {className: "tweet-list__head"}, 
-            React.createElement(Status, {connected: this.state.connected}), 
-            React.createElement("div", {className: "tweet-list__head__nav"}, 
-              React.createElement(Loading, {viewReady: this.state.view_ready}), 
-              React.createElement(ToggleYear, null)
-            )
-          ), 
-          React.createElement("div", {className: body_class}, 
-            React.createElement("div", null, 
-              React.createElement(TransitionGroup, {transitionName: "fade"}, 
-                React.createElement(RouteHandler, {key: path, 
-                  enableSocketState: this.enableSocketState, 
-                  disableSocketState: this.disableSocketState, 
-                  fadeInPage: this.fadeInPage}
-                )
-              )
-            )
+    return React.createElement(
+      'div',
+      { className: 'tweet-list' },
+      React.createElement(
+        'div',
+        { className: 'tweet-list__head' },
+        React.createElement(Status, { connected: this.state.connected }),
+        React.createElement(
+          'div',
+          { className: 'tweet-list__head__nav' },
+          React.createElement(Loading, { viewReady: this.state.view_ready }),
+          React.createElement(ToggleYear, null)
+        )
+      ),
+      React.createElement(
+        'div',
+        { className: body_class },
+        React.createElement(
+          'div',
+          null,
+          React.createElement(
+            TransitionGroup,
+            { transitionName: 'fade' },
+            React.createElement(RouteHandler, { key: path,
+              enableSocketState: this.enableSocketState,
+              disableSocketState: this.disableSocketState,
+              fadeInPage: this.fadeInPage
+            })
           )
         )
-      );
+      )
+    );
     // } else {
     //   return <div>Loading...</div>;
     // }
@@ -37442,38 +37484,39 @@ var Feed = React.createClass({displayName: "Feed",
 module.exports = Feed;
 
 },{"./Loading.jsx":273,"./Status.jsx":275,"./ToggleYear.jsx":279,"classnames":1,"react-router":31,"react/addons":46}],272:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
-var React         = require('react');
+var React = require('react');
 var Router = require('react-router');
 
 var ArchiveFeed = require('./ArchiveFeed.jsx');
 var SocketFeed = require('./SocketFeed.jsx');
 
-var LiveFeed = React.createClass({displayName: "LiveFeed",
-  mixins: [ Router.State ],
+var LiveFeed = React.createClass({
+  displayName: 'LiveFeed',
 
-  componentWillMount: function () {
-      // console.log('> componentWillMount()');
+  mixins: [Router.State],
+
+  componentWillMount: function componentWillMount() {
+    // console.log('> componentWillMount()');
   },
 
-  componentDidMount: function() {
+  componentDidMount: function componentDidMount() {},
+
+  componentWillUnmount: function componentWillUnmount() {
+    // console.log('> componentWillUnmount()');
   },
 
-  componentWillUnmount: function () {
-      // console.log('> componentWillUnmount()');
-  },
-
-  render: function() {
-    return (
-      React.createElement("div", null, 
-        React.createElement(SocketFeed, {
-          connected: this.props.connected, 
-          enableSocketState: this.props.enableSocketState, 
-          disableSocketState: this.props.disableSocketState}
-        ), 
-        React.createElement(ArchiveFeed, {fadeInPage: this.props.fadeInPage})
-      )
+  render: function render() {
+    return React.createElement(
+      'div',
+      null,
+      React.createElement(SocketFeed, {
+        connected: this.props.connected,
+        enableSocketState: this.props.enableSocketState,
+        disableSocketState: this.props.disableSocketState
+      }),
+      React.createElement(ArchiveFeed, { fadeInPage: this.props.fadeInPage })
     );
   }
 
@@ -37482,14 +37525,15 @@ var LiveFeed = React.createClass({displayName: "LiveFeed",
 module.exports = LiveFeed;
 
 },{"./ArchiveFeed.jsx":269,"./SocketFeed.jsx":274,"react":218,"react-router":31}],273:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
-var React  = require('react');
+var React = require('react');
 // var classNames = require('classnames');
 
-var Loading = React.createClass({displayName: "Loading",
+var Loading = React.createClass({
+  displayName: 'Loading',
 
-  render: function() {
+  render: function render() {
     var elClass = this.props.viewReady ? 'loader' : 'loader active';
 
     // var elClass = classNames(
@@ -37497,8 +37541,10 @@ var Loading = React.createClass({displayName: "Loading",
     //   { 'active': !this.props.viewReady }
     // );
 
-    return (
-      React.createElement("div", {className: elClass}, "Loading...")
+    return React.createElement(
+      'div',
+      { className: elClass },
+      'Loading...'
     );
   }
 
@@ -37507,10 +37553,10 @@ var Loading = React.createClass({displayName: "Loading",
 module.exports = Loading;
 
 },{"react":218}],274:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
-var React         = require('react/addons'); //,
-var io            = require('socket.io-client');
+var React = require('react/addons'); //,
+var io = require('socket.io-client');
 
 var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
@@ -37518,42 +37564,42 @@ var StreamItem = require('./StreamItem.jsx');
 
 var socket;
 
-var SocketFeed = React.createClass({displayName: "SocketFeed",
+var SocketFeed = React.createClass({
+  displayName: 'SocketFeed',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return {
       connected: false,
       tweets: []
-    }
+    };
   },
 
-  connectToSockets: function() {
+  connectToSockets: function connectToSockets() {
     // console.log('Connect to sockets init!');
     var self = this;
     // var socket = io('http://localhost/');
-    if ( !socket ) {
+    if (!socket) {
       // console.log('socket does not exist');
       socket = io.connect({
         // multiplex: false
       });
-
     } else {
-      // console.log('socket exists');
-      socket.connect();
-    }
+        // console.log('socket exists');
+        socket.connect();
+      }
 
-    socket.on('connect', function() {
+    socket.on('connect', function () {
       // console.log('connected! but how many times?');
 
       if (self.isMounted()) {
         // console.log('Setting state of connected to true');
-        self.setState({connected: true });
+        self.setState({ connected: true });
       }
 
       self.props.enableSocketState();
     });
 
-    socket.on('incomingTweet', function(tweet) {
+    socket.on('incomingTweet', (function (tweet) {
       // console.log('new tweet: ', tweet);
       // console.log('self state? ', self.state.tweets);
 
@@ -37563,16 +37609,15 @@ var SocketFeed = React.createClass({displayName: "SocketFeed",
       // console.log('newArray: ', newArray);
 
       // console.log('Mounted, updating state.');
-      this.setState({tweets:newArray.reverse()});
+      this.setState({ tweets: newArray.reverse() });
 
       // console.log(self.state.tweets);
-    }.bind(this));
+    }).bind(this));
 
-    socket.on('disconnect', function() {
+    socket.on('disconnect', function () {
       // self.setState({connected: false});
       self.props.disableSocketState();
     });
-
   },
 
   // Called each time componented is mounted
@@ -37581,7 +37626,7 @@ var SocketFeed = React.createClass({displayName: "SocketFeed",
   // },
 
   // Called once first time mounted and cached until there are changes
-  componentDidMount: function() {
+  componentDidMount: function componentDidMount() {
     // console.log('how many fucking times is this MOUNTING???');
     this.connectToSockets();
   },
@@ -37590,7 +37635,7 @@ var SocketFeed = React.createClass({displayName: "SocketFeed",
   // },
 
   // Called each time the component is unmounted
-  componentWillUnmount: function () {
+  componentWillUnmount: function componentWillUnmount() {
     // console.log('> componentWillUnmount()');
     // this.setState({connected: false});
     // this.props.disableSocketState();
@@ -37601,7 +37646,7 @@ var SocketFeed = React.createClass({displayName: "SocketFeed",
     socket.removeListener('disconnect');
   },
 
-  render: function() {
+  render: function render() {
     // console.log('hello props?');
     // console.log(this.props.data);
     // console.log(this.props.connected);
@@ -37610,32 +37655,46 @@ var SocketFeed = React.createClass({displayName: "SocketFeed",
     if (this.state.connected) {
       if (this.state.tweets.length !== 0) {
         // console.log('tweets updated', this.state.tweets);
-        var tweetItems = this.state.tweets.map(function(tweet, index) {
+        var tweetItems = this.state.tweets.map((function (tweet, index) {
           // console.log('looping');
-          return React.createElement(StreamItem, {key: tweet.id, tweet: tweet})
-        }.bind(this));
+          return React.createElement(StreamItem, { key: tweet.id, tweet: tweet });
+        }).bind(this));
       }
 
-      var socket_component = (
-        React.createElement("div", {className: "tweet-list__live"}, 
-
-          React.createElement("div", {className: "tweet"}, 
-
-            React.createElement("div", {className: "tweet__container"}, 
-              React.createElement("div", {className: "tweet__profile_picture"}, 
-                React.createElement("img", {src: ""})
-              ), 
-              React.createElement("div", {className: "tweet__screen_name"}, 
-                React.createElement("a", {href: "/"})
-              ), 
-
-              React.createElement("div", {className: "tweet__body"}, "This is a body of text tweet for testing out sockets"), 
-
-              React.createElement("div", {className: "tweet__meta"}, 
-                React.createElement("a", {href: "#"}, 
-                  React.createElement("time", {className: "tweet__time timeago", dateTime: "{created_at}"}, 
-                    "5 seconds ago"
-                  )
+      var socket_component = React.createElement(
+        'div',
+        { className: 'tweet-list__live' },
+        React.createElement(
+          'div',
+          { className: 'tweet' },
+          React.createElement(
+            'div',
+            { className: 'tweet__container' },
+            React.createElement(
+              'div',
+              { className: 'tweet__profile_picture' },
+              React.createElement('img', { src: '' })
+            ),
+            React.createElement(
+              'div',
+              { className: 'tweet__screen_name' },
+              React.createElement('a', { href: '/' })
+            ),
+            React.createElement(
+              'div',
+              { className: 'tweet__body' },
+              'This is a body of text tweet for testing out sockets'
+            ),
+            React.createElement(
+              'div',
+              { className: 'tweet__meta' },
+              React.createElement(
+                'a',
+                { href: '#' },
+                React.createElement(
+                  'time',
+                  { className: 'tweet__time timeago', dateTime: '{created_at}' },
+                  '5 seconds ago'
                 )
               )
             )
@@ -37644,10 +37703,10 @@ var SocketFeed = React.createClass({displayName: "SocketFeed",
       );
     }
 
-    return (
-      React.createElement(ReactCSSTransitionGroup, {transitionName: "fade"}, 
-        tweetItems
-      )
+    return React.createElement(
+      ReactCSSTransitionGroup,
+      { transitionName: 'fade' },
+      tweetItems
     );
   }
 
@@ -37656,25 +37715,29 @@ var SocketFeed = React.createClass({displayName: "SocketFeed",
 module.exports = SocketFeed;
 
 },{"./StreamItem.jsx":276,"react/addons":46,"socket.io-client":220}],275:[function(require,module,exports){
+'use strict';
+
 var React = require('react');
 var classNames = require('classnames');
 
-var Status = React.createClass({displayName: "Status",
+var Status = React.createClass({
+  displayName: 'Status',
 
-  render: function() {
+  render: function render() {
 
     var status_text = this.props.connected ? 'LIVE' : 'Offline';
-    var status_class = classNames(
-      'socket-connection__status',
-      { 'socket-connection__status--down': !this.props.connected },
-      { 'socket-connection__status--up': this.props.connected }
-    );
+    var status_class = classNames('socket-connection__status', { 'socket-connection__status--down': !this.props.connected }, { 'socket-connection__status--up': this.props.connected });
 
     console.log('connection status: ', this.props.connected);
 
-    return (
-      React.createElement("div", {className: "socket-connection"}, "Stream: ", 
-        React.createElement("span", {className: status_class}, status_text)
+    return React.createElement(
+      'div',
+      { className: 'socket-connection' },
+      'Stream: ',
+      React.createElement(
+        'span',
+        { className: status_class },
+        status_text
       )
     );
   }
@@ -37684,6 +37747,8 @@ var Status = React.createClass({displayName: "Status",
 module.exports = Status;
 
 },{"classnames":1,"react":218}],276:[function(require,module,exports){
+'use strict';
+
 var React = require('react');
 var Router = require('react-router');
 var moment = require('moment');
@@ -37693,10 +37758,12 @@ var twitter = require('twitter-text');
 var StreamItemMedia = require('./StreamItemMedia.jsx');
 var StreamItemVine = require('./StreamItemVine.jsx');
 
-var StreamItem = React.createClass({displayName: "StreamItem",
-  mixins: [ Router.State ],
+var StreamItem = React.createClass({
+  displayName: 'StreamItem',
 
-  componentDidMount: function () {
+  mixins: [Router.State],
+
+  componentDidMount: function componentDidMount() {
     var self = this;
     var img = new Image();
 
@@ -37709,12 +37776,12 @@ var StreamItem = React.createClass({displayName: "StreamItem",
     img.src = this.state.profile_img_src;
   },
 
-  getInitialState: function () {
+  getInitialState: function getInitialState() {
     var profile_image;
 
     // Catch 404 images for newer feeds.
     // Replace profile images by default for older feeds.
-    if ((this.getPath() === '/2012') || this.getPath() === '/2013') {
+    if (this.getPath() === '/2012' || this.getPath() === '/2013') {
       profile_image = '/images/icon__twitter.png';
     } else {
       profile_image = this.props.tweet.value.user.profile_image_url;
@@ -37723,7 +37790,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
     return { profile_img_src: profile_image };
   },
 
-  render: function() {
+  render: function render() {
     // console.log('PATH - ', this.getPath());
     // console.log(this.props.tweet);
     // 2012 DH DATABASE
@@ -37756,7 +37823,7 @@ var StreamItem = React.createClass({displayName: "StreamItem",
 
       tweet = this.props.tweet.value;
 
-      if ((this.getPath() === '/2012') || this.getPath() === '/2013') {
+      if (this.getPath() === '/2012' || this.getPath() === '/2013') {
         tweet_id = tweet.tweet_id;
         screen_name = tweet.screen_name;
         created_at = tweet.timestamp;
@@ -37794,47 +37861,59 @@ var StreamItem = React.createClass({displayName: "StreamItem",
       if (profile_image) {
         profile_image = profile_image.replace("normal", "200x200");
       }
-
     }
 
-    return (
-      React.createElement("div", {className: "tweet"}, 
-
-        React.createElement("div", {className: "tweet__container"}, 
-          React.createElement("div", {className: "tweet__profile_picture"}, 
-            React.createElement("img", {src: this.state.profile_img_src})
-          ), 
-          React.createElement("div", {className: "tweet__screen_name"}, 
-            React.createElement("a", {href: screen_name_href}, "@", screen_name)
-          ), 
-
-          React.createElement("div", {className: "tweet__body"}, 
-            React.createElement("div", {dangerouslySetInnerHTML: {__html: tweet_text}}), 
-            React.createElement("div", {className: "tweet__body__footer"}, timestamp)
-          ), 
-
-          React.createElement("div", {className: "tweet__meta"}, 
-            React.createElement("a", {href: tweet_href}, 
-              React.createElement(AutoupdateTime, {className: "tweet_time timeago", value: created_at})
-            )
+    return React.createElement(
+      'div',
+      { className: 'tweet' },
+      React.createElement(
+        'div',
+        { className: 'tweet__container' },
+        React.createElement(
+          'div',
+          { className: 'tweet__profile_picture' },
+          React.createElement('img', { src: this.state.profile_img_src })
+        ),
+        React.createElement(
+          'div',
+          { className: 'tweet__screen_name' },
+          React.createElement(
+            'a',
+            { href: screen_name_href },
+            '@',
+            screen_name
           )
-        ), 
-
-        media ? (
-          React.createElement("div", null, 
-            React.createElement(StreamItemMedia, {media: media, extended_entities: extended_entities, tweet_href: tweet_href})
+        ),
+        React.createElement(
+          'div',
+          { className: 'tweet__body' },
+          React.createElement('div', { dangerouslySetInnerHTML: { __html: tweet_text } }),
+          React.createElement(
+            'div',
+            { className: 'tweet__body__footer' },
+            timestamp
           )
-        ) :
-        null, 
-
-        vine ? (
-          React.createElement("div", null, 
-            React.createElement(StreamItemVine, {entities: entities})
+        ),
+        React.createElement(
+          'div',
+          { className: 'tweet__meta' },
+          React.createElement(
+            'a',
+            { href: tweet_href },
+            React.createElement(AutoupdateTime, { className: 'tweet_time timeago', value: created_at })
           )
-        ) :
-        null
-      )
-
+        )
+      ),
+      media ? React.createElement(
+        'div',
+        null,
+        React.createElement(StreamItemMedia, { media: media, extended_entities: extended_entities, tweet_href: tweet_href })
+      ) : null,
+      vine ? React.createElement(
+        'div',
+        null,
+        React.createElement(StreamItemVine, { entities: entities })
+      ) : null
     );
   }
 
@@ -37843,13 +37922,17 @@ var StreamItem = React.createClass({displayName: "StreamItem",
 module.exports = StreamItem;
 
 },{"./StreamItemMedia.jsx":277,"./StreamItemVine.jsx":278,"moment":4,"react":218,"react-autoupdate-time":5,"react-router":31,"twitter-text":267}],277:[function(require,module,exports){
+'use strict';
+
 var React = require('react');
 var Router = require('react-router');
 
-var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
-  mixins: [ Router.State ],
+var StreamItemMedia = React.createClass({
+  displayName: 'StreamItemMedia',
 
-  render: function() {
+  mixins: [Router.State],
+
+  render: function render() {
 
     // var screen_name = this.props.tweet.value.user.screen_name;
     // var tweet_id = this.props.tweet.value.id_str;
@@ -37860,38 +37943,40 @@ var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
     var tweet_media_img;
     var media_replace;
 
-    var path = this.getPath()
+    var path = this.getPath();
 
     switch (path) {
 
       case '/2012':
         media = this.props.media.replace(".com/", ".com/media/");
-        tweet_media_img = React.createElement("img", {className: "tweet__media", src: media})
+        tweet_media_img = React.createElement('img', { className: 'tweet__media', src: media });
         break;
 
       case '/2013':
-        tweet_media_img = React.createElement("img", {className: "tweet__media", src: media})
+        tweet_media_img = React.createElement('img', { className: 'tweet__media', src: media });
         break;
 
       case '/2014':
-        tweet_media_img = this.props.media.map(function(media, index) {
-          return React.createElement("img", {key: index, className: "tweet__media", src: media.media_url})
+        tweet_media_img = this.props.media.map(function (media, index) {
+          return React.createElement('img', { key: index, className: 'tweet__media', src: media.media_url });
         });
         break;
 
       // 2015 and beyond... (provided Twitter don't change the API... again.)
       default:
-        tweet_media_img = this.props.extended_entities.media.map(function(media, index) {
-          return React.createElement("img", {key: index, className: "tweet__media", src: media.media_url})
+        tweet_media_img = this.props.extended_entities.media.map(function (media, index) {
+          return React.createElement('img', { key: index, className: 'tweet__media', src: media.media_url });
         });
         break;
     }
 
-    return (
-      React.createElement("div", {className: "tweet__entities"}, 
-        React.createElement("a", {href: this.props.tweet_href}, 
-          tweet_media_img
-        )
+    return React.createElement(
+      'div',
+      { className: 'tweet__entities' },
+      React.createElement(
+        'a',
+        { href: this.props.tweet_href },
+        tweet_media_img
       )
     );
   }
@@ -37901,19 +37986,22 @@ var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
 module.exports = StreamItemMedia;
 
 },{"react":218,"react-router":31}],278:[function(require,module,exports){
+"use strict";
+
 var React = require('react');
 
-var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
+var StreamItemMedia = React.createClass({
+  displayName: "StreamItemMedia",
 
-  render: function() {
+  render: function render() {
 
     // var url = this.props.entities.urls[0].expanded_url + "/embed/simple";
     var url = this.props.entities.urls[0].expanded_url + "/card?mute=0";
 
-    return (
-      React.createElement("div", {className: "tweet__entities"}, 
-        React.createElement("iframe", {src: url, width: "590", height: "590", frameBorder: "0", scrolling: "no", seamless: "seamless"})
-      )
+    return React.createElement(
+      "div",
+      { className: "tweet__entities" },
+      React.createElement("iframe", { src: url, width: "590", height: "590", frameBorder: "0", scrolling: "no", seamless: "seamless" })
     );
   }
 
@@ -37922,20 +38010,55 @@ var StreamItemMedia = React.createClass({displayName: "StreamItemMedia",
 module.exports = StreamItemMedia;
 
 },{"react":218}],279:[function(require,module,exports){
+'use strict';
+
 var React = require('react');
 var Router = require('react-router'); // or var Router = ReactRouter; in browsers
 
 var Link = Router.Link;
 
-var ToggleYear = React.createClass({displayName: "ToggleYear",
+var ToggleYear = React.createClass({
+  displayName: 'ToggleYear',
 
-  render: function() {
-    return (
-      React.createElement("ul", {className: "stream-nav"}, 
-        React.createElement("li", {className: "stream-nav__item"}, React.createElement(Link, {to: "/2015"}, "2015")), 
-        React.createElement("li", {className: "stream-nav__item"}, React.createElement(Link, {to: "/2014"}, "2014")), 
-        React.createElement("li", {className: "stream-nav__item"}, React.createElement(Link, {to: "/2013"}, "2013")), 
-        React.createElement("li", {className: "stream-nav__item"}, React.createElement(Link, {to: "/2012"}, "2012"))
+  render: function render() {
+    return React.createElement(
+      'ul',
+      { className: 'stream-nav' },
+      React.createElement(
+        'li',
+        { className: 'stream-nav__item' },
+        React.createElement(
+          Link,
+          { to: '/2015' },
+          '2015'
+        )
+      ),
+      React.createElement(
+        'li',
+        { className: 'stream-nav__item' },
+        React.createElement(
+          Link,
+          { to: '/2014' },
+          '2014'
+        )
+      ),
+      React.createElement(
+        'li',
+        { className: 'stream-nav__item' },
+        React.createElement(
+          Link,
+          { to: '/2013' },
+          '2013'
+        )
+      ),
+      React.createElement(
+        'li',
+        { className: 'stream-nav__item' },
+        React.createElement(
+          Link,
+          { to: '/2012' },
+          '2012'
+        )
       )
     );
   }

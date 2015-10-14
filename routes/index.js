@@ -1,6 +1,12 @@
 'use strict';
 
 var express = require('express');
+var React = require('react');
+// var Router = require('react-router');
+// var routes = require('../public/javascripts/src/Routes.jsx');
+
+var EventInfo = React.createFactory(require('../public/javascripts/src/jsx/EventInfo.jsx'));
+
 var router = express.Router();
 
 /* GET home page. */
@@ -23,9 +29,11 @@ router.get('/', function(req, res) {
 router.get('/:year', function(req, res) {
 
   var db = req.db['dh_' + req.params.year];
+  // var reactHtml = React.renderToString(EventInfo({}));
 
   try {
-    db.view('tweets/all', {descending: true}, function callback(err, response) {
+    db.view('tweets/event_info', {descending: true}, function callback(err, response) {
+
       if (err) {
         console.log(err);
       } else {
@@ -35,7 +43,11 @@ router.get('/:year', function(req, res) {
           },
 
           html: function(){
-            res.render('index');
+            var reactHtml = React.renderToString(EventInfo({data: response}));
+
+            res.render('index', {
+              reactOutput: reactHtml
+            });
           },
 
           json: function(){
@@ -106,5 +118,10 @@ router.get('/:year/tweets', function(req, res) {
     res.redirect('/');
   }
 });
+
+// A utility function to safely escape JSON for embedding in a <script> tag
+function safeStringify(obj) {
+  return JSON.stringify(obj).replace(/<\/script/g, '<\\/script').replace(/<!--/g, '<\\!--')
+}
 
 module.exports = router;

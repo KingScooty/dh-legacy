@@ -1,19 +1,26 @@
 var React  = require('react');
 var Router = require('react-router');
-var Reqwest = require('reqwest');
+// import { Router, Route, Link } from 'react-router'
 
 var EventInfo = React.createClass({
   mixins: [ Router.State ],
 
+  // getDefaultProps: function() {
+  //   return {
+  //     data: [
+  //       {
+  //         value: {
+  //           html: ""
+  //         }
+  //       }
+  //     ]
+  //   }
+  // },
+
   getInitialState: function() {
     return {
-      data: [
-        {
-          value: {
-            html: "Loading..."
-          }
-        }
-      ]
+      data: this.props.data
+      // html: this.props.data
     }
   },
 
@@ -22,6 +29,9 @@ var EventInfo = React.createClass({
    */
 
   readFromAPI: function(url, successFunction) {
+
+    var Reqwest = require('reqwest');
+
     Reqwest({
       url: url,
       type: 'json',
@@ -40,11 +50,15 @@ var EventInfo = React.createClass({
   **/
 
   componentWillMount: function () {
-    this.readEventInfoFromAPI();
+    // this.readEventInfoFromAPI();
   },
 
   componentWillReceiveProps: function (nextProps) {
     this.readEventInfoFromAPI();
+  },
+
+  componentDidUpdate: function() {
+    // this.readEventInfoFromAPI();
   },
 
   readEventInfoFromAPI: function() {
@@ -59,12 +73,28 @@ var EventInfo = React.createClass({
     }.bind(this));
   },
 
+  // A utility function to safely escape JSON for embedding in a <script> tag
+  safeStringify: function(obj) {
+    return JSON.stringify(obj).replace(/<\/script/g, '<\\/script').replace(/<!--/g, '<\\!--')
+  },
+
   render: function() {
-    var html = this.state.data[0].value.html;
+    //var html = this.state.data; //[0].value.html;
+
+    var json = this.safeStringify(this.props);
+    // var json = this.safeStringify(this.props);
+    var propStore = <script type="application/json" id="someId" dangerouslySetInnerHTML={{__html: json }}></script>;
+
+    // if (this.state.data) {
+      // html = this.props.data[0].value.html;
+    // }
 
     return (
       <div>
-        <h1>Hello! Event Info here! {this.getPath()}</h1>
+        <hr/>
+        {propStore}
+        <hr/>
+        <h1>Hello! Event Info here!</h1>
         <div dangerouslySetInnerHTML={{__html: html }}></div>
       </div>
     );

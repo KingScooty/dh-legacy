@@ -9,6 +9,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cradle = require('cradle');
+
+require("babel/register");
 // var io = require('socket.io')();
 
 // var twitter_sockets = require('./server/twitter_sockets');
