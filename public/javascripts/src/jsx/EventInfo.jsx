@@ -18,9 +18,18 @@ var EventInfo = React.createClass({
   // },
 
   getInitialState: function() {
-    return {
-      data: this.props.data
-      // html: this.props.data
+    if (typeof window !== 'undefined') {
+      return {
+        data: JSON.parse(document.getElementById("someId").innerHTML).data
+      }
+    } else {
+      // var container = document.getElementById("someId");
+      // var props = JSON.parse(document.getElementById("someId").innerHTML);
+      // React.renderComponent(Item(props), container);
+      return {
+        data: this.props.data
+        // html: this.props.data
+      }
     }
   },
 
@@ -79,15 +88,17 @@ var EventInfo = React.createClass({
   },
 
   render: function() {
-    //var html = this.state.data; //[0].value.html;
-
-    var json = this.safeStringify(this.props);
-    // var json = this.safeStringify(this.props);
-    var propStore = <script type="application/json" id="someId" dangerouslySetInnerHTML={{__html: json }}></script>;
-
-    // if (this.state.data) {
-      // html = this.props.data[0].value.html;
+    var html; // = this.state.data[0].value.html;
+    // if (this.state.data/) {
+    console.log(this.state.data[0]);
+      html = this.state.data[0].value.html;
     // }
+
+    if (typeof window === 'undefined') {
+      var json = this.safeStringify(this.props);
+      // var json = this.safeStringify(this.props);
+      var propStore = <script type="application/json" id="someId" dangerouslySetInnerHTML={{__html: json }}></script>;
+    }
 
     return (
       <div>

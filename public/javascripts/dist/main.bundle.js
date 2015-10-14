@@ -37289,10 +37289,19 @@ var EventInfo = React.createClass({
   // },
 
   getInitialState: function getInitialState() {
-    return {
-      data: this.props.data
-      // html: this.props.data
-    };
+    if (typeof window !== 'undefined') {
+      return {
+        data: JSON.parse(document.getElementById("someId").innerHTML).data
+      };
+    } else {
+      // var container = document.getElementById("someId");
+      // var props = JSON.parse(document.getElementById("someId").innerHTML);
+      // React.renderComponent(Item(props), container);
+      return {
+        data: this.props.data
+        // html: this.props.data
+      };
+    }
   },
 
   /**
@@ -37349,15 +37358,17 @@ var EventInfo = React.createClass({
   },
 
   render: function render() {
-    //var html = this.state.data; //[0].value.html;
-
-    var json = this.safeStringify(this.props);
-    // var json = this.safeStringify(this.props);
-    var propStore = React.createElement('script', { type: 'application/json', id: 'someId', dangerouslySetInnerHTML: { __html: json } });
-
-    // if (this.state.data) {
-    // html = this.props.data[0].value.html;
+    var html; // = this.state.data[0].value.html;
+    // if (this.state.data/) {
+    console.log(this.state.data[0]);
+    html = this.state.data[0].value.html;
     // }
+
+    if (typeof window === 'undefined') {
+      var json = this.safeStringify(this.props);
+      // var json = this.safeStringify(this.props);
+      var propStore = React.createElement('script', { type: 'application/json', id: 'someId', dangerouslySetInnerHTML: { __html: json } });
+    }
 
     return React.createElement(
       'div',
