@@ -37339,7 +37339,9 @@ var EventInfo = React.createClass({
   },
 
   shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-    return this.props != nextProps;
+    return this.state !== nextState;
+    // console.log(nextProps);
+    // console.log(nextState);
   },
 
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
