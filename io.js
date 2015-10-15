@@ -39,13 +39,16 @@ module.exports = function(server){
     throw err;
   });
 
-  var stream = T.stream('statuses/filter', { track: '#digitalheroes2015' });
+  // var stream = T.stream('statuses/filter', { track: '#digitalheroes2015' });
+  var stream = T.stream('statuses/filter', { track: ['#digitalheroes2015', '#halloweenheroes', '#halloweenheroes2015'] });
 
   stream.on('tweet', function callback(tweet) {
     console.log('SOMEONE TWEETED!');
     // Change the type of the document for filtering.
     tweet.type = "tweet";
-    app.locals.db.dh_2015.save(tweet.id_str, tweet, function callback(err, res) {
+
+    // app.locals.db.dh_2015.save(tweet.id_str, tweet, function callback(err, res) {
+    app.locals.db.dh_halloween15.save(tweet.id_str, tweet, function callback(err, res) {
       if (err) {
         console.log(err);
       } else {

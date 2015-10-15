@@ -23,7 +23,7 @@ var EventInfo = require('./jsx/EventInfo.jsx');
 
 var routes = (
   <Route name="layout" path="/" handler={Feed} ignoreScrollBehavior>
-    <Route name="live" path="/2015" handler={LiveFeed}/>
+    <Route name="live" path="/halloween15" handler={LiveFeed}/>
     <Route name="year" path="/:year" handler={ArchiveFeed}/>
     // <Redirect from="/" to="live" />
   </Route>

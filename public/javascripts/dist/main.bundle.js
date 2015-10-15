@@ -37134,7 +37134,7 @@ var EventInfo = require('./jsx/EventInfo.jsx');
 var routes = React.createElement(
   Route,
   { name: 'layout', path: '/', handler: Feed, ignoreScrollBehavior: true },
-  React.createElement(Route, { name: 'live', path: '/2015', handler: LiveFeed }),
+  React.createElement(Route, { name: 'live', path: '/halloween15', handler: LiveFeed }),
   React.createElement(Route, { name: 'year', path: '/:year', handler: ArchiveFeed }),
   '// ',
   React.createElement(Redirect, { from: '/', to: 'live' })
