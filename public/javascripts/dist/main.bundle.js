@@ -37383,11 +37383,6 @@ var EventInfo = React.createClass({
       'div',
       null,
       propStore,
-      React.createElement(
-        'h1',
-        null,
-        'Hello! Event Info here!'
-      ),
       React.createElement('div', { dangerouslySetInnerHTML: { __html: html } })
     );
   }
@@ -38042,6 +38037,15 @@ var ToggleYear = React.createClass({
     return React.createElement(
       'ul',
       { className: 'stream-nav' },
+      React.createElement(
+        'li',
+        { className: 'stream-nav__item' },
+        React.createElement(
+          Link,
+          { to: '/halloween15' },
+          'Halloween \'15'
+        )
+      ),
       React.createElement(
         'li',
         { className: 'stream-nav__item' },

@@ -111,7 +111,6 @@ var EventInfo = React.createClass({
     return (
       <div>
         {propStore}
-        <h1>Hello! Event Info here!</h1>
         <div dangerouslySetInnerHTML={{__html: html }}></div>
       </div>
     );
