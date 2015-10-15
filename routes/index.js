@@ -11,19 +11,20 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.format({
-    text: function(){
-      res.send('hey');
-    },
-
-    html: function(){
-      res.render('index', { title: 'Express' });
-    },
-
-    json: function(){
-      res.send({ message: 'hey' });
-    }
-  });
+  res.redirect('/2015');
+  // res.format({
+  //   text: function(){
+  //     res.send('hey');
+  //   },
+  //
+  //   html: function(){
+  //     res.render('index', { title: 'Express' });
+  //   },
+  //
+  //   json: function(){
+  //     res.send({ message: 'hey' });
+  //   }
+  // });
 });
 
 router.get('/:year', function(req, res) {

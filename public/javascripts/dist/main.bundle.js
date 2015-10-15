@@ -37136,6 +37136,7 @@ var routes = React.createElement(
   { name: 'layout', path: '/', handler: Feed, ignoreScrollBehavior: true },
   React.createElement(Route, { name: 'live', path: '/2015', handler: LiveFeed }),
   React.createElement(Route, { name: 'year', path: '/:year', handler: ArchiveFeed }),
+  '// ',
   React.createElement(Redirect, { from: '/', to: 'live' })
 );
 
@@ -37323,7 +37324,7 @@ var EventInfo = React.createClass({
         location = '/';
       }
     });
-    console.log('read api called');
+    console.log('EVENT INFO API called');
   },
 
   /**
@@ -37335,7 +37336,10 @@ var EventInfo = React.createClass({
         data: JSON.parse(document.getElementById("someId").innerHTML).data
       });
     }
-    // this.readEventInfoFromAPI();
+  },
+
+  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+    return this.props != nextProps;
   },
 
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
@@ -37370,14 +37374,13 @@ var EventInfo = React.createClass({
 
     var json = this.safeStringify(this.state);
     // var json = this.safeStringify(this.props);
+
     var propStore = React.createElement('script', { type: 'application/json', id: 'someId', dangerouslySetInnerHTML: { __html: json } });
 
     return React.createElement(
       'div',
       null,
-      React.createElement('hr', null),
       propStore,
-      React.createElement('hr', null),
       React.createElement(
         'h1',
         null,

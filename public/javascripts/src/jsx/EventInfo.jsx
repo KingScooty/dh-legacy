@@ -52,7 +52,7 @@ var EventInfo = React.createClass({
         location = '/';
       }
     });
-    console.log('read api called');
+    console.log('EVENT INFO API called');
   },
 
   /**
@@ -64,7 +64,10 @@ var EventInfo = React.createClass({
         data: JSON.parse(document.getElementById("someId").innerHTML).data
       })
     }
-    // this.readEventInfoFromAPI();
+  },
+
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return this.props != nextProps;
   },
 
   componentWillReceiveProps: function (nextProps) {
@@ -100,13 +103,12 @@ var EventInfo = React.createClass({
 
     var json = this.safeStringify(this.state);
     // var json = this.safeStringify(this.props);
+
     var propStore = <script type="application/json" id="someId" dangerouslySetInnerHTML={{__html: json }}></script>;
 
     return (
       <div>
-        <hr/>
         {propStore}
-        <hr/>
         <h1>Hello! Event Info here!</h1>
         <div dangerouslySetInnerHTML={{__html: html }}></div>
       </div>
