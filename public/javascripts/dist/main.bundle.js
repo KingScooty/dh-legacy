@@ -37330,6 +37330,11 @@ var EventInfo = React.createClass({
   **/
 
   componentWillMount: function componentWillMount() {
+    if (typeof window !== 'undefined') {
+      this.setState({
+        data: JSON.parse(document.getElementById("someId").innerHTML).data
+      });
+    }
     // this.readEventInfoFromAPI();
   },
 
@@ -37359,16 +37364,13 @@ var EventInfo = React.createClass({
 
   render: function render() {
     var html; // = this.state.data[0].value.html;
-    // if (this.state.data/) {
+
     console.log(this.state.data[0]);
     html = this.state.data[0].value.html;
-    // }
 
-    if (typeof window === 'undefined') {
-      var json = this.safeStringify(this.props);
-      // var json = this.safeStringify(this.props);
-      var propStore = React.createElement('script', { type: 'application/json', id: 'someId', dangerouslySetInnerHTML: { __html: json } });
-    }
+    var json = this.safeStringify(this.state);
+    // var json = this.safeStringify(this.props);
+    var propStore = React.createElement('script', { type: 'application/json', id: 'someId', dangerouslySetInnerHTML: { __html: json } });
 
     return React.createElement(
       'div',

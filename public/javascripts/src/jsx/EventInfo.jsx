@@ -59,6 +59,11 @@ var EventInfo = React.createClass({
   **/
 
   componentWillMount: function () {
+    if (typeof window !== 'undefined') {
+      this.setState({
+        data: JSON.parse(document.getElementById("someId").innerHTML).data
+      })
+    }
     // this.readEventInfoFromAPI();
   },
 
@@ -89,16 +94,13 @@ var EventInfo = React.createClass({
 
   render: function() {
     var html; // = this.state.data[0].value.html;
-    // if (this.state.data/) {
-    console.log(this.state.data[0]);
-      html = this.state.data[0].value.html;
-    // }
 
-    if (typeof window === 'undefined') {
-      var json = this.safeStringify(this.props);
-      // var json = this.safeStringify(this.props);
-      var propStore = <script type="application/json" id="someId" dangerouslySetInnerHTML={{__html: json }}></script>;
-    }
+    console.log(this.state.data[0]);
+    html = this.state.data[0].value.html;
+
+    var json = this.safeStringify(this.state);
+    // var json = this.safeStringify(this.props);
+    var propStore = <script type="application/json" id="someId" dangerouslySetInnerHTML={{__html: json }}></script>;
 
     return (
       <div>
