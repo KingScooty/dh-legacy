@@ -72,7 +72,8 @@ app.use(function(req, res, next) {
 
 // middleware for json headers
 app.use(function (req, res, next) {
-  var format = req.param('format');
+  // var format = req.param('format');
+  var format = req.query['format'];
 
   if (format) {
     req.headers.accept = 'application/' + format;
