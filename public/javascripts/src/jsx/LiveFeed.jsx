@@ -7,17 +7,6 @@ var SocketFeed = require('./SocketFeed.jsx');
 var LiveFeed = React.createClass({
   mixins: [ Router.State ],
 
-  componentWillMount: function () {
-      // console.log('> componentWillMount()');
-  },
-
-  componentDidMount: function() {
-  },
-
-  componentWillUnmount: function () {
-      // console.log('> componentWillUnmount()');
-  },
-
   render: function() {
     return (
       <div>
