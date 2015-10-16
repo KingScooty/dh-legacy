@@ -11,7 +11,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.redirect('/2015');
+  res.redirect('/halloween15');
   // res.format({
   //   text: function(){
   //     res.send('hey');

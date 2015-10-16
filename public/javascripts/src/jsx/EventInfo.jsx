@@ -100,7 +100,7 @@ var EventInfo = React.createClass({
   render: function() {
     var html; // = this.state.data[0].value.html;
 
-    console.log(this.state.data[0]);
+    // console.log(this.state.data[0]);
     html = this.state.data[0].value.html;
 
     var json = this.safeStringify(this.state);
