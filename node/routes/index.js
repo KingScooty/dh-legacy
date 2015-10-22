@@ -12,19 +12,6 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res) {
   res.redirect('/halloween15');
-  // res.format({
-  //   text: function(){
-  //     res.send('hey');
-  //   },
-  //
-  //   html: function(){
-  //     res.render('index', { title: 'Express' });
-  //   },
-  //
-  //   json: function(){
-  //     res.send({ message: 'hey' });
-  //   }
-  // });
 });
 
 router.get('/:year', function(req, res) {

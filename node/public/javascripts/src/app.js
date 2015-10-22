@@ -48,5 +48,5 @@ Router.run(routes, Router.HistoryLocation, function(Handler) {
 
 
 Router.run(eventInfoRoutes, Router.HistoryLocation, function(Handler) {
-  React.render(<Handler/>, document.getElementById('EventInfo'));
+  React.render(<Handler/>, document.querySelector('.event'));
 });

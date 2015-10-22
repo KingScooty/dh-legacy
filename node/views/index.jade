@@ -4,16 +4,7 @@ block content
   //- h1= title
   //- p Welcome to #{title}
   .main
-    h1.lead-title DIGITAL HEROES
-    h2.support-title A SUPERHERO THEMED NIGHT OUT <br> 6TH JUNE 2015. NQ, MANCHESTER.
-
-    hr.section-spacer
-
-    #EventInfo!=reactOutput
-
-    hr#twitter-stream
-    h2.island-title LIVE TWITTER FEED &ndash; #digitalheroes2015 / #halloweenheroes2015
-    hr
+    .event!=reactOutput
 
     .tweets-wrapper
       div#app

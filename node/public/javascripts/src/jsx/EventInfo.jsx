@@ -1,34 +1,17 @@
 var React  = require('react');
 var Router = require('react-router');
-// import { Router, Route, Link } from 'react-router'
 
 var EventInfo = React.createClass({
   mixins: [ Router.State ],
 
-  // getDefaultProps: function() {
-  //   return {
-  //     data: [
-  //       {
-  //         value: {
-  //           html: ""
-  //         }
-  //       }
-  //     ]
-  //   }
-  // },
-
   getInitialState: function() {
     if (typeof window !== 'undefined') {
       return {
-        data: JSON.parse(document.getElementById("someId").innerHTML).data
+        data: JSON.parse(document.getElementById("DigitalHeroesInitialData").innerHTML).data
       }
     } else {
-      // var container = document.getElementById("someId");
-      // var props = JSON.parse(document.getElementById("someId").innerHTML);
-      // React.renderComponent(Item(props), container);
       return {
         data: this.props.data
-        // html: this.props.data
       }
     }
   },
@@ -61,7 +44,7 @@ var EventInfo = React.createClass({
   componentWillMount: function () {
     if (typeof window !== 'undefined') {
       this.setState({
-        data: JSON.parse(document.getElementById("someId").innerHTML).data
+        data: JSON.parse(document.getElementById("DigitalHeroesInitialData").innerHTML).data
       })
     }
   },
@@ -106,7 +89,7 @@ var EventInfo = React.createClass({
     var json = this.safeStringify(this.state);
     // var json = this.safeStringify(this.props);
 
-    var propStore = <script type="application/json" id="someId" dangerouslySetInnerHTML={{__html: json }}></script>;
+    var propStore = <script type="application/json" id="DigitalHeroesInitialData" dangerouslySetInnerHTML={{__html: json }}></script>;
 
     return (
       <div>
