@@ -20,7 +20,7 @@
 
 
 ###################### CODE STARTS HERE ###################
-scriptversionnumber="1.1.0"
+scriptversionnumber="1.1.1"
 
 ##START: FUNCTIONS
 usage(){
@@ -69,7 +69,7 @@ checkdiskspace(){
     fi
 
     stripdir=${location%/*}
-    KBavail=$(df -P -BK ${stripdir} | tail -n 1 | awk '{print$4}' | sed -e 's/K$//')
+    KBavail=$(df -P -k ${stripdir} | tail -n 1 | awk '{print$4}' | sed -e 's/K$//')
 
     if [ $KBavail -ge $KBrequired ]; then
         return 0
@@ -116,7 +116,7 @@ while getopts ":h?H:d:f:u:p:P:l:t:a:V?b?B?r?R?" opt; do
         l) lines="${OPTARG}" ;;
         t) threads="${OPTARG}" ;;
         a) attempts="${OPTARG}";;
-        V) scriptversion;;        
+        V) scriptversion;;
         :) echo "... ERROR: Option \"-${OPTARG}\" requires an argument"; usage ;;
         *|\?) echo "... ERROR: Unknown Option \"-${OPTARG}\""; usage;;
     esac
@@ -193,7 +193,7 @@ fi
 if [ ! "`echo $url | egrep -c ":[0-9]*$"`" = "1" ]; then
     # add it.
     url="$url:$port"
-fi	
+fi
 
 ## Manage the addition of user+pass if needed:
 # Ensure, if one is set, both are set.
@@ -221,6 +221,12 @@ if [ "`echo $url | grep -ic "^https://"`" = "1" ]; then
 	curlopt="-k"
 fi
 
+## Check for curl
+if [ "x`which curl`" = "x" ]; then
+    echo "... ERROR: This script requires 'curl' to be present."
+    exit 1
+fi
+
 ### If user selected BACKUP, run the following code:
 if [ $backup = true ]&&[ $restore = false ]; then
     #################################################################
@@ -233,7 +239,7 @@ if [ $backup = true ]&&[ $restore = false ]; then
     fi
 
     # Grab our data from couchdb
-    curl ${curlopt} -X GET "$url/$db_name/_all_docs?include_docs=true" -o ${file_name}
+    curl ${curlopt} -X GET "$url/$db_name/_all_docs?include_docs=true&attachments=true" -o ${file_name}
     # Check for curl errors
     if [ ! $? = 0 ]; then
         echo "... ERROR: Curl encountered an issue whilst dumping the database."
@@ -299,7 +305,7 @@ if [ $backup = true ]&&[ $restore = false ]; then
         for loop in `seq 1 ${threads}`; do
             PADNUM=`printf "%06d" $NUM`
             PADNAME="${file_name}.thread${PADNUM}"
-            sed -i 's/.*,"doc"://g' ${PADNAME} &
+            sed -i '' 's/.*,"doc"://g' ${PADNAME} &
             (( NUM++ ))
         done
         wait
@@ -328,7 +334,7 @@ if [ $backup = true ]&&[ $restore = false ]; then
         filesize=$(du -P -k ${file_name} | awk '{print$1}')
         filesize=`expr $filesize - $KBreduction`
         checkdiskspace "${file_name}" $filesize
-        sed -i 's/.*,"doc"://g' $file_name
+        sed -i '' 's/.*,"doc"://g' $file_name
         if [ ! $? = 0 ];then
             echo "Stage failed."
             exit 1
@@ -341,7 +347,7 @@ if [ $backup = true ]&&[ $restore = false ]; then
     filesize=$(du -P -k ${file_name} | awk '{print$1}')
     filesize=`expr $filesize - $KBreduction`
     checkdiskspace "${file_name}" $filesize
-    sed -i 's/}},$/},/g' $file_name
+    sed -i '' 's/}},$/},/g' $file_name
     if [ ! $? = 0 ];then
         echo "Stage failed."
         exit 1
@@ -349,7 +355,7 @@ if [ $backup = true ]&&[ $restore = false ]; then
     echo "... INFO: Stage 3 - Header Correction"
     filesize=$(du -P -k ${file_name} | awk '{print$1}')
     checkdiskspace "${file_name}" $filesize
-    sed -i '1s/^.*/{"new_edits":false,"docs":[/' $file_name
+    sed -i '' '1s/^.*/{"new_edits":false,"docs":[/' $file_name
     if [ ! $? = 0 ];then
         echo "Stage failed."
         exit 1
@@ -357,7 +363,7 @@ if [ $backup = true ]&&[ $restore = false ]; then
     echo "... INFO: Stage 4 - Final document line correction"
     filesize=$(du -P -k ${file_name} | awk '{print$1}')
     checkdiskspace "${file_name}" $filesize
-    sed -i 's/}}$/}/g' $file_name
+    sed -i '' 's/}}$/}/g' $file_name
     if [ ! $? = 0 ];then
         echo "Stage failed."
         exit 1
@@ -378,7 +384,7 @@ elif [ $restore = true ]&&[ $backup = false ]; then
 
     #### VALIDATION END
 
-    ## Stop bash mangling wildcard... 
+    ## Stop bash mangling wildcard...
     set -o noglob
     # Manage Design Documents as a priority, and remove them from the main import job
     echo "... INFO: Checking for Design documents"
@@ -389,7 +395,7 @@ elif [ $restore = true ]&&[ $backup = false ]; then
     # Count the design file (if it even exists)
     DESIGNS="`wc -l ${design_file_name} 2>/dev/null | awk '{print$1}'`"
     # If there's no design docs for import...
-    if [ "x$DESIGNS" = "x" ]||[ "$DESIGNS" = "0" ]; then 
+    if [ "x$DESIGNS" = "x" ]||[ "$DESIGNS" = "0" ]; then
         # Cleanup any null files
         rm -f ${design_file_name} 2>/dev/null
         echo "... INFO: No Design Documents found for import."
@@ -404,13 +410,13 @@ elif [ $restore = true ]&&[ $backup = false ]; then
         # Remove these design docs from (our new) main file.
         echo "... INFO: Stripping _design elements from regular documents"
         checkdiskspace "${file_name}" $filesize
-        sed -i '/^{"_id":"_design/d' ${file_name}
+        sed -i '' '/^{"_id":"_design/d' ${file_name}
         # Remove the final document's trailing comma
         echo "... INFO: Fixing end document"
         line=$(expr `wc -l ${file_name} | awk '{print$1}'` - 1)
         filesize=$(du -P -k ${file_name} | awk '{print$1}')
         checkdiskspace "${file_name}" $filesize
-        sed -i "${line}s/,$//" ${file_name}
+        sed -i '' "${line}s/,$//" ${file_name}
 
         echo "... INFO: Inserting Design documents"
         designcount=0
@@ -541,7 +547,7 @@ elif [ $restore = true ]&&[ $backup = false ]; then
                     echo "... INFO: Adding header to ${PADNAME}"
                     filesize=$(du -P -k ${PADNAME} | awk '{print$1}')
                     checkdiskspace "${PADNAME}" $filesize
-                    sed -i "1i${HEADER}" ${PADNAME}
+                    sed -i '' "1i${HEADER}" ${PADNAME}
                 else
                     echo "... INFO: Header already applied to ${PADNAME}"
                 fi
@@ -549,15 +555,15 @@ elif [ $restore = true ]&&[ $backup = false ]; then
                     echo "... INFO: Adding footer to ${PADNAME}"
                     filesize=$(du -P -k ${PADNAME} | awk '{print$1}')
                     checkdiskspace "${PADNAME}" $filesize
-                    sed -i '$s/,$//g' ${PADNAME}
+                    sed -i '' '$s/,$//g' ${PADNAME}
                     echo "${FOOTER}" >> ${PADNAME}
                 else
                     echo "... INFO: Footer already applied to ${PADNAME}"
                 fi
                 echo "... INFO: Inserting ${PADNAME}"
-                A=0
+                B=0
                 attemptcount=0
-                until [ $A = 1 ]; do
+                until [ $B = 1 ]; do
                     (( attemptcount++ ))
                     curl -T ${PADNAME} -X POST "$url/$db_name/_bulk_docs" -H 'Content-Type: application/json' -o tmp.out
                     if [ ! $? = 0 ]; then
@@ -577,7 +583,7 @@ elif [ $restore = true ]&&[ $backup = false ]; then
                             sleep 1
                         fi
                     else
-                        A=1
+                        B=1
                         rm -f ${PADNAME}
                         rm -f tmp.out
                     fi
