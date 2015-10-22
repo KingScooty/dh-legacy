@@ -18,28 +18,11 @@ It works on LINUX/UNIX, Bash based systems (MacOSx)
 ```bash couchdb-backup.sh -r -H 127.0.0.1 -d my-db -f dumpedDB.json -u admin -p password```
 
 ## Why do you need it?
-Surprisingly, there is not a straightforward way to dump a CouchDB database. Often you are suggested to replicate it or to dump it with the couchdb `_all_docs` directive. 
+Surprisingly, there is not a straightforward way to dump a CouchDB database. Often you are suggested to replicate it or to dump it with the couchdb `_all_docs` directive.
 
 **But, using the `_all_docs` directive provides you with JSON which cannot be directly re-import back into CouchDB**.
 
 Hence, the goal of this script(s) is to give you a simple way to Dump & Restore your CouchDB database.
-
-## What can't it do?
-Unfortunately, the script doesn't currently handle binary attachments- and documents which contain them will fail to import- ie:
-
-```
-{"docs":[
-{"_id":"4685ca2ba841112ed63ba386c0001e56","_rev":"2-e1432ed19858cdbc8b5c0c0bbf38f76a","value":"this is my binary document","_attachments":{"esxi.tgz":{"content_type":"application/x-compressed-tar","revpos":2,"digest":"md5-K1F3CiyZT2AjIaR3n7dFSQ==","length":1697995,"stub":true}}}
-]}
-```
-
-Results in:
-
-```
-{"error":"missing_stub","reason":"id:4685ca2ba841112ed63ba386c0001e56, name:esxi.tgz"}
-```
-
-This is a known limitation, and is discussed in #2
 
 ## Usage
 ```
@@ -60,3 +43,16 @@ Usage: ./couchdb-backup.sh [-b|-r] -H <COUCHDB_HOST> -d <DB_NAME> -f <BACKUP_FIL
 
 Example: ./couchdb-backup.sh -b -H 127.0.0.1 -d mydb -f dumpedDB.json -u admin -p password
 ```
+
+### Bonus 1! Full Database Compaction
+In the past, we've used this script to greatly compress a bloated database.
+In our use case, we had non-sequential IDs which cause CouchDB's B-Tree to balloon out of control, even with daily compactions.
+
+**How does this fix work?**
+When running the export, all of the documents are pulled out in "ID Order"- When re-importing these (now sorted) documents again, the B-Tree can be created in a much more efficient manner. We've seen 15GB database files, containing only 2.1GB of raw JSON, reduced to 2.5GB on disk after import!
+
+### Bonus 2! Purge Historic and Deleted Data
+CouchDB is an append-only database. When you delete records, the metadata is maintained for future reference, and is never fully deleted. All documents also retain a historic revision count.
+With the above points in mind; the export and import does not include Deleted documents, or old revisions; therefore, using this script, you can export and re-import your data, cleansing it of any previously (logically) deleted data!
+
+if you pair this with deletion and re-creation of replication rules (using the 'update_seq' parameter to avoid re-pulling the entire DB/deleted documents from a remote node) you can manually compress and clean out an entire cluster of waste, node-by-node.

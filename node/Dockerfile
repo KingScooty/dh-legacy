@@ -1,20 +1,25 @@
-FROM node:0.12.2
+FROM node:4.2
+# FROM wildflame/grunt-runner
 
 # Set env here to avoid
 # ENV NODE_ENV=production
+
+# use changes to package.json to force Docker not to use the cache
+# when we change our application's nodejs dependencies:
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app/
 RUN npm install --production
+
 COPY . /usr/src/app
 
 # Install bower
-RUN npm install -g bower # grunt-cli
+# RUN npm install -g bower # grunt-cli
 
 # WORKDIR src/app
-RUN bower install --allow-root
+# RUN bower install --allow-root
 
 # Expose port
 EXPOSE 3000

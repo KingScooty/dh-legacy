@@ -20,7 +20,7 @@ var config = require('../server/_config').init(app.get('env'));
 
 // var settings = config.settings;
 
-var fixture = require('../server/fixture');
+var fixture = require('./fixtures/fixture');
 var tweets = fixture.tweets;
 
 var database = require('../server/database');

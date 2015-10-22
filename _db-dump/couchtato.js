@@ -1,5 +1,6 @@
 /**
  * Bulk update docs in couchdb
+ * Read docs in runbook to use this.
  */
 
 exports.conf = {

@@ -20,7 +20,7 @@ module.exports.init = function init(env) {
 
   // -- TEST
   if (env === 'test') {
-    envSettings = require('./env/test');
+    envSettings = require('./environment/test');
   }
 
   // exports.settings = envSettings.settings;
