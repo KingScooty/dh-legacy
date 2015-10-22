@@ -94,6 +94,9 @@ var EventInfo = React.createClass({
     return (
       <div>
         {propStore}
+        <h1>Alright chumps, let's do this!</h1>
+        <h2>LEEEROOOOOOYYYYYYYY</h2>
+        <h3>JEEENKIINNNSSSss</h3>
         <div dangerouslySetInnerHTML={{__html: html }}></div>
       </div>
     );
