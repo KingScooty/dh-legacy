@@ -2,6 +2,18 @@ doctype html
 html
   head
     title Digital Heroes 2015 -- June 6th 2015
+
+    <script type="text/javascript" src="//use.typekit.net/zsn1cix.js"></script>
+    script.
+      try{
+        Typekit.load({
+          active: function() {
+            var target = document.querySelector('.event');
+            window.dh_el_event_current_height = target.clientHeight;
+          }
+        });
+      }catch(e){}
+
     if process.env.NODE_ENV === 'production'
       link(rel='stylesheet', href='/stylesheets/style.min.css')
     else
@@ -19,6 +31,3 @@ html
       <script src="/javascripts/dist/main.bundle.min.js"></script>
     else
       <script src="/javascripts/dist/main.bundle.js"></script>
-
-    <script type="text/javascript" src="//use.typekit.net/zsn1cix.js"></script>
-    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
