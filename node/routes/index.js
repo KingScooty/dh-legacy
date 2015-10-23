@@ -5,7 +5,7 @@ var React = require('react');
 // var Router = require('react-router');
 // var routes = require('../public/javascripts/src/Routes.jsx');
 
-var EventInfo = React.createFactory(require('../public/javascripts/src/jsx/EventInfo.jsx'));
+var EventInfo = React.createFactory(require('../public/javascripts/src/jsx/EventInfo'));
 
 var router = express.Router();
 
