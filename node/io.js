@@ -40,7 +40,7 @@ module.exports = function(server){
   });
 
   // var stream = T.stream('statuses/filter', { track: '#digitalheroes2015' });
-  var stream = T.stream('statuses/filter', { track: ['#digitalheroes2015', '#halloweenheroes', '#halloweenheroes2015'] });
+  var stream = T.stream('statuses/filter', { track: ['#digitalheroes2015', '#halloweenheroes2015'] });
 
   stream.on('tweet', function callback(tweet) {
     console.log('SOMEONE TWEETED!');
