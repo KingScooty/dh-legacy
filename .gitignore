@@ -3,6 +3,5 @@ node_modules
 npm-debug.log
 bower_components
 server/env
-assets/psd
 
 .env_dev.env
