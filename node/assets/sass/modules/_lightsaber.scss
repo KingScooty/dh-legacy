@@ -1,0 +1,22 @@
+.lightsaber {
+  width: 506px;
+  height: 350px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-size: 506px 350px;
+}
+
+.lightsaber--blue {
+  background: url(/svg/lightsaber_blue.svg);
+}
+.lightsaber--red {
+  background: url(/svg/lightsaber_red.svg);
+}
+.lightsaber--green {
+  background: url(/svg/lightsaber_green.svg);
+}
+
+.lightsaber--flipped {
+  transform: scaleX(-1);
+}

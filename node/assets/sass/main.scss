@@ -27,6 +27,9 @@ $wood: url(/images/dark_wood.jpg);
 @import 'modules/react_transitions';
 @import 'modules/loader';
 
+@import 'modules/logo-props';
+@import 'modules/lightsaber';
+
 
 .preload {
   display: none;
@@ -45,7 +48,7 @@ a {
     text-decoration: none;
     &:hover {
       text-decoration: underline;
-    }    
+    }
   }
 }
 
