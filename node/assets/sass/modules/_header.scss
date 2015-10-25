@@ -22,7 +22,16 @@
   width: 464px;
   left: 50%;
   margin-left: -232px;
-  background: url(/images/halloween-15/logo__ribbon.png) no-repeat;
+  background: url(/images/logo__ribbon.png) no-repeat;
+}
+
+.logo__ribbon__text {
+  position: absolute;
+  left:0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: url(/images/halloween-15/logo__ribbon__text.png) no-repeat;
 }
 
 .logo__base {
