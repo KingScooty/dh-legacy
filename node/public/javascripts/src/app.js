@@ -52,7 +52,11 @@ require('./scrollPos');
 //   // }, 1200);
 // });
 
-document.querySelector('.logo__props').classList.add('logo__props--engaged');
+var delay = 200;
+
+setTimeout(function() {
+  document.querySelector('.logo__props').classList.add('logo__props--engaged');
+}, delay)
 
 
 setTimeout(function() {
@@ -60,11 +64,11 @@ setTimeout(function() {
 // }, 1535 /*1450*/)
 // }, 1435 /*1450*/)
 //}, 1365 /*1450*/)
-}, 1415 /*1450*/)
+}, (1415 + delay) /*1450*/)
 
 setTimeout(function() {
   document.querySelector('.logo').classList.add('shake', 'shake_x', 'shake_x--long');
 // }, 1535 /*1450*/)
 // }, 1435 /*1450*/)
 //}, 1365 /*1450*/)
-}, 1415 /*1450*/)
+}, (1415 + delay) /*1450*/)

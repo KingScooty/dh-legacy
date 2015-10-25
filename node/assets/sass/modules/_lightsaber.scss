@@ -1,5 +1,6 @@
 .lightsaber {
-  // opacity: 0;
+  opacity: 0;
+  visibility: hidden;
   width: 506px;
   height: 350px;
   position: absolute;
@@ -49,7 +50,8 @@
 
   .lightsaber {
     transform: rotate(0deg);
-    // opacity: 1;
+    opacity: 1;
+    visibility: visible;
   }
   .lightsaber--flipped {
     transform: scaleX(-1) rotate(0deg);
