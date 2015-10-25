@@ -56,10 +56,12 @@ setTimeout(function() {
   document.querySelector('.bg2').classList.add('active', 'shake', 'shake_y--fast');
 // }, 1535 /*1450*/)
 // }, 1435 /*1450*/)
-}, 1365 /*1450*/)
+//}, 1365 /*1450*/)
+}, 1410 /*1450*/)
 
 setTimeout(function() {
   document.querySelector('.logo').classList.add('shake', 'shake_x', 'shake_x--long');
 // }, 1535 /*1450*/)
 // }, 1435 /*1450*/)
-}, 1365 /*1450*/)
+//}, 1365 /*1450*/)
+}, 1410 /*1450*/)
