@@ -13,8 +13,14 @@ $wood: url(/images/dark_wood.jpg);
   }
 }
 
-* {
-  box-sizing: border-box;
+html {
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
 }
 
 @import 'modules/body';
