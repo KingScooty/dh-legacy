@@ -10,6 +10,7 @@
   left: 0;
   bottom: 0;
   background-size: 506px 350px;
+  background-position: top center;
 
   transform-origin: bottom left;
   // transition: all .7s $easeInOutFast;
@@ -22,13 +23,13 @@
 }
 
 .lightsaber--blue {
-  background: url(/svg/lightsaber_blue.min.svg);
+  background-image: url(/svg/lightsaber_blue.min.svg);
 }
 .lightsaber--red {
-  background: url(/svg/lightsaber_red.min.svg);
+  background-image: url(/svg/lightsaber_red.min.svg);
 }
 .lightsaber--green {
-  background: url(/svg/lightsaber_green.svg);
+  background-image: url(/svg/lightsaber_green.svg);
 }
 
 // .lightsaber--stand {
