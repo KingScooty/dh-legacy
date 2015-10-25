@@ -1,11 +1,14 @@
 .lightsaber {
+  display: block;
   opacity: 0;
   visibility: hidden;
+  overflow: hidden;
   width: 506px;
   height: 350px;
   position: absolute;
   top: 0;
   left: 0;
+  bottom: 0;
   background-size: 506px 350px;
 
   transform-origin: bottom left;
