@@ -10,7 +10,7 @@
 
   transform-origin: bottom left;
   // transition: all .7s $easeInOutFast;
-  transition: all .5s cubic-bezier(1.000, 0.000, 0.435, 1.100);
+  transition: transform .5s cubic-bezier(1.000, 0.000, 0.435, 1.100);
   transition-delay: inherit;
 
   // transform: scaleX(0) rotate(-60deg);
