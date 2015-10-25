@@ -34,34 +34,37 @@ Router.run(eventInfoRoutes, Router.HistoryLocation, function(Handler) {
 
 require('./scrollPos');
 
-var lightsaber = document.querySelectorAll('.lightsaber');
+// var lightsaber = document.querySelectorAll('.lightsaber');
+//
+// console.log(lightsaber);
+//
+// Array.fromList = function(list) {
+//   var array = [];
+//   for (var i = 0, n = list.length; i < n; i++) {
+//     array[i] = list[i];
+//   }
+//   return array;
+// };
 
-console.log(lightsaber);
+// Array.fromList(lightsaber).forEach(function(el) {
+//   // setTimeout(function() {
+//     el.classList.remove('lightsaber--stand');
+//   // }, 1200);
+// });
 
-Array.fromList = function(list) {
-  var array = [];
-  for (var i = 0, n = list.length; i < n; i++) {
-    array[i] = list[i];
-  }
-  return array;
-};
+document.querySelector('.logo__props').classList.add('logo__props--engaged');
 
-Array.fromList(lightsaber).forEach(function(el) {
-  // setTimeout(function() {
-    el.classList.remove('lightsaber--stand');
-  // }, 1200);
-});
 
 setTimeout(function() {
   document.querySelector('.bg2').classList.add('active', 'shake', 'shake_y--fast');
 // }, 1535 /*1450*/)
 // }, 1435 /*1450*/)
 //}, 1365 /*1450*/)
-}, 1410 /*1450*/)
+}, 1415 /*1450*/)
 
 setTimeout(function() {
   document.querySelector('.logo').classList.add('shake', 'shake_x', 'shake_x--long');
 // }, 1535 /*1450*/)
 // }, 1435 /*1450*/)
 //}, 1365 /*1450*/)
-}, 1410 /*1450*/)
+}, 1415 /*1450*/)

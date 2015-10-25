@@ -1,4 +1,5 @@
 .lightsaber {
+  // opacity: 0;
   width: 506px;
   height: 350px;
   position: absolute;
@@ -9,7 +10,10 @@
   transform-origin: bottom left;
   // transition: all .7s $easeInOutFast;
   transition: all .5s cubic-bezier(1.000, 0.000, 0.435, 1.100);
-  transition-delay: 1s;
+  transition-delay: inherit;
+
+  transform: scaleX(0) rotate(-60deg);
+  backface-visibility: hidden;
 }
 
 .lightsaber--blue {
@@ -22,21 +26,31 @@
   background: url(/svg/lightsaber_green.svg);
 }
 
-.lightsaber--stand {
-  transform: scaleX(0) rotate(-60deg);
-  opacity: 0;
-}
+// .lightsaber--stand {
+//   transform: scaleX(0) rotate(-60deg);
+//   opacity: 0;
+// }
 
 .lightsaber--flipped {
-  // transform: scaleX(-1);
-
   transform-origin: bottom left;
-  transform: scaleX(-1) rotate(0deg);
+  // transform: scaleX(-1) rotate(0deg);
+  transform: scaleX(0) rotate(-60deg);
   right: -100%;
   left: auto;
-  // transition-delay: 1.1s;
 
-  &.lightsaber--stand {
-    transform: scaleX(0) rotate(-60deg);
+  // &.lightsaber--stand {
+  //   transform: scaleX(0) rotate(-60deg);
+  // }
+}
+
+.logo__props--engaged {
+  opacity: 1;
+
+  .lightsaber {
+    transform: scaleX(1) rotate(0deg);
+    // opacity: 1;
+  }
+  .lightsaber--flipped {
+    transform: scaleX(-1) rotate(0deg);
   }
 }
