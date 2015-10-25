@@ -53,7 +53,7 @@ require('./scrollPos');
 // });
 
 var propDelay = 200;
-var shakeDelay = 2015;
+var shakeDelay = 1615;
 
 setTimeout(function() {
 document.querySelector('.logo__props').classList.add('logo__props--engaged');
