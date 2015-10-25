@@ -1,15 +1,15 @@
 @-webkit-keyframes shake_x {
-    0% { -webkit-transform: translate(0, 0); }
-    25% { -webkit-transform: translate(5px, 0); }
-    75% { -webkit-transform: translate(-5px, 0); }
-    100% { -webkit-transform: translate(0, 0); }
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(5px, 0); }
+    75% { transform: translate(-5px, 0); }
+    100% { transform: translate(0, 0); }
 }
 
 @-webkit-keyframes shake_y {
-    0% { -webkit-transform: translate(0, 0); }
-    25% { -webkit-transform: translate(0, 5px); }
-    75% { -webkit-transform: translate(0, -5px); }
-    100% { -webkit-transform: translate(0, 0); }
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(0, 5px); }
+    75% { transform: translate(0, -5px); }
+    100% { transform: translate(0, 0); }
 }
 
 .shake {
@@ -28,4 +28,14 @@
 .shake_y {
     -webkit-animation-name: shake_y;
     -webkit-animation-duration: 0.12s;
+}
+
+.shake_x--long {
+  -webkit-animation-iteration-count: 4;
+}
+
+.shake_y--fast {
+  -webkit-animation-iteration-count: 7;
+  animation-name: shake_y;
+  animation-duration: 0.05s;
 }
