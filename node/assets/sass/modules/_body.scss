@@ -44,7 +44,7 @@ body.ready {
   background-repeat: no-repeat;
   z-index: -1;
 
-  -webkit-transition: opacity .3s $authenticMotion;
+  transition: opacity .3s $authenticMotion;
 
   &.active {
     opacity: 1;

@@ -79,14 +79,14 @@
   overflow: hidden;
 }
 
-.js {
+// .js {
   .logo {
-    position: absolute;
-    top: 50px;
+    // position: absolute;
+    // top: 50px;
     /* top: -450px; */
-    left: 50%;
-    margin-left: -365px;
-    -webkit-transform-style: preserve-3d;
-    -webkit-transform: translate3d(0,0,0);
+    // left: 50%;
+    // margin-left: -365px;
+    transform-style: preserve-3d;
+    transform: translate3d(0,0,0);
   }
-}
+// }
