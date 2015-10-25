@@ -31,8 +31,39 @@
   right: 0;
   top: 0;
   bottom: 0;
-  background: url(/images/halloween-15/logo__ribbon__text.png) no-repeat;
+  // background: url(/images/halloween-15/logo__ribbon__text.png) no-repeat;
 }
+
+.logo--halloween-15 {
+  .logo__ribbon__text {
+    background: url(/images/halloween-15/logo__ribbon__text.png) no-repeat;
+  }
+}
+
+.logo--2015 {
+  .logo__ribbon__text {
+    background: url(/images/2015/logo__ribbon__text.png) no-repeat;
+  }
+}
+
+.logo--2014 {
+  .logo__ribbon__text {
+    background: url(/images/2014/logo__ribbon__text.png) no-repeat;
+  }
+}
+
+.logo--2013 {
+  .logo__ribbon__text {
+    background: url(/images/2013/logo__ribbon__text.png) no-repeat;
+  }
+}
+
+.logo--2012 {
+  .logo__ribbon__text {
+    background: url(/images/2012/logo__ribbon__text.png) no-repeat;
+  }
+}
+
 
 .logo__base {
   position: relative;
