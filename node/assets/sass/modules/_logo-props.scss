@@ -9,8 +9,13 @@
 
   // Default state is invisible.
   opacity: 0;
-  visibility: hidden;
-  transition: opacity .5s cubic-bezier(1.000, 0.000, 0.435, 1.100),
-              visibility .5s cubic-bezier(1.000, 0.000, 0.435, 1.100);
+  // visibility: hidden;
+  transition: opacity .5s cubic-bezier(1.000, 0.000, 0.435, 1.100);
   transition-delay: 1s;
+}
+
+.preload .logo__props {
+  & * {
+    transition: none !important;
+  }
 }

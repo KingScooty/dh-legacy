@@ -20,7 +20,7 @@ body {
   font-family: "proxima-nova",sans-serif;
 }
 
-body.ready {
+body {
   background-image: url(/images/explosion-bg.min.jpg);
   /* background-image: url(/images/fire-bg.jpg); */
   /* background-attachment: fixed; */
@@ -45,6 +45,7 @@ body.ready {
   z-index: -1;
 
   transition: opacity .3s $authenticMotion;
+  transition-delay: 1.4s;
 
   &.active {
     opacity: 1;

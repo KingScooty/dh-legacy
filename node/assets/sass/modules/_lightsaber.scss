@@ -1,7 +1,7 @@
 .lightsaber {
   display: block;
-  opacity: 0;
-  visibility: hidden;
+  opacity: 1;
+  // visibility: hidden;
   overflow: hidden;
   width: 506px;
   height: 350px;
@@ -18,7 +18,7 @@
   transition-delay: inherit;
 
   // transform: scaleX(0) rotate(-60deg);
-  transform: rotate(-60deg);
+  transform: scaleX(0) rotate(-60deg);
   backface-visibility: hidden;
 }
 
@@ -38,11 +38,12 @@
 // }
 
 .lightsaber--flipped {
-  transform-origin: bottom left;
+  // transform-origin: bottom left;
   // transform: scaleX(-1) rotate(0deg);
-  transform: scaleX(0) rotate(-60deg);
+  // transform: scaleX(0) rotate(-60deg);
   right: -100%;
   left: auto;
+  transition-duration: .45s;
 
   // &.lightsaber--stand {
   //   transform: scaleX(0) rotate(-60deg);
@@ -51,12 +52,12 @@
 
 .logo__props--engaged {
   opacity: 1;
-  visibility: visible;
+  // visibility: visible;
 
   .lightsaber {
-    transform: rotate(0deg);
+    transform: scaleX(1) rotate(0deg);
     opacity: 1;
-    visibility: visible;
+    // visibility: visible;
   }
   .lightsaber--flipped {
     transform: scaleX(-1) rotate(0deg);

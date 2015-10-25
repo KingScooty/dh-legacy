@@ -30,12 +30,16 @@
     animation-duration: 0.12s;
 }
 
+$prop_delay: 1.4s;
+
 .shake_x--long {
   animation-iteration-count: 4;
+  animation-delay: $prop_delay;
 }
 
 .shake_y--fast {
   animation-iteration-count: 7;
   animation-name: shake_y;
   animation-duration: 0.05s;
+  animation-delay: $prop_delay;
 }
