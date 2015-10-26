@@ -1,0 +1,41 @@
+doctype html
+html
+  head
+    title Digital Heroes 2015 -- June 6th 2015
+
+    <script type="text/javascript" src="//use.typekit.net/zsn1cix.js"></script>
+
+    script
+      :uglify-js
+        try{
+          Typekit.load({
+            active: function() {
+              var target = document.querySelector('.event');
+              window.dh_el_event_current_height = target.clientHeight;
+            }
+          });
+        }catch(e){}
+
+    if process.env.NODE_ENV === 'production'
+      link(rel='stylesheet', href='/stylesheets/style.min.css')
+    else
+      link(rel='stylesheet', href='/stylesheets/style.css')
+
+  body.preload
+    .bg2
+    div.container
+      header.masthead
+        div.logo.js.logo--halloween-15
+          .logo__ribbon
+            .logo__ribbon__text
+          a(href="/").logo__base Digital Heroes - 2015
+          .logo__props
+            .lightsaber.lightsaber--red
+            .lightsaber.lightsaber--blue.lightsaber--flipped
+
+    block content
+
+    if process.env.NODE_ENV === 'production'
+      <script src="/javascripts/dist/main.bundle.min.js"></script>
+    else
+      <script src="/javascripts/dist/main.bundle.js"></script>

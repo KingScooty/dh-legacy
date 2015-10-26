@@ -1,0 +1,45 @@
+@keyframes shake_x {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(5px, 0); }
+    75% { transform: translate(-5px, 0); }
+    100% { transform: translate(0, 0); }
+}
+
+@keyframes shake_y {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(0, 5px); }
+    75% { transform: translate(0, -5px); }
+    100% { transform: translate(0, 0); }
+}
+
+.shake {
+    animation-duration: 0.1s;
+    transform-origin:50% 50%;
+    animation-iteration-count: 3;
+    animation-timing-function: linear;
+    transform-style: preserve-3d;
+}
+
+.shake_x {
+    animation-name: shake_x;
+    animation-duration: 0.08s;
+}
+
+.shake_y {
+    animation-name: shake_y;
+    animation-duration: 0.12s;
+}
+
+$prop_delay: 1.38s;
+
+.shake_x--long {
+  animation-iteration-count: 4;
+  animation-delay: $prop_delay;
+}
+
+.shake_y--fast {
+  animation-iteration-count: 7;
+  animation-name: shake_y;
+  animation-duration: 0.05s;
+  animation-delay: $prop_delay;
+}
