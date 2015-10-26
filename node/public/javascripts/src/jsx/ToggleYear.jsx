@@ -23,7 +23,8 @@ var ToggleYear = React.createClass({
           <Link to="/halloween15">Halloween ’15</Link>
         </li>
 
-        <li className="stream-nav__item"          onClick={this.handleClick.bind(this, '2015')}>
+        <li className="stream-nav__item"
+        onClick={this.handleClick.bind(this, '2015')}>
           <Link to="/2015">2015</Link>
         </li>
 
