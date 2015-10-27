@@ -1,7 +1,5 @@
 .tweet-list {
   border-left: 3px solid #747f8a;
-  -webkit-transition: opacity .3s ease-in-out;
-  -o-transition: opacity .3s ease-in-out;
   transition: opacity .3s ease-in-out;
   // &.inactive {
   //   opacity: 0;
@@ -40,8 +38,6 @@
 
 .tweet-list__body {
   opacity: 1;
-  -webkit-transition: all .3s ease-in-out;
-  -o-transition: all .3s ease-in-out;
   transition: all .3s ease-in-out;
 }
 

@@ -54,17 +54,38 @@ module.exports = function(grunt) {
       }
     },
 
-    cssmin: {
+
+    // cssmin: {
+    //   options: {
+    //     shorthandCompacting: false,
+    //     roundingPrecision: -1
+    //   },
+    //   target: {
+    //     files: {
+    //       'public/stylesheets/style.min.css': 'public/stylesheets/style.css'
+    //     }
+    //   }
+    // }
+
+    postcss: {
       options: {
-        shorthandCompacting: false,
-        roundingPrecision: -1
+        map: false,
+        failOnError: true,
+        // writeDest: false,
+        processors: [
+          require('pixrem')(),
+          require('autoprefixer')({browsers: 'last 2 versions'}),
+          require('cssnano')()
+        ]
       },
-      target: {
-        files: {
-          'public/stylesheets/style.min.css': 'public/stylesheets/style.css'
-        }
+      dist: {
+        src: 'public/stylesheets/style.css'
+        // src: {
+        //   'public/stylesheets/style.nano.css': 'public/stylesheets/style.css'
+        // }
       }
     }
+
   });
 
 
@@ -72,13 +93,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  // grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-postcss');
 
   grunt.registerTask('default', ['sass:dist', 'watch']);
   grunt.registerTask('build', [
     'sass:dist',
     'browserify',
     'uglify',
-    'cssmin'
+    // 'cssmin'
+    'postcss'
   ]);
 };

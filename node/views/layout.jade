@@ -16,8 +16,10 @@ html
           });
         }catch(e){}
 
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
     if process.env.NODE_ENV === 'production'
-      link(rel='stylesheet', href='/stylesheets/style.min.css')
+      //- link(rel='stylesheet', href='/stylesheets/style.min.css')
       script
         :uglify-js
           !function(g,s,q,r,d){r=g[r]=g[r]||function(){(r.q=r.q||[]).push(
@@ -26,7 +28,7 @@ html
           insertBefore(d,q)}(window,document,'script','_gs');
           
           _gs('GSN-891405-A');
-    else
+    //- else
       link(rel='stylesheet', href='/stylesheets/style.css')
 
   body.preload
