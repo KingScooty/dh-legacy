@@ -38,18 +38,22 @@
     "twitter-text": "^1.13.1"
   },
   "devDependencies": {
+    "autoprefixer": "^6.0.3",
     "babelify": "*",
     "bower": "^1.6.3",
     "chai": "*",
+    "cssnano": "^3.3.1",
     "grunt": "*",
     "grunt-browserify": "*",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-cssmin": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*",
+    "grunt-postcss": "^0.7.0",
     "grunt-sass": "*",
     "mocha": "*",
-    "node-sass": "*"
+    "node-sass": "*",
+    "pixrem": "^3.0.0"
   },
   "subdomain": "digital-heroes-2014",
   "engines": {

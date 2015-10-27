@@ -7,6 +7,6 @@
   width: 730px;
   height: 536px;
   z-index: -1;
-  -webkit-transform-style: preserve-3d;
-  -webkit-transform: translate3d(0,0,0);
+  transform-style: preserve-3d;
+  transform: translate3d(0,0,0);
 }
