@@ -4,5 +4,4 @@ assets/
 public/bower_components
 node_modules
 public/javascripts/dist/main.bundle.js
-public/stylesheets/style.css
 _db-dump
