@@ -44,8 +44,8 @@ body {
   background-repeat: no-repeat;
   z-index: -1;
 
-  transition: opacity .3s $authenticMotion;
-  transition-delay: 1.38s;
+  transition: opacity 1s $authenticMotion;
+  transition-delay: 1.2s;
 
   &.active {
     opacity: 1;
