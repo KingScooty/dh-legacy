@@ -10,3 +10,8 @@ dependencies:
     pre:
     # Install circleci-matrix
     - curl -fsSL https://git.io/v2Ifn | bash
+
+test:
+  override:
+    # - cd $TEST_DIR && NODE_ENV=test npm test
+    - circleci-matrix
