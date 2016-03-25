@@ -1,6 +1,5 @@
 env:
   - TEST_DIR=api
-
 command:
   - cd $TEST_DIR
   - npm install
