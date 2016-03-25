@@ -13,5 +13,4 @@ dependencies:
 
 test:
   override:
-    # - cd $TEST_DIR && NODE_ENV=test npm test
     - circleci-matrix
