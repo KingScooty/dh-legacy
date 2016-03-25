@@ -1,8 +1,7 @@
 env:
-  - TEST_DIR=api
+  - TESTDIR=api
 command:
-  - cd $TEST_DIR
-  - npm install
+  - cd $TESTDIR && npm install
   - NODE_ENV=test npm test
     # - docker-compose -f docker-compose.production.yml
     # - docker-compose -f docker-compose.test.yml up -d

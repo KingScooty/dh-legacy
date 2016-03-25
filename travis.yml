@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - "5.9.0"
+env:
+  - TEST_DIR=api
+  # - TEST_DIR=worker
+
+script: cd $TEST_DIR && npm install && npm test
