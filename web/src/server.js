@@ -13,19 +13,26 @@ const Koa = require('koa');
 const web = new Koa();
 
 const logger = Morgan('combined');
+const componentpath = path.join(__dirname, 'components');
 const viewpath = path.join(__dirname, 'views');
 
 web.use(Compress({
     flush: require('zlib').Z_SYNC_FLUSH
 }));
 
-react(web, { views: viewpath });
+react(web,
+  {
+    views: viewpath,
+    internals: true
+  }
+);
 
 // imports babel runtime for JSX views, warning: live transpiling
 // best to precompile in production deploys for perf + reliability
 register({
   only: [
-    viewpath
+    viewpath,
+    componentpath
   ]
 });
 

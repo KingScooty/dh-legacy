@@ -1,8 +1,9 @@
-// var Content = require('../components/content');
+// var Content = require('../components/cheekyComponent');
 var escapeHtml = require('escape-html');
-var Layout = require('./layout.jsx');
+var Layout = require('./layout');
 var React = require('react');
-var ReactDOMServer = require('react-dom/server');
+// var ReactDOMServer = require('react-dom/server');
+var Content = require('../components/cheekyComponent');
 
 var index = React.createClass({
   propTypes: {
@@ -20,8 +21,9 @@ var index = React.createClass({
     return (
       <Layout title={this.props.title}>
         <h1>{this.props.title}</h1>
-        {/* <div id="content" dangerouslySetInnerHTML={{__html: contentString}}>
-        </div>*/}
+        <Content />
+        { /* <div id="content" dangerouslySetInnerHTML={{__html: contentString}}>
+        </div> */ }
         <script dangerouslySetInnerHTML={{__html: dataScript}}></script>
       </Layout>
     );
