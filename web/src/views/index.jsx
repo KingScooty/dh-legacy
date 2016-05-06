@@ -3,7 +3,9 @@ var escapeHtml = require('escape-html');
 var Layout = require('./layout');
 var React = require('react');
 // var ReactDOMServer = require('react-dom/server');
-var Content = require('../components/cheekyComponent');
+var CheekyComponent = require('../components/cheekyComponent');
+var Header = require('../components/Header');
+var Feed = require('../components/Feed');
 
 var index = React.createClass({
   propTypes: {
@@ -21,7 +23,9 @@ var index = React.createClass({
     return (
       <Layout title={this.props.title}>
         <h1>{this.props.title}</h1>
-        <Content />
+        <Header />
+        <CheekyComponent />
+        <Feed />
         { /* <div id="content" dangerouslySetInnerHTML={{__html: contentString}}>
         </div> */ }
         <script dangerouslySetInnerHTML={{__html: dataScript}}></script>
