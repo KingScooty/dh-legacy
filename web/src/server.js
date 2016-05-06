@@ -42,6 +42,12 @@ register({
 
 // const router = require('./routes/')(web);
 // router(web);
+// const router = require('./routes');//(web);
+// router(web);
+
+// web
+//   .use(router.routes())
+//   .use(router.allowedMethods());
 
 web.use(logger);
 
@@ -55,6 +61,7 @@ web.use(function* () {
     ]
   });
 });
+
 // web
 //   .use(router.routes())
 //   .use(router.allowedMethods());
