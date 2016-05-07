@@ -24,7 +24,9 @@ describe('<Post />', function() {
     it('renders a timestamp', function() {
       const post = mockPost(tweetSimple);
       const wrapper = shallow(<Post {...post} />);
-      expect(wrapper.text()).to.contain(post.timestamp);
+      const meta = wrapper.find('.stream-post__meta');
+
+      expect(meta.text()).to.contain(post.timestamp);
     });
 
     it('renders post text', function() {
@@ -59,7 +61,9 @@ describe('<Post />', function() {
     it('renders a timestamp', function() {
       const post = mockPost();
       const wrapper = shallow(<Post {...post} />);
-      expect(wrapper.text()).to.contain(post.created_at);
+      const meta = wrapper.find('.stream-post__meta');
+
+      expect(meta.text()).to.contain(post.created_at);
     });
 
     it('renders body text', function() {
