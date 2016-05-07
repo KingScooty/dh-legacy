@@ -11,7 +11,12 @@ var Post = React.createClass({
   },
 
   getScreenName: function() {
-    return this.props.screen_name || this.props.user.screen_name;
+    var screenName = this.props.screen_name || this.props.user.screen_name;
+    var screenNameObject = {
+      'text': screenName,
+      'url': `https://twitter.com/${screenName}`
+    }
+    return screenNameObject;
   },
 
   getProfileImage: function() {
@@ -23,7 +28,9 @@ var Post = React.createClass({
     return (
       <div className="stream-post">
         <div className="stream-post__profile-image"><img src={ this.getProfileImage() } /></div>
-        <div className="stream-post__screen-name">{ this.getScreenName() }</div>
+        <div className="stream-post__screen-name">
+          <a href={ this.getScreenName().url }>@{ this.getScreenName().text }</a>
+        </div>
         <div className="stream-post__meta">{ this.getTimeStamp() }</div>
         <div className="stream-post__body">{ this.props.text }</div>
         {/*<div className="stream-media">Media goes here</div>*/}

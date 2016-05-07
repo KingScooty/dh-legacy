@@ -40,9 +40,11 @@ describe('<Post />', function() {
     it('renders screen name', function() {
       const post = mockPost(tweetSimple);
       const wrapper = shallow(<Post {...post} />);
-      const screen_name = wrapper.find('.stream-post__screen-name');
+      const screenNameWrapper = wrapper.find('.stream-post__screen-name');
+      const screenName = screenNameWrapper.find('a');
 
-      expect(screen_name.text()).to.equal(post.screen_name);
+      expect(screenName.prop('href')).to.equal(`https://twitter.com/${post.screen_name}`);
+      expect(screenName.text()).to.equal(`@${post.screen_name}`);
     });
 
     it('renders a profile image', function() {
@@ -76,9 +78,11 @@ describe('<Post />', function() {
     it('renders screen name', function() {
       const post = mockPost();
       const wrapper = shallow(<Post {...post} />);
-      const screen_name = wrapper.find('.stream-post__screen-name');
+      const screenNameWrapper = wrapper.find('.stream-post__screen-name');
+      const screenName = screenNameWrapper.find('a');
 
-      expect(screen_name.text()).to.equal(post.user.screen_name);
+      expect(screenName.prop('href')).to.equal(`https://twitter.com/${post.user.screen_name}`);
+      expect(screenName.text()).to.equal(`@${post.user.screen_name}`);
     });
 
     it('renders a profile image', function() {
