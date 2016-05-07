@@ -3,18 +3,17 @@ var Post = require('../Post');
 
 var Stream = React.createClass({
 
-  getStream: function() {
-    return (
-      <h2>Stream:</h2>
-    )
+  getPosts: function() {
+    return this.props.posts.map(function(post, index) {
+      return (
+        <Post post={post} key={index} />
+      )
+    });
   },
 
   render: function() {
-    postData = {
-      title: "This is a dummy tweet",
-      date: "5 months ago"
-    };
-    // var stream = this.getStream();
+
+    var Posts = this.getPosts();
 
     return (
       <div className="stream">
@@ -31,10 +30,7 @@ var Stream = React.createClass({
         </div>
 
         <div className="stream__body">
-          <Post {...postData} />
-          <Post {...postData} />
-          <Post {...postData} />
-          <Post {...postData} />
+          {Posts}
         </div>
       </div>
     );
