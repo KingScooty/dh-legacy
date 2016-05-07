@@ -2,10 +2,11 @@
 var escapeHtml = require('escape-html');
 var Layout = require('./layout');
 var React = require('react');
+
 // var ReactDOMServer = require('react-dom/server');
-var CheekyComponent = require('../components/cheekyComponent');
+
 var Header = require('../components/Header');
-var Feed = require('../components/Feed');
+var Stream = require('../components/Stream');
 
 var index = React.createClass({
   propTypes: {
@@ -18,16 +19,16 @@ var index = React.createClass({
     // xss!!!
     var dataScript = `window.__list__ = '${escapeHtml(JSON.stringify(this.props.list))}';`;
     // render as a dynamic react component
-    // var contentString = ReactDOMServer.renderToString(<Content list={this.props.list} />);
+    // var contentString = ReactDOMServer.renderToString(<Header list={this.props.list} />);
 
     return (
       <Layout title={this.props.title}>
         <h1>{this.props.title}</h1>
         <Header />
-        <CheekyComponent />
-        <Feed />
-        { /* <div id="content" dangerouslySetInnerHTML={{__html: contentString}}>
-        </div> */ }
+        <Stream />
+
+        {/*<div id="content" dangerouslySetInnerHTML={{__html: contentString}}></div>*/}
+
         <script dangerouslySetInnerHTML={{__html: dataScript}}></script>
       </Layout>
     );

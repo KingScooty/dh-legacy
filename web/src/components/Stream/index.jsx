@@ -1,16 +1,20 @@
 var React = require('react');
+var Post = require('../Post');
 
-var Feed = React.createClass({
+var Stream = React.createClass({
 
-  getFeed: function() {
+  getStream: function() {
     return (
-      <h2>Feed:</h2>
+      <h2>Stream:</h2>
     )
   },
 
   render: function() {
-
-    var feed = this.getFeed();
+    postData = {
+      title: "This is a dummy tweet",
+      date: "5 months ago"
+    };
+    // var stream = this.getStream();
 
     return (
       <div className="stream">
@@ -27,15 +31,14 @@ var Feed = React.createClass({
         </div>
 
         <div className="stream__body">
-          <div className="stream-post">
-            <div className="stream-post__meta">5 months ago</div>
-            <div className="stream-body">This is a dummy tweet. Lolz.</div>
-          </div>
-
+          <Post {...postData} />
+          <Post {...postData} />
+          <Post {...postData} />
+          <Post {...postData} />
         </div>
       </div>
     );
   }
 });
 
-module.exports = Feed;
+module.exports = Stream;

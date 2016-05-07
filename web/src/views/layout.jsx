@@ -10,11 +10,11 @@ var Layout = React.createClass({
       <html>
         <head>
           <title>{this.props.title}</title>
-          <link rel="stylesheet" href="/css/main.css" />
+          {/*<link rel="stylesheet" href="/css/main.css" />*/}
         </head>
         <body>
           {this.props.children}
-          <script src="/js/bundle.js"></script>
+          {/*<script src="/js/bundle.js"></script>*/}
         </body>
       </html>
     );
