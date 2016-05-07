@@ -27,10 +27,20 @@ describe('<Post />', function() {
       expect(wrapper.text()).to.contain(post.timestamp);
     });
 
-    it('renders body text', function() {
+    it('renders post text', function() {
       const post = mockPost(tweetSimple);
       const wrapper = shallow(<Post {...post} />);
-      expect(wrapper.text()).to.contain(post.text);
+
+      const postBody = wrapper.find('.stream-post__body');
+      expect(postBody.text()).to.contain(post.text);
+    });
+
+    it('renders screen name', function() {
+      const post = mockPost(tweetSimple);
+      const wrapper = shallow(<Post {...post} />);
+      const screen_name = wrapper.find('.stream-post__screen-name');
+
+      expect(screen_name.text()).to.equal(post.screen_name);
     });
 
     it('renders a profile image', function() {
@@ -55,7 +65,16 @@ describe('<Post />', function() {
     it('renders body text', function() {
       const post = mockPost();
       const wrapper = shallow(<Post {...post} />);
-      expect(wrapper.text()).to.contain(post.text);
+      const postBody = wrapper.find('.stream-post__body');
+      expect(postBody.text()).to.contain(post.text);
+    });
+
+    it('renders screen name', function() {
+      const post = mockPost();
+      const wrapper = shallow(<Post {...post} />);
+      const screen_name = wrapper.find('.stream-post__screen-name');
+
+      expect(screen_name.text()).to.equal(post.user.screen_name);
     });
 
     it('renders a profile image', function() {

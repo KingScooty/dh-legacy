@@ -23,8 +23,9 @@ var Post = React.createClass({
     return (
       <div className="stream-post">
         <div className="stream-post__profile-image"><img src={ this.getProfileImage() } /></div>
+        <div className="stream-post__screen-name">{ this.getScreenName() }</div>
         <div className="stream-post__meta">{ this.getTimeStamp() }</div>
-        <div className="stream-post__body">{this.props.text}</div>
+        <div className="stream-post__body">{ this.props.text }</div>
         {/*<div className="stream-media">Media goes here</div>*/}
       </div>
     );
