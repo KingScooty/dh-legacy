@@ -12,19 +12,33 @@ var media2014 = require('./mocks/tweet_2014_with_media.json');
 var mediaModern = require('./mocks/tweet_2015_with_media.json');
 var mediaModernMultiple = require('./mocks/tweet_2015_with_multiple_media.json');
 
-// function mockMedia(mediaType) {
-  // var mediaObject = {};
-  // if (mediaType.extended_entities && mediaType.extended_entities.media) {
-  //   mediaObject.extended_entities = mediaType.extended_entities
-  // }
 
-  // var mockType = type || tweetFull;
-  // return _.merge(mockType, overrides);
-// }
+function removeMedia(mediaType) {
+  var noMedia = JSON.parse(JSON.stringify(mediaType));
+
+  if (noMedia.extended_entities && noMedia.extended_entities.media) {
+    delete noMedia.entities.media;
+    delete noMedia.extended_entities.media;
+  } else if (noMedia.entities && noMedia.entities.media) {
+    delete noMedia.entities.media;
+  } else {
+    noMedia.media = "";
+  }
+
+  return noMedia;
+}
 
 describe('<PostMedia />', function() {
 
   describe('<= 2013 data format', function() {
+    it('renders no media object if no media present', function() {
+      const noMedia = removeMedia(legacyMedia);
+      const wrapper = shallow(<PostMedia {...noMedia} />);
+      const imageWrapper = wrapper.find('.stream-post__media');
+
+      expect(imageWrapper).to.have.length.of(0);
+    });
+
     it('renders a single media object', function() {
       const wrapper = shallow(<PostMedia {...legacyMedia} />);
       const image = wrapper.find('.stream-post__media-item');
@@ -42,12 +56,13 @@ describe('<PostMedia />', function() {
   });
 
   describe('2014 data format', function() {
-    // it('renders no media object if no media present', function() {
-    //   const wrapper = shallow(<PostMedia {...media2014} />);
-    //   const image = wrapper.find('.stream-post__media-item');
-    //
-    //   expect(image).to.have.length.of(0);
-    // });
+    it('renders no media object if no media present', function() {
+      const noMedia = removeMedia(media2014);
+      const wrapper = shallow(<PostMedia {...noMedia} />);
+      const imageWrapper = wrapper.find('.stream-post__media');
+
+      expect(imageWrapper).to.have.length.of(0);
+    });
 
     it('renders a single media object if media present', function() {
       const wrapper = shallow(<PostMedia {...media2014} />);
@@ -66,12 +81,13 @@ describe('<PostMedia />', function() {
   });
 
   describe('>= 2015 (modern data format)', function() {
-    // it('renders no media object if no media present', function() {
-    //   const wrapper = shallow(<PostMedia {...media2014} />);
-    //   const image = wrapper.find('.stream-post__media-item');
-    //
-    //   expect(image).to.have.length.of(0);
-    // });
+    it('renders no media object if no media present', function() {
+      const noMedia = removeMedia(mediaModern);
+      const wrapper = shallow(<PostMedia {...noMedia} />);
+      const imageWrapper = wrapper.find('.stream-post__media');
+
+      expect(imageWrapper).to.have.length.of(0);
+    });
 
     it('renders a single media object if media present', function() {
       const wrapper = shallow(<PostMedia {...mediaModern} />);
