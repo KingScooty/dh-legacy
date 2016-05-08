@@ -24,7 +24,12 @@ const Post = React.createClass({
   },
 
   getProfileImage: function() {
-    return this.props.profile_image_url || this.props.user.profile_image_url;
+    /**
+     * Query the puclic Twitter API for the profile image rather than use
+     * the stale CDN link in the data:
+     * http://stackoverflow.com/a/29699589/155740
+     */
+    return `https://twitter.com/${this.getScreenName().text}/profile_image?size=bigger`;
   },
 
   render: function() {

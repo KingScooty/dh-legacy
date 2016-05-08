@@ -54,8 +54,9 @@ describe('<Post />', function() {
 
       const imageContainer = wrapper.find('.stream-post__profile-image');
       const image = imageContainer.find('img');
+      const expectedProfileImage = `https://twitter.com/${post.screen_name}/profile_image?size=bigger`;
 
-      expect(image.prop('src')).to.equal(post.profile_image_url);
+      expect(image.prop('src')).to.equal(expectedProfileImage);
     });
 
   });
@@ -94,8 +95,9 @@ describe('<Post />', function() {
 
       const imageContainer = wrapper.find('.stream-post__profile-image');
       const image = imageContainer.find('img');
+      const expectedProfileImage = `https://twitter.com/${post.user.screen_name}/profile_image?size=bigger`;
 
-      expect(image.prop('src')).to.equal(post.user.profile_image_url);
+      expect(image.prop('src')).to.equal(expectedProfileImage);
     });
   });
 
