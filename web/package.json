@@ -33,6 +33,7 @@
     "koa-router": "^7.0.1",
     "react-dom": "^15.0.2",
     "react-timeago": "^3.0.0",
-    "spdy": "^3.3.1"
+    "spdy": "^3.3.1",
+    "twitter-text": "^1.13.4"
   }
 }

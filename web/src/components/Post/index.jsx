@@ -1,5 +1,6 @@
 import React from 'react';
 import TimeAgo from 'react-timeago';
+import twitter from 'twitter-text';
 
 import PostMedia from './PostMedia';
 
@@ -32,7 +33,18 @@ const Post = React.createClass({
     return `https://twitter.com/${this.getScreenName().text}/profile_image?size=bigger`;
   },
 
+  getBodyText: function() {
+    var postBody = twitter.autoLink(twitter.htmlEscape(this.props.text));
+
+    return {
+      dangerouslySetInnerHTML: {
+        __html : postBody
+      }
+    }
+  },
+
   render: function() {
+    var bodyText = this.getBodyText();
 
     return (
       <div className="stream-post">
@@ -43,7 +55,7 @@ const Post = React.createClass({
         <div className="stream-post__meta">
           <TimeAgo date={ this.getTimeStamp() } />
         </div>
-        <div className="stream-post__body">{ this.props.text }</div>
+        <div {...bodyText} className="stream-post__body"></div>
 
         {/*<PostMedia extended_entities={this.props.extended_entities} entities={this.props.entities} media={this.props.media} href="" />*/}
       </div>
