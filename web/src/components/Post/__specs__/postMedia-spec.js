@@ -111,7 +111,7 @@ describe('<PostMedia />', function() {
       expect(images).to.have.length.of(3);
     });
 
-    it('renders the media object with correct props', function() {
+    it('renders multiple media objects with correct props', function() {
       const wrapper = shallow(<PostMedia {...mediaModernMultiple } />);
       const images = wrapper.find('.stream-post__media-item');
       const expectedSrc = mediaModernMultiple.extended_entities.media;
