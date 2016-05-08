@@ -33,7 +33,6 @@ var Post = React.createClass({
         </div>
         <div className="stream-post__meta">{ this.getTimeStamp() }</div>
         <div className="stream-post__body">{ this.props.text }</div>
-        {/*<div className="stream-media">Media goes here</div>*/}
       </div>
     );
   }
