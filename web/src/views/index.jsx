@@ -8,7 +8,7 @@ var React = require('react');
 var Header = require('../components/Header');
 var Stream = require('../components/Stream');
 
-var data = require('../components/Post/__specs__/mocks/tweet_2015_with_media.json');
+var data = require('../components/Post/__specs__/mocks/tweet_2015_with_multiple_media.json');
 
 var index = React.createClass({
   propTypes: {
