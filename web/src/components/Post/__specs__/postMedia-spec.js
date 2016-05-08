@@ -30,6 +30,16 @@ function removeMedia(mediaType) {
 
 describe('<PostMedia />', function() {
 
+  it('renders an anchor wrapper with correct props if media is present', function() {
+    const href = "https://twitter.com/kingscooty/status/123";
+    const wrapper = shallow(<PostMedia {...mediaModern} href={href} />);
+    const media = wrapper.find('.stream-post__media');
+    const anchor = media.find('a');
+
+    expect(anchor).to.have.length.of(1);
+    expect(anchor.prop('href')).to.equal(href);
+  });
+
   describe('<= 2013 data format', function() {
     it('renders no media object if no media present', function() {
       const noMedia = removeMedia(legacyMedia);
