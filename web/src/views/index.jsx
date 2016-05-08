@@ -8,6 +8,8 @@ var React = require('react');
 var Header = require('../components/Header');
 var Stream = require('../components/Stream');
 
+var data = require('../components/Post/__specs__/mocks/tweet_2015_with_media.json');
+
 var index = React.createClass({
   propTypes: {
     title: React.PropTypes.string,
@@ -25,7 +27,7 @@ var index = React.createClass({
       <Layout title={this.props.title}>
         <h1>{this.props.title}</h1>
         <Header />
-        <Stream />
+        <Stream posts={[data]} />
 
         {/*<div id="content" dangerouslySetInnerHTML={{__html: contentString}}></div>*/}
 

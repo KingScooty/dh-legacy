@@ -1,9 +1,13 @@
-var React = require('react');
+import React from 'react';
+import TimeAgo from 'react-timeago';
 
-var Post = React.createClass({
+import PostMedia from './PostMedia';
+
+const Post = React.createClass({
 
   getTimeStamp: function () {
     return this.props.timestamp || this.props.created_at;
+    // return new Date(Date.parse(timestamp));
   },
 
   getId: function() {
@@ -31,7 +35,9 @@ var Post = React.createClass({
         <div className="stream-post__screen-name">
           <a href={ this.getScreenName().url }>@{ this.getScreenName().text }</a>
         </div>
-        <div className="stream-post__meta">{ this.getTimeStamp() }</div>
+        <div className="stream-post__meta">
+          <TimeAgo date={ this.getTimeStamp() } />
+        </div>
         <div className="stream-post__body">{ this.props.text }</div>
 
         {/*<PostMedia extended_entities={this.props.extended_entities} entities={this.props.entities} media={this.props.media} href="" />*/}

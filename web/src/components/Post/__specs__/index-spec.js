@@ -3,7 +3,7 @@ var expect = chai.expect;
 var _ = require('lodash');
 
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, render } from 'enzyme';
 
 import Post from '../';
 
@@ -21,12 +21,13 @@ describe('<Post />', function() {
   }
 
   describe('simple data format', function() {
-    it('renders a timestamp', function() {
+    it('calls <TimeAgo /> with correct props', function() {
       const post = mockPost(tweetSimple);
       const wrapper = shallow(<Post {...post} />);
       const meta = wrapper.find('.stream-post__meta');
+      const timeAgo = meta.children();
 
-      expect(meta.text()).to.contain(post.timestamp);
+      expect(timeAgo.prop('date')).to.equal(post.timestamp);
     });
 
     it('renders post text', function() {
@@ -60,13 +61,15 @@ describe('<Post />', function() {
   });
 
   describe('full data format', function() {
-    it('renders a timestamp', function() {
+    it('calls <TimeAgo /> with correct props', function() {
       const post = mockPost();
       const wrapper = shallow(<Post {...post} />);
       const meta = wrapper.find('.stream-post__meta');
+      const timeAgo = meta.children();
 
-      expect(meta.text()).to.contain(post.created_at);
+      expect(timeAgo.prop('date')).to.equal(post.created_at);
     });
+
 
     it('renders body text', function() {
       const post = mockPost();

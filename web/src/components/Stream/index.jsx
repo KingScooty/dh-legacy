@@ -6,7 +6,7 @@ var Stream = React.createClass({
   getPosts: function() {
     return this.props.posts.map(function(post, index) {
       return (
-        <Post post={post} key={index} />
+        <Post {...post} key={index} />
       )
     });
   },
