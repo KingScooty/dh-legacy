@@ -49,8 +49,8 @@ const Post = React.createClass({
     return (
       <div className="stream-post">
 
-        <div className="stream-post__meta">
-          <TimeAgo date={ this.getTimeStamp() } />
+        <div className="stream-post__aside">
+          <TimeAgo className="stream-post__timeago" date={ this.getTimeStamp() } />
         </div>
 
         <div className="stream-post__profile-image">

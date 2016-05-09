@@ -24,8 +24,7 @@ describe('<Post />', function() {
     it('calls <TimeAgo /> with correct props', function() {
       const post = mockPost(tweetSimple);
       const wrapper = shallow(<Post {...post} />);
-      const meta = wrapper.find('.stream-post__meta');
-      const timeAgo = meta.children();
+      const timeAgo = wrapper.find('.stream-post__timeago');
 
       expect(timeAgo.prop('date')).to.equal(post.timestamp);
     });
@@ -65,8 +64,7 @@ describe('<Post />', function() {
     it('calls <TimeAgo /> with correct props', function() {
       const post = mockPost();
       const wrapper = shallow(<Post {...post} />);
-      const meta = wrapper.find('.stream-post__meta');
-      const timeAgo = meta.children();
+      const timeAgo = wrapper.find('.stream-post__timeago');
 
       expect(timeAgo.prop('date')).to.equal(post.created_at);
     });
