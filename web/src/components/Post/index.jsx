@@ -48,14 +48,25 @@ const Post = React.createClass({
 
     return (
       <div className="stream-post">
-        <div className="stream-post__profile-image"><img src={ this.getProfileImage() } /></div>
-        <div className="stream-post__screen-name">
-          <a href={ this.getScreenName().url }>@{ this.getScreenName().text }</a>
-        </div>
+
         <div className="stream-post__meta">
           <TimeAgo date={ this.getTimeStamp() } />
         </div>
-        <div {...bodyText} className="stream-post__body"></div>
+
+        <div className="stream-post__profile-image">
+          <img src={ this.getProfileImage() } />
+        </div>
+
+        <div className="stream-post__screen-name">
+          <a href={ this.getScreenName().url }>@{ this.getScreenName().text }</a>
+        </div>
+
+
+        <div {...bodyText} className="stream-post__body-text" />
+
+        {/*<div className="stream-post__body">*/}
+        {/*<div {...} className="stream-post__timestamp" />*/}
+        {/*</div>*/}
 
         {/*<PostMedia extended_entities={this.props.extended_entities} entities={this.props.entities} media={this.props.media} href="" />*/}
       </div>

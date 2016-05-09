@@ -32,10 +32,10 @@ describe('<Post />', function() {
 
     it('renders post text', function() {
       const post = mockPost(tweetSimple);
-      const wrapper = shallow(<Post {...post} />);
+      const wrapper = render(<Post {...post} />);
 
-      const postBody = wrapper.find('.stream-post__body');
-      expect(postBody.text()).to.contain(post.text);
+      const postText = wrapper.find('.stream-post__body-text');
+      expect(postText.text()).to.contain(post.text);
     });
 
     it('renders screen name', function() {
@@ -72,11 +72,13 @@ describe('<Post />', function() {
     });
 
 
-    it('renders body text', function() {
+    it('renders post text', function() {
       const post = mockPost();
-      const wrapper = shallow(<Post {...post} />);
-      const postBody = wrapper.find('.stream-post__body');
-      expect(postBody.text()).to.contain(post.text);
+      const wrapper = render(<Post {...post} />);
+      const postText = wrapper.find('.stream-post__body-text');
+
+      // console.log(postText);.
+      expect(postText.text()).to.contain(post.text);
     });
 
     it('renders screen name', function() {
