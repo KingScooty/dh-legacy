@@ -33,7 +33,7 @@ const Post = React.createClass({
     return `https://twitter.com/${this.getScreenName().text}/profile_image?size=bigger`;
   },
 
-  getBodyText: function() {
+  getPostText: function() {
     var postBody = twitter.autoLink(twitter.htmlEscape(this.props.text));
 
     return {
@@ -44,7 +44,7 @@ const Post = React.createClass({
   },
 
   render: function() {
-    var bodyText = this.getBodyText();
+    var postText = this.getPostText();
 
     return (
       <div className="stream-post">
@@ -61,10 +61,8 @@ const Post = React.createClass({
           <a href={ this.getScreenName().url }>@{ this.getScreenName().text }</a>
         </div>
 
-
-        <div {...bodyText} className="stream-post__body-text" />
-
         {/*<div className="stream-post__body">*/}
+        <div {...postText} className="stream-post__text" />
         {/*<div {...} className="stream-post__timestamp" />*/}
         {/*</div>*/}
 

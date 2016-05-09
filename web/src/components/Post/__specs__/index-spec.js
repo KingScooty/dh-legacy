@@ -34,7 +34,7 @@ describe('<Post />', function() {
       const post = mockPost(tweetSimple);
       const wrapper = render(<Post {...post} />);
 
-      const postText = wrapper.find('.stream-post__body-text');
+      const postText = wrapper.find('.stream-post__text');
       expect(postText.text()).to.contain(post.text);
     });
 
@@ -75,7 +75,7 @@ describe('<Post />', function() {
     it('renders post text', function() {
       const post = mockPost();
       const wrapper = render(<Post {...post} />);
-      const postText = wrapper.find('.stream-post__body-text');
+      const postText = wrapper.find('.stream-post__text');
 
       // console.log(postText);.
       expect(postText.text()).to.contain(post.text);
