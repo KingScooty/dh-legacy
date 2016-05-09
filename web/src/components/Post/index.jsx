@@ -27,6 +27,11 @@ const Post = React.createClass({
     return screenNameObject;
   },
 
+  getStatusUrl: function() {
+    var statusId = this.props.tweet_id || this.props.id_str
+    return `https://twitter.com/statuses/${statusId}`;
+  },
+
   getProfileImage: function() {
     /**
      * Query the puclic Twitter API for the profile image rather than use
@@ -53,7 +58,8 @@ const Post = React.createClass({
       <div className="stream-post">
 
         <div className="stream-post__aside">
-          <TimeAgo className="stream-post__timeago" date={ this.getTimeStamp() } />
+          <a href={ this.getStatusUrl() } target="_blank">
+          <TimeAgo className="stream-post__timeago" date={ this.getTimeStamp() } /></a>
         </div>
 
         <div className="stream-post__profile-image">
@@ -66,8 +72,9 @@ const Post = React.createClass({
 
         {/*<div className="stream-post__body">*/}
         <div {...postText} className="stream-post__text" />
+
         <div className="stream-post__timestamp">
-          { this.getTimeStamp(true) }
+          <a href={ this.getStatusUrl() } target="_blank">{ this.getTimeStamp(true) }</a>
         </div>
         {/*</div>*/}
 
