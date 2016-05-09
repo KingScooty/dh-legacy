@@ -58,6 +58,15 @@ describe('<Post />', function() {
       expect(image.prop('src')).to.equal(expectedProfileImage);
     });
 
+    it('renders a formatted timestamp', function() {
+      const post = mockPost(tweetSimple);
+      const wrapper = shallow(<Post {...post} />);
+
+      const timestamp = wrapper.find('.stream-post__timestamp');
+
+      expect(timestamp.text()).to.equal('21:35 pm, 30th May');
+    });
+
   });
 
   describe('full data format', function() {
@@ -75,7 +84,6 @@ describe('<Post />', function() {
       const wrapper = render(<Post {...post} />);
       const postText = wrapper.find('.stream-post__text');
 
-      // console.log(postText);.
       expect(postText.text()).to.contain(post.text);
     });
 
@@ -98,6 +106,15 @@ describe('<Post />', function() {
       const expectedProfileImage = `https://twitter.com/${post.user.screen_name}/profile_image?size=bigger`;
 
       expect(image.prop('src')).to.equal(expectedProfileImage);
+    });
+
+    it('renders a formatted timestamp', function() {
+      const post = mockPost();
+      const wrapper = shallow(<Post {...post} />);
+
+      const timestamp = wrapper.find('.stream-post__timestamp');
+
+      expect(timestamp.text()).to.equal('05:07 am, 1st Nov');
     });
   });
 

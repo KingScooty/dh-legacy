@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import TimeAgo from 'react-timeago';
 import twitter from 'twitter-text';
 
@@ -6,9 +7,11 @@ import PostMedia from './PostMedia';
 
 const Post = React.createClass({
 
-  getTimeStamp: function () {
-    return this.props.timestamp || this.props.created_at;
-    // return new Date(Date.parse(timestamp));
+  getTimeStamp: function (format) {
+    var timestamp = this.props.timestamp || this.props.created_at
+    if (!format) return timestamp;
+
+    return moment(timestamp, "ddd MMM DD HH:mm:SS ZZ YYYY").format("HH:mm a, Do MMM");
   },
 
   getId: function() {
@@ -63,7 +66,9 @@ const Post = React.createClass({
 
         {/*<div className="stream-post__body">*/}
         <div {...postText} className="stream-post__text" />
-        {/*<div {...} className="stream-post__timestamp" />*/}
+        <div className="stream-post__timestamp">
+          { this.getTimeStamp(true) }
+        </div>
         {/*</div>*/}
 
         {/*<PostMedia extended_entities={this.props.extended_entities} entities={this.props.entities} media={this.props.media} href="" />*/}

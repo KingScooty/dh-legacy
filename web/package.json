@@ -31,6 +31,7 @@
     "koa-morgan": "^1.0.1",
     "koa-react-view": "git+https://github.com/KingScooty/react-view.git",
     "koa-router": "^7.0.1",
+    "moment": "^2.13.0",
     "react-dom": "^15.0.2",
     "react-timeago": "^3.0.0",
     "spdy": "^3.3.1",
