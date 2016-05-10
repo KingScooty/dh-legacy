@@ -1,3 +1,5 @@
+"use strict";
+
 import React from 'react';
 import moment from 'moment';
 import TimeAgo from 'react-timeago';
@@ -7,42 +9,45 @@ import PostMedia from './PostMedia';
 
 const Post = React.createClass({
 
-  getTimeStamp: function (format) {
-    var timestamp = this.props.timestamp || this.props.created_at
-    if (!format) return timestamp;
-
-    return moment(timestamp, "ddd MMM DD HH:mm:SS ZZ YYYY").format("HH:mm a, Do MMM");
+  getTimeStamp: function (post) {
+    return post.timestamp || post.created_at
   },
 
-  getId: function() {
-    return this.props.tweet_id || this.props.id_str;
-  },
+  // getId: function(post) {
+  //   return post.tweet_id || post.id_str;
+  // },
 
-  getScreenName: function() {
-    var screenName = this.props.screen_name || this.props.user.screen_name;
-    var screenNameObject = {
+  getScreenName: function(post) {
+    const screenName = post.screen_name || post.user.screen_name;
+    const screenNameObject = {
       'text': screenName,
       'url': `https://twitter.com/${screenName}`
     }
+
     return screenNameObject;
   },
 
-  getStatusUrl: function() {
-    var statusId = this.props.tweet_id || this.props.id_str
+  formatTimeStamp: function(timestamp) {
+    return moment(timestamp, "ddd MMM DD HH:mm:SS ZZ YYYY").format("HH:mm a, Do MMM");
+  },
+
+  getStatusUrl: function(post) {
+    const statusId = post.tweet_id || post.id_str;
+
     return `https://twitter.com/statuses/${statusId}`;
   },
 
-  getProfileImage: function() {
+  getProfileImage: function(screenName) {
     /**
      * Query the puclic Twitter API for the profile image rather than use
      * the stale CDN link in the data:
      * http://stackoverflow.com/a/29699589/155740
      */
-    return `https://twitter.com/${this.getScreenName().text}/profile_image?size=bigger`;
+    return `https://twitter.com/${screenName}/profile_image?size=bigger`;
   },
 
-  getPostText: function() {
-    var postBody = twitter.autoLink(twitter.htmlEscape(this.props.text));
+  getPostText: function(post) {
+    var postBody = twitter.autoLink(twitter.htmlEscape(post.text));
 
     return {
       dangerouslySetInnerHTML: {
@@ -52,29 +57,38 @@ const Post = React.createClass({
   },
 
   render: function() {
-    var postText = this.getPostText();
+    const post = this.props;
+
+    const screenName = this.getScreenName(post);
+    const statusUrl = this.getStatusUrl(post);
+    const postText = this.getPostText(post);
+    const timestamp = this.getTimeStamp(post);
+
+    const profileImage = this.getProfileImage(screenName.text);
+    const timestampFormatted = this.formatTimeStamp(timestamp);
+
 
     return (
       <div className="stream-post">
 
         <div className="stream-post__aside">
-          <a href={ this.getStatusUrl() } target="_blank">
-          <TimeAgo className="stream-post__timeago" date={ this.getTimeStamp() } /></a>
+          <a href={ statusUrl } target="_blank">
+          <TimeAgo className="stream-post__timeago" date={ timestamp } /></a>
         </div>
 
         <div className="stream-post__profile-image">
-          <img src={ this.getProfileImage() } />
+          <img src={ profileImage } />
         </div>
 
         <div className="stream-post__screen-name">
-          <a href={ this.getScreenName().url }>@{ this.getScreenName().text }</a>
+          <a href={ screenName.url }>@{ screenName.text }</a>
         </div>
 
         {/*<div className="stream-post__body">*/}
         <div {...postText} className="stream-post__text" />
 
         <div className="stream-post__timestamp">
-          <a href={ this.getStatusUrl() } target="_blank">{ this.getTimeStamp(true) }</a>
+          <a href={ statusUrl } target="_blank">{ timestampFormatted }</a>
         </div>
         {/*</div>*/}
 
