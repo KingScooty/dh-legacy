@@ -9,12 +9,10 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import Post from '../';
+import PostMedia from '../PostMedia';
 
 var tweetSimple = require('./mocks/tweet--simple.json');
-var tweetMediaSimple = require('./mocks/tweet_with_media--simple.json');
-
 var tweetFull = require('./mocks/tweet--full.json');
-var tweetMediaFull = require('./mocks/tweet_with_media--full.json');
 
 chai.use(sinonChai);
 
@@ -161,6 +159,19 @@ describe('<Post />', function() {
         expect(timestamp.text()).to.equal('21:35 pm, 30th May');
       });
 
+      it('calls <PostMedia /> with correct props', function() {
+        const postMedia = shallow(<Post {...tweetSimple} />).find(PostMedia);
+        const expectedHref = `https://twitter.com/statuses/${tweetSimple.tweet_id}`;
+
+        expect(postMedia).to.exist;
+        expect(postMedia.prop('extended_entities'))
+          .to.not.exist;
+        expect(postMedia.prop('entities'))
+          .to.not.exist;
+        expect(postMedia.prop('media')).to.equal(tweetSimple.media);
+        expect(postMedia.prop('href')).equal(expectedHref);
+      });
+
     });
 
 
@@ -210,6 +221,19 @@ describe('<Post />', function() {
         const timestamp = wrapper.find('.stream-post__timestamp');
 
         expect(timestamp.text()).to.equal('05:07 am, 1st Nov');
+      });
+
+      it('calls <PostMedia /> with correct props', function() {
+        const postMedia = shallow(<Post {...tweetFull} />).find(PostMedia);
+        const expectedHref = `https://twitter.com/statuses/${tweetFull.id_str}`;
+
+        expect(postMedia).to.exist;
+        expect(postMedia.prop('extended_entities'))
+          .to.deep.equal(tweetFull.exextended_entities);
+        expect(postMedia.prop('entities'))
+          .to.deep.equal(tweetFull.entities);
+        expect(postMedia.prop('media')).to.not.exist;
+        expect(postMedia.prop('href')).equal(expectedHref);
       });
     });
 

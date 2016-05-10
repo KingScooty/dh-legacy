@@ -58,7 +58,7 @@ describe('<PostMedia />', function() {
 
     it('renders the media object with correct props', function() {
       const wrapper = shallow(<PostMedia {...legacyMedia} />);
-      const image = wrapper.find('.stream-post__media-item');
+      const image = wrapper.find('.stream-post__media-item').find('img');
       const expectedSrc = legacyMedia.media;
 
       expect(image.prop('src')).to.equal(expectedSrc);
@@ -83,7 +83,7 @@ describe('<PostMedia />', function() {
 
     it('renders the media object with correct props', function() {
       const wrapper = shallow(<PostMedia {...media2014 } />);
-      const image = wrapper.find('.stream-post__media-item');
+      const image = wrapper.find('.stream-post__media-item').find('img');
       const expectedSrc = media2014.entities.media[0].media_url;
 
       expect(image.prop('src')).to.equal(expectedSrc);
@@ -108,7 +108,7 @@ describe('<PostMedia />', function() {
 
     it('renders the media object with correct props', function() {
       const wrapper = shallow(<PostMedia {...mediaModern } />);
-      const image = wrapper.find('.stream-post__media-item');
+      const image = wrapper.find('.stream-post__media-item').find('img');
       const expectedSrc = mediaModern.extended_entities.media[0].media_url;
 
       expect(image.prop('src')).to.equal(expectedSrc);
@@ -123,7 +123,7 @@ describe('<PostMedia />', function() {
 
     it('renders multiple media objects with correct props', function() {
       const wrapper = shallow(<PostMedia {...mediaModernMultiple } />);
-      const images = wrapper.find('.stream-post__media-item');
+      const images = wrapper.find('.stream-post__media-item').find('img');
       const expectedSrc = mediaModernMultiple.extended_entities.media;
 
       images.forEach(function(image, index) {

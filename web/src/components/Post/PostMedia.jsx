@@ -4,7 +4,13 @@ var PostMedia = React.createClass({
 
   imgElement: function(media) {
     return media.map((media, index) => {
-      return <img className="stream-post__media-item" src={ media.media_url } key={ index } />
+      return (
+        <div className="stream-post__media-item" key={ index }>
+          <a href={this.props.href}>
+            <img src={ media.media_url } />
+          </a>
+        </div>
+      );
     });
   },
 
@@ -28,9 +34,7 @@ var PostMedia = React.createClass({
 
     return (
       <div className="stream-post__media">
-        <a href={this.props.href}>
-          { media }
-        </a>
+        { media }
       </div>
     );
   }

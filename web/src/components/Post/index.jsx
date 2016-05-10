@@ -88,7 +88,7 @@ const Post = React.createClass({
         </div>
         {/*</div>*/}
 
-        {/*<PostMedia extended_entities={this.props.extended_entities} entities={this.props.entities} media={this.props.media} href="" />*/}
+        <PostMedia extended_entities={this.props.extended_entities} entities={this.props.entities} media={this.props.media} href={ statusUrl } />
       </div>
     );
   }
