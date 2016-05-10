@@ -13,9 +13,9 @@ const Post = React.createClass({
     return post.timestamp || post.created_at
   },
 
-  // getId: function(post) {
-  //   return post.tweet_id || post.id_str;
-  // },
+  formatTimeStamp: function(timestamp) {
+    return moment(timestamp, "ddd MMM DD HH:mm:SS ZZ YYYY").format("HH:mm a, Do MMM");
+  },
 
   getScreenName: function(post) {
     const screenName = post.screen_name || post.user.screen_name;
@@ -25,10 +25,6 @@ const Post = React.createClass({
     }
 
     return screenNameObject;
-  },
-
-  formatTimeStamp: function(timestamp) {
-    return moment(timestamp, "ddd MMM DD HH:mm:SS ZZ YYYY").format("HH:mm a, Do MMM");
   },
 
   getStatusUrl: function(post) {

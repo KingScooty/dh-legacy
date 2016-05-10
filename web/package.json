@@ -21,7 +21,9 @@
     "enzyme": "^2.2.0",
     "lodash": "^4.11.2",
     "mocha": "^2.4.5",
-    "react-addons-test-utils": "^15.0.2"
+    "react-addons-test-utils": "^15.0.2",
+    "sinon": "^1.17.4",
+    "sinon-chai": "^2.8.0"
   },
   "dependencies": {
     "bluebird": "^3.3.5",
