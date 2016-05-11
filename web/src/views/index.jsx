@@ -8,7 +8,7 @@ var React = require('react');
 var Header = require('../components/Header');
 var Stream = require('../components/Stream');
 
-var data = require('../components/Post/__specs__/mocks/tweet_2015_with_multiple_media.json');
+// var data = require('../components/Post/__specs__/mocks/tweet_2015_with_multiple_media.json');
 
 var index = React.createClass({
   propTypes: {
@@ -19,7 +19,7 @@ var index = React.createClass({
   render: function() {
     // pass data to client side js
     // xss!!!
-    var dataScript = `window.__list__ = '${escapeHtml(JSON.stringify(this.props.list))}';`;
+    var dataScript = `window.__posts__ = '${escapeHtml(JSON.stringify(this.props.data))}';`;
     // render as a dynamic react component
     // var contentString = ReactDOMServer.renderToString(<Header list={this.props.list} />);
 
@@ -27,7 +27,7 @@ var index = React.createClass({
       <Layout title={this.props.title}>
         <h1>{this.props.title}</h1>
         <Header />
-        <Stream posts={[data]} />
+        <Stream posts={this.props.data} />
 
         {/*<div id="content" dangerouslySetInnerHTML={{__html: contentString}}></div>*/}
 

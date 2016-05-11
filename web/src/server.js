@@ -52,13 +52,16 @@ register({
 web.use(logger);
 
 
+var tweetData = require('./components/Post/__specs__/mocks/tweet_2015_with_multiple_media.json');
+
 web.use(function* () {
   this.render('index', {
     title: 'List',
     list: [
       'hello koa',
       'hello react'
-    ]
+    ],
+    data: [tweetData]
   });
 });
 
