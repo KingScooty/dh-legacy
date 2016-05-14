@@ -45,6 +45,7 @@
     "koa-react-view": "git+https://github.com/KingScooty/react-view.git",
     "koa-router": "^7.0.1",
     "koa-static": "^2.0.0",
+    "marked": "^0.3.5",
     "moment": "^2.13.0",
     "react-dom": "^15.0.2",
     "react-redux": "^4.4.5",
@@ -73,6 +74,7 @@
         }
       ],
       "babel/object-curly-spacing": 0,
+      "react/no-danger": 0,
       "react/jsx-curly-spacing": [
         2,
         "always"
@@ -81,6 +83,12 @@
         2,
         "always"
       ]
-    }
+    },
+    "overrides": [
+      {
+        "files": "__specs__/*.js",
+        "envs": ["node", "mocha"]
+      }
+    ]
   }
 }
