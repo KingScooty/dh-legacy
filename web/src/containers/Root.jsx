@@ -1,7 +1,6 @@
 'use strict';
 
-// import React from 'react';
-var React = require('react');
+import React from 'react';
 
 const Logo = require('../components/Logo');
 const EventInfo = require('../components/EventInfo');

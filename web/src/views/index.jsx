@@ -1,7 +1,7 @@
 var React = require('react');
 var ReactDOMServer = require('react-dom/server');
 
-var DigitalHeroes = require('../containers/digital-heroes');
+var Root = require('../containers/Root');
 
 var Layout = require('./layout');
 
@@ -20,7 +20,7 @@ var index = React.createClass({
 
     // render as a dynamic react component
     var appString = ReactDOMServer.renderToString(
-      <DigitalHeroes posts={ this.props.posts } />
+      <Root posts={ this.props.posts } />
     );
 
     return (

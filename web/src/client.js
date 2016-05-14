@@ -1,13 +1,13 @@
 'use strict';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 
 const mountNode = document.getElementById('app');
 
 const hydratedState = JSON.parse(document.getElementById('__INITIAL_STATE__').innerHTML);
 
-const DigitalHeroes = require('./containers/digital-heroes');
+const Root = require('./containers/Root');
 
 // function renderApp(locale) {
 //   const app = require('./app');
@@ -20,4 +20,4 @@ const DigitalHeroes = require('./containers/digital-heroes');
 // }
 // Client(window.__INITIAL_STATE__), document.getElementById('app')
 
-ReactDOM.render(<DigitalHeroes posts={ hydratedState } />, mountNode);
+render(<Root posts={ hydratedState } />, mountNode);
