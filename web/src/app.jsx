@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react');
-var Root = require('./containers/Root');
+var Home = require('./containers/Home');
 
 var App = React.createClass({
   propTypes: {
@@ -12,7 +12,7 @@ var App = React.createClass({
     return (
       <div id="app">
         {/*{ this.props.children }*/}
-        <Root posts={this.props.posts} />
+        <Home posts={this.props.posts} />
       </div>
     );
   }

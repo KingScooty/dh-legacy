@@ -6,7 +6,7 @@ const Logo = require('../components/Logo');
 const EventInfo = require('../components/EventInfo');
 const Stream = require('../components/Stream');
 
-var digitalHeroes = React.createClass({
+var Home = React.createClass({
   propTypes: {
     posts: React.PropTypes.array.isRequired
   },
@@ -34,4 +34,4 @@ var digitalHeroes = React.createClass({
   }
 });
 
-module.exports = digitalHeroes;
+module.exports = Home;
