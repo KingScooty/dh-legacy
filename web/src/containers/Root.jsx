@@ -25,7 +25,7 @@ var digitalHeroes = React.createClass({
     };
 
     return (
-      <div id="app" className="app">
+      <div>
         <Logo {...logoProps} />
         <EventInfo {...eventInfoProps} />
         <Stream posts={ posts } />

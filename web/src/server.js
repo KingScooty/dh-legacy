@@ -12,9 +12,10 @@ const Koa = require('koa');
 const web = new Koa();
 
 const logger = morgan('combined');
+const srcPath = __dirname;
 const viewpath = path.join(__dirname, 'views');
-const containerPath = path.join(__dirname, 'containers');
-const componentpath = path.join(__dirname, 'components');
+// const containerPath = path.join(__dirname, 'containers');
+// const componentpath = path.join(__dirname, 'components');
 
 const serve = require('koa-static');
 
@@ -35,9 +36,10 @@ react(web,
 // best to precompile in production deploys for perf + reliability
 register({
   only: [
-    viewpath,
-    containerPath,
-    componentpath
+    srcPath
+    // viewpath,
+    // containerPath,
+    // componentpath
   ]
 });
 
@@ -68,6 +70,13 @@ web.use(function* () {
     posts: [tweetData, tweetData, tweetData]
   });
 });
+
+
+
+// router.get('*', (ctx, next) => {
+//
+// });
+
 
 // web
 //   .use(router.routes())

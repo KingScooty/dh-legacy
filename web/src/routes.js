@@ -1,32 +1,28 @@
-const router = require('koa-router')();
-const Promise = require('bluebird');
-const co = Promise.coroutine;
+// modules/routes.js
+import React from 'react'
+import { Route, IndexRoute } from 'react-router'
+import Root from './containers/Root'
+// import About from './About'
+// import Repos from './Repos'
+// import Repo from './Repo'
+// import Home from './Home'
 
-/**
- * GET all years.
- */
-
-router.get('/', (ctx, next) => {
-  ctx.body = {
-    body: 'All the events!'
-  }
-});
-
-/**
- * GET year by :year.
- */
-
-router.get('/:year', co(function *(ctx, next) {
-  const year_query = `dh_${ctx.params.year}`;
-  if (!databaseList.hasOwnProperty(year_query)) return ctx.throw(404);
-
-  // ctx.body = yield eventModel.listAll(year_query)
-
-  // this would go in some sort of controller;
-  web.use(function* () {
-    this.render('index', yield eventModel.listAll(year_query));
-  });
-}));
+module.exports = (
+  <Route path="/" component={Root}>
+    {/*<IndexRedirect to="/welcome" />*/}
+    <IndexRoute component={Home}/>
+    <Route path="/repos" component={Repos}>
+      <Route path="/repos/:userName/:repoName" component={Repo}/>
+    </Route>
+  </Route>
+);
 
 
-module.exports = router;
+
+//
+// var routes = (
+//   <Route name="layout" path="/" handler={Feed} ignoreScrollBehavior>
+//     <Route name="live" path="/halloween15" handler={LiveFeed}/>
+//     <Route name="year" path="/:year" handler={ArchiveFeed}/>
+//   </Route>
+// );
