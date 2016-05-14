@@ -3,8 +3,8 @@ var classNames = require('classnames');
 
 var Logo = React.createClass({
   propTypes: {
-    title: React.PropTypes.string.isRequired,
-    eventTag: React.ProtoTypes.string.isRequired
+    // title: React.PropTypes.string.isRequired,
+    // eventTag: React.ProtoTypes.string.isRequired
   },
 
   // getFeed: function() {

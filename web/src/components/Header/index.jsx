@@ -1,15 +1,13 @@
 var React = require('react');
 
 var Feed = React.createClass({
-
-  getFeed: function() {
+  getFeed: function () {
     return (
       <h1>HELLO!!!</h1>
-    )
+    );
   },
 
-  render: function() {
-
+  render: function () {
     var feed = this.getFeed();
 
     return (

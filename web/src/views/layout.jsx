@@ -5,15 +5,15 @@ var Layout = React.createClass({
     title: React.PropTypes.string
   },
 
-  render: function() {
+  render: function () {
     return (
       <html>
         <head>
-          <title>{this.props.title}</title>
-          {/*<link rel="stylesheet" href="/css/main.css" />*/}
+          <title>{ this.props.title }</title>
+          { /* <link rel="stylesheet" href="/css/main.css" /> */ }
         </head>
         <body>
-          {this.props.children}
+          { this.props.children }
           <script src="/bundle.js"></script>
         </body>
       </html>
