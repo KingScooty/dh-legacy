@@ -26,14 +26,14 @@ var Logo = React.createClass({
     );
 
     return (
-      <div class={ logoClasses }>
-        <div class="logo__ribbon"><div class="logo__ribbon__text"></div></div>
+      <div className={ logoClasses }>
+        <div className="logo__ribbon"><div className="logo__ribbon__text"></div></div>
 
-        <a href="/" class="logo__base">{ title }</a>
+        <a href="/" className="logo__base">{ title }</a>
 
-        <div class="logo__props logo__props--engaged">
-          <div class="lightsaber lightsaber--red"></div>
-          <div class="lightsaber lightsaber--blue lightsaber--flipped"></div>
+        <div className="logo__props logo__props--engaged">
+          <div className="lightsaber lightsaber--red"></div>
+          <div className="lightsaber lightsaber--blue lightsaber--flipped"></div>
         </div>
       </div>
     );
