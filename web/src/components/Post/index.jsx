@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 import React from 'react';
 import moment from 'moment';
@@ -8,32 +8,37 @@ import twitter from 'twitter-text';
 import PostMedia from './PostMedia';
 
 const Post = React.createClass({
+  propTypes: {
+    entities: React.PropTypes.node,
+    extended_entities: React.PropTypes.node,
+    media: React.PropTypes.node
+  },
 
   getTimeStamp: function (post) {
-    return post.timestamp || post.created_at
+    return post.timestamp || post.created_at;
   },
 
-  formatTimeStamp: function(timestamp) {
-    return moment(timestamp, "ddd MMM DD HH:mm:SS ZZ YYYY").format("HH:mm a, Do MMM");
+  formatTimeStamp: function (timestamp) {
+    return moment(timestamp, 'ddd MMM DD HH:mm:SS ZZ YYYY').format('HH:mm a, Do MMM');
   },
 
-  getScreenName: function(post) {
+  getScreenName: function (post) {
     const screenName = post.screen_name || post.user.screen_name;
     const screenNameObject = {
-      'text': screenName,
-      'url': `https://twitter.com/${screenName}`
-    }
+      text: screenName,
+      url: `https://twitter.com/${screenName}`
+    };
 
     return screenNameObject;
   },
 
-  getStatusUrl: function(post) {
+  getStatusUrl: function (post) {
     const statusId = post.tweet_id || post.id_str;
 
     return `https://twitter.com/statuses/${statusId}`;
   },
 
-  getProfileImage: function(screenName) {
+  getProfileImage: function (screenName) {
     /**
      * Query the puclic Twitter API for the profile image rather than use
      * the stale CDN link in the data:
@@ -42,17 +47,17 @@ const Post = React.createClass({
     return `https://twitter.com/${screenName}/profile_image?size=bigger`;
   },
 
-  getPostText: function(post) {
+  getPostText: function (post) {
     var postBody = twitter.autoLink(twitter.htmlEscape(post.text));
 
     return {
       dangerouslySetInnerHTML: {
-        __html : postBody
+        __html: postBody
       }
-    }
+    };
   },
 
-  render: function() {
+  render: function () {
     const post = this.props;
 
     const screenName = this.getScreenName(post);
@@ -63,13 +68,13 @@ const Post = React.createClass({
     const profileImage = this.getProfileImage(screenName.text);
     const timestampFormatted = this.formatTimeStamp(timestamp);
 
-
     return (
       <div className="stream-post">
 
         <div className="stream-post__aside">
           <a href={ statusUrl } target="_blank">
-          <TimeAgo className="stream-post__timeago" date={ timestamp } /></a>
+            <TimeAgo className="stream-post__timeago" date={ timestamp } />
+          </a>
         </div>
 
         <div className="stream-post__profile-image">
@@ -80,15 +85,13 @@ const Post = React.createClass({
           <a href={ screenName.url }>@{ screenName.text }</a>
         </div>
 
-        {/*<div className="stream-post__body">*/}
         <div {...postText} className="stream-post__text" />
 
         <div className="stream-post__timestamp">
           <a href={ statusUrl } target="_blank">{ timestampFormatted }</a>
         </div>
-        {/*</div>*/}
 
-        <PostMedia extended_entities={this.props.extended_entities} entities={this.props.entities} media={this.props.media} href={ statusUrl } />
+        <PostMedia extended_entities={ this.props.extended_entities } entities={ this.props.entities } media={ this.props.media } href={ statusUrl } />
       </div>
     );
   }
