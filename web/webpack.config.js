@@ -1,19 +1,32 @@
 
 
 module.exports = {
-  entry: './src/views/index.jsx',
+  entry: './src/client.js',
   output: {
-    filename: './src/views/index.js'
+    filename: './src/dist/bundle.js'
+  },
+  resolve: {
+    extensions: ['', '.js', '.jsx']
   },
   module: {
     loaders: [
       {
         test: /\.jsx?$/,
-        loader: 'babel',
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel', // 'babel-loader' is also a legal name to reference
         query: {
-          presets: ['react']
+          presets: ['es2015', 'react']
         }
       }
     ]
+    // loaders: [
+    //   {
+    //     test: /\.jsx?$/,
+    //     loader: 'babel',
+    //     query: {
+    //       presets: ['react', 'es2015']
+    //     }
+    //   }
+    // ]
   }
 };

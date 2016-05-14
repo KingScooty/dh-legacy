@@ -3,15 +3,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// const mountNode - document.getElementById("");
-const dehydratedState = window.__INITIAL_STATE__;
+const mountNode = document.getElementById("stream");
 
-function renderApp(locale) {
-  const app = require('./app');
+const hydratedState = JSON.parse(document.getElementById('__INITIAL_STATE__').innerHTML);
 
-  app.rehydrate(dehydratedState, (err, context) => {
-    if (err) {
-      throw(err);
-    }
-  });
-}
+const Stream = require('./components/Stream');
+
+// function renderApp(locale) {
+//   const app = require('./app');
+
+  // app.rehydrate(dehydratedState, (err, context) => {
+  //   if (err) {
+  //     throw(err);
+  //   }
+  // });
+// }
+// Client(window.__INITIAL_STATE__), document.getElementById('app')
+
+ ReactDOM.render(<Stream posts={hydratedState} />, mountNode);

@@ -1,14 +1,11 @@
-// var Content = require('../components/cheekyComponent');
 var escapeHtml = require('escape-html');
 var Layout = require('./layout');
 var React = require('react');
-
-// var ReactDOMServer = require('react-dom/server');
+var ReactDOMServer = require('react-dom/server');
 
 var Header = require('../components/Header');
 var Stream = require('../components/Stream');
 
-// var data = require('../components/Post/__specs__/mocks/tweet_2015_with_multiple_media.json');
 
 var index = React.createClass({
   propTypes: {
@@ -16,22 +13,26 @@ var index = React.createClass({
     list: React.PropTypes.array
   },
 
+  safeStringify: function(obj) {
+    return JSON.stringify(obj).replace(/<\/script/g, '<\\/script').replace(/<!--/g, '<\\!--')
+  },
+
   render: function() {
-    // pass data to client side js
-    // xss!!!
-    var dataScript = `window.__posts__ = '${escapeHtml(JSON.stringify(this.props.data))}';`;
+    var dataScript = this.safeStringify(this.props.posts);
+
     // render as a dynamic react component
-    // var contentString = ReactDOMServer.renderToString(<Header list={this.props.list} />);
+    var streamString = ReactDOMServer.renderToString(
+      <Stream posts={this.props.posts} />
+    );
 
     return (
       <Layout title={this.props.title}>
         <h1>{this.props.title}</h1>
         <Header />
-        <Stream posts={this.props.data} />
+        
+        <div id="stream" class="stream" dangerouslySetInnerHTML={{__html: streamString}} />
 
-        {/*<div id="content" dangerouslySetInnerHTML={{__html: contentString}}></div>*/}
-
-        <script dangerouslySetInnerHTML={{__html: dataScript}}></script>
+        <script charSet="utf-8" id="__INITIAL_STATE__" type="application/json" dangerouslySetInnerHTML={{__html: dataScript}}></script>
       </Layout>
     );
   }

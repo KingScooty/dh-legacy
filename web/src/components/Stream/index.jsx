@@ -16,7 +16,7 @@ var Stream = React.createClass({
     var Posts = this.getPosts();
 
     return (
-      <div className="stream">
+      <div id="stream" className="stream">
         <div className="stream__header">
 
           <div className="live-status">LIVE</div>

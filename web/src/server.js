@@ -16,6 +16,10 @@ const logger = Morgan('combined');
 const componentpath = path.join(__dirname, 'components');
 const viewpath = path.join(__dirname, 'views');
 
+const serve = require('koa-static');
+
+web.use(serve(__dirname + '/dist'));
+
 web.use(Compress({
     flush: require('zlib').Z_SYNC_FLUSH
 }));
@@ -61,7 +65,7 @@ web.use(function* () {
       'hello koa',
       'hello react'
     ],
-    data: [tweetData]
+    posts: [tweetData]
   });
 });
 
