@@ -1,27 +1,27 @@
 'use strict';
 // const Promise = require('bluebird');
 // const co = Promise.coroutine;
-const register = require('babel-register');
-const Compress = require('koa-compress');
-const Morgan = require('koa-morgan');
-const react = require('koa-react-view');
 const path = require('path');
-
+const register = require('babel-register');
+const compress = require('koa-compress');
+const morgan = require('koa-morgan');
+const react = require('koa-react-view');
 // middleware
 
 const Koa = require('koa');
 const web = new Koa();
 
-const logger = Morgan('combined');
-const componentpath = path.join(__dirname, 'components');
+const logger = morgan('combined');
 const viewpath = path.join(__dirname, 'views');
+const containerPath = path.join(__dirname, 'containers');
+const componentpath = path.join(__dirname, 'components');
 
 const serve = require('koa-static');
 
-web.use(serve(__dirname + '/dist'));
+web.use(serve(path.join(__dirname, 'dist')));
 
-web.use(Compress({
-    flush: require('zlib').Z_SYNC_FLUSH
+web.use(compress({
+  flush: require('zlib').Z_SYNC_FLUSH
 }));
 
 react(web,
@@ -36,6 +36,7 @@ react(web,
 register({
   only: [
     viewpath,
+    containerPath,
     componentpath
   ]
 });
@@ -54,7 +55,6 @@ register({
 //   .use(router.allowedMethods());
 
 web.use(logger);
-
 
 var tweetData = require('./components/Post/__specs__/mocks/tweet_2015_with_multiple_media.json');
 
