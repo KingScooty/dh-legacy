@@ -12,7 +12,8 @@ describe('<Stream />', function() {
   function mockPost(overrides) {
     var mock = {
       title: "This is a dummy tweet",
-      date: "5 months ago"
+      date: "5 months ago",
+      text: 'This is some text'
     }
 
     return overrides || mock;
