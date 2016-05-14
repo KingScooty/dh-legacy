@@ -10,10 +10,10 @@ import PostMedia from './PostMedia';
 const Post = React.createClass({
   propTypes: {
     screen_name: React.PropTypes.string,
-    user: React.PropTypes.object.isRequired,
+    user: React.PropTypes.object,
     timestamp: React.PropTypes.string,
     created_at: React.PropTypes.string,
-    tweet_id: React.PropTypes.string,
+    tweet_id: React.PropTypes.number,
     id_str: React.PropTypes.string,
     text: React.PropTypes.string.isRequired,
     entities: React.PropTypes.object,

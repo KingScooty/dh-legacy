@@ -1,3 +1,5 @@
+/* eslint-env node, mocha */
+
 var chai = require('chai');
 var expect = chai.expect;
 var _ = require('lodash');
@@ -16,22 +18,21 @@ var tweetFull = require('./mocks/tweet--full.json');
 
 chai.use(sinonChai);
 
-describe('<Post />', function() {
-
+describe('<Post />', function () {
   function mockPost(type, overrides) {
     var mockType = type || tweetFull;
     return _.merge(mockType, overrides);
   }
 
-  describe('getTimeStamp()', function() {
-    it('returns the timestamp when using old data format', function() {
+  describe('getTimeStamp()', function () {
+    it('returns the timestamp when using old data format', function () {
       const timestamp = Post.prototype.getTimeStamp(tweetSimple);
       const expectedTimeStamp = tweetSimple.timestamp;
 
       expect(timestamp).to.equal(expectedTimeStamp);
     });
 
-    it('returns the timestamp when using new data format', function() {
+    it('returns the timestamp when using new data format', function () {
       const timestamp = Post.prototype.getTimeStamp(tweetFull);
       const expectedTimeStamp = tweetFull.created_at;
 
@@ -39,8 +40,8 @@ describe('<Post />', function() {
     });
   });
 
-  describe('formatTimeStamp()', function() {
-    it('returns a formatted timestamp', function() {
+  describe('formatTimeStamp()', function () {
+    it('returns a formatted timestamp', function () {
       const formattedTimestamp = Post.prototype.formatTimeStamp(tweetFull.created_at);
       var expectedFormattedTimestamp = '05:07 am, 1st Nov';
 
@@ -48,37 +49,37 @@ describe('<Post />', function() {
     });
   });
 
-  describe('getScreenName()', function() {
-    it('returns a screen name object when using old data format', function() {
+  describe('getScreenName()', function () {
+    it('returns a screen name object when using old data format', function () {
       const screenNameObject = Post.prototype.getScreenName(tweetSimple);
       var expectedScreeNameObject = {
         text: 'KingScooty',
         url: 'https://twitter.com/KingScooty'
-      }
+      };
 
       expect(screenNameObject).to.deep.equal(expectedScreeNameObject);
     });
 
-    it('returns a screen name object when using new data format', function() {
+    it('returns a screen name object when using new data format', function () {
       const screenNameObject = Post.prototype.getScreenName(tweetFull);
       var expectedScreeNameObject = {
         text: 'KingScooty',
         url: 'https://twitter.com/KingScooty'
-      }
+      };
 
       expect(screenNameObject).to.deep.equal(expectedScreeNameObject);
     });
   });
 
-  describe('getStatusUrl()', function() {
-    it('returns a status url when using old data format', function() {
+  describe('getStatusUrl()', function () {
+    it('returns a status url when using old data format', function () {
       const statusUrl = Post.prototype.getStatusUrl(tweetSimple);
       var expectedStatusUrl = `https://twitter.com/statuses/${tweetSimple.tweet_id}`;
 
       expect(statusUrl).to.equal(expectedStatusUrl);
     });
 
-    it('returns a status url when using new data format', function() {
+    it('returns a status url when using new data format', function () {
       const statusUrl = Post.prototype.getStatusUrl(tweetFull);
       var expectedStatusUrl = `https://twitter.com/statuses/${tweetFull.id_str}`;
 
@@ -86,17 +87,17 @@ describe('<Post />', function() {
     });
   });
 
-  describe('getProfileImage()', function() {
-    it('returns a profile image url based on a screen name', function() {
+  describe('getProfileImage()', function () {
+    it('returns a profile image url based on a screen name', function () {
       const getProfileImage = Post.prototype.getProfileImage('KingScooty');
-      var expectedProfileImage = 'https://twitter.com/KingScooty/profile_image?size=bigger'
+      var expectedProfileImage = 'https://twitter.com/KingScooty/profile_image?size=bigger';
 
       expect(getProfileImage).to.equal(expectedProfileImage);
     });
   });
 
-  describe('getPostText()', function() {
-    it('calls twitter-text with the correct props', function() {
+  describe('getPostText()', function () {
+    it('calls twitter-text with the correct props', function () {
       let sandbox = sinon.sandbox.create();
 
       let htmlEscapeSpy = sandbox.spy(twitter, 'htmlEscape');
@@ -111,9 +112,9 @@ describe('<Post />', function() {
     });
   });
 
-  describe('render()', function() {
-    describe('simple data format', function() {
-      it('calls <TimeAgo /> with correct props', function() {
+  describe('render()', function () {
+    describe('simple data format', function () {
+      it('calls <TimeAgo /> with correct props', function () {
         const post = mockPost(tweetSimple);
         const wrapper = shallow(<Post {...post} />);
         const timeAgo = wrapper.find('.stream-post__timeago');
@@ -121,7 +122,7 @@ describe('<Post />', function() {
         expect(timeAgo.prop('date')).to.equal(post.timestamp);
       });
 
-      it('renders post text', function() {
+      it('renders post text', function () {
         const post = mockPost(tweetSimple);
         const wrapper = render(<Post {...post} />);
 
@@ -129,7 +130,7 @@ describe('<Post />', function() {
         expect(postText.text()).to.contain(post.text);
       });
 
-      it('renders screen name', function() {
+      it('renders screen name', function () {
         const post = mockPost(tweetSimple);
         const wrapper = shallow(<Post {...post} />);
         const screenNameWrapper = wrapper.find('.stream-post__screen-name');
@@ -139,7 +140,7 @@ describe('<Post />', function() {
         expect(screenName.text()).to.equal(`@${post.screen_name}`);
       });
 
-      it('renders a profile image', function() {
+      it('renders a profile image', function () {
         const post = mockPost(tweetSimple);
         const wrapper = shallow(<Post {...post} />);
 
@@ -150,7 +151,7 @@ describe('<Post />', function() {
         expect(image.prop('src')).to.equal(expectedProfileImage);
       });
 
-      it('renders a formatted timestamp', function() {
+      it('renders a formatted timestamp', function () {
         const post = mockPost(tweetSimple);
         const wrapper = shallow(<Post {...post} />);
 
@@ -159,7 +160,7 @@ describe('<Post />', function() {
         expect(timestamp.text()).to.equal('21:35 pm, 30th May');
       });
 
-      it('calls <PostMedia /> with correct props', function() {
+      it('calls <PostMedia /> with correct props', function () {
         const postMedia = shallow(<Post {...tweetSimple} />).find(PostMedia);
         const expectedHref = `https://twitter.com/statuses/${tweetSimple.tweet_id}`;
 
@@ -171,12 +172,10 @@ describe('<Post />', function() {
         expect(postMedia.prop('media')).to.equal(tweetSimple.media);
         expect(postMedia.prop('href')).equal(expectedHref);
       });
-
     });
 
-
-    describe('full data format', function() {
-      it('calls <TimeAgo /> with correct props', function() {
+    describe('full data format', function () {
+      it('calls <TimeAgo /> with correct props', function () {
         const post = mockPost();
         const wrapper = shallow(<Post {...post} />);
         const timeAgo = wrapper.find('.stream-post__timeago');
@@ -184,8 +183,7 @@ describe('<Post />', function() {
         expect(timeAgo.prop('date')).to.equal(post.created_at);
       });
 
-
-      it('renders post text', function() {
+      it('renders post text', function () {
         const post = mockPost();
         const wrapper = render(<Post {...post} />);
         const postText = wrapper.find('.stream-post__text');
@@ -193,7 +191,7 @@ describe('<Post />', function() {
         expect(postText.text()).to.contain(post.text);
       });
 
-      it('renders screen name', function() {
+      it('renders screen name', function () {
         const post = mockPost();
         const wrapper = shallow(<Post {...post} />);
         const screenNameWrapper = wrapper.find('.stream-post__screen-name');
@@ -203,7 +201,7 @@ describe('<Post />', function() {
         expect(screenName.text()).to.equal(`@${post.user.screen_name}`);
       });
 
-      it('renders a profile image', function() {
+      it('renders a profile image', function () {
         const post = mockPost();
         const wrapper = shallow(<Post {...post} />);
 
@@ -214,7 +212,7 @@ describe('<Post />', function() {
         expect(image.prop('src')).to.equal(expectedProfileImage);
       });
 
-      it('renders a formatted timestamp', function() {
+      it('renders a formatted timestamp', function () {
         const post = mockPost();
         const wrapper = shallow(<Post {...post} />);
 
@@ -223,7 +221,7 @@ describe('<Post />', function() {
         expect(timestamp.text()).to.equal('05:07 am, 1st Nov');
       });
 
-      it('calls <PostMedia /> with correct props', function() {
+      it('calls <PostMedia /> with correct props', function () {
         const postMedia = shallow(<Post {...tweetFull} />).find(PostMedia);
         const expectedHref = `https://twitter.com/statuses/${tweetFull.id_str}`;
 
@@ -236,6 +234,5 @@ describe('<Post />', function() {
         expect(postMedia.prop('href')).equal(expectedHref);
       });
     });
-
   });
 });

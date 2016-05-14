@@ -5,7 +5,7 @@ var PostMedia = React.createClass({
     entities: React.PropTypes.object,
     extended_entities: React.PropTypes.object,
     media: React.PropTypes.string,
-    href: React.PropTypes.string.isRequired
+    href: React.PropTypes.string
   },
 
   imgElement: function (media) {
