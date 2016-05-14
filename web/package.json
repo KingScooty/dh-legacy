@@ -50,6 +50,7 @@
   },
   "xo": {
     "space": true,
+    "globals": "document",
     "extends": "xo-react",
     "rules": {
       "camelcase": [2, {"properties": "never"}],
