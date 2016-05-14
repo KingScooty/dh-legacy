@@ -2,6 +2,9 @@ var React = require('react');
 var Post = require('../Post');
 
 var Stream = React.createClass({
+  propTypes: {
+    posts: React.PropTypes.array.isRequired
+  },
 
   getPosts: function() {
     return this.props.posts.map(function(post, index) {
