@@ -16,7 +16,7 @@ var digitalHeroes = React.createClass({
     var posts = this.props.posts;
 
     return (
-      <div id="app" className="app">
+      <div clasName="digital-heroes">
         <Logo />
         <EventInfo />
         <Stream posts={ posts } />
