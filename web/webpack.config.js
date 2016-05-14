@@ -10,7 +10,7 @@ module.exports = {
   ],
   output: {
     // filename: './src/dist/bundle.js'
-    path: path.join(__dirname, 'src/dist'),
+    path: path.join(__dirname, 'src/dist/'),
     filename: 'bundle.js'
   },
   resolve: {
@@ -34,12 +34,12 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin()
   ],
-  devtool: 'inline-source-map'//,
-  // devServer: {
-  //   hot: true,
-  //   proxy: {
-  //     '*': 'http://127.0.0.1:' + (process.env.PORT) || 3001
-  //   },
-  //   host: '127.0.0.1'
-  // }
+  devtool: 'inline-source-map',
+  devServer: {
+    hot: true,
+    proxy: {
+      '*': 'http://127.0.0.1:' + (process.env.PORT) || 3001
+    },
+    host: '127.0.0.1'
+  }
 };

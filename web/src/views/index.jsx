@@ -25,7 +25,6 @@ var index = React.createClass({
 
     return (
       <Layout title={ this.props.title }>
-        <h1>{ this.props.title }</h1>
 
         <div id="app" className="app" dangerouslySetInnerHTML={ {__html: appString} } />
 
