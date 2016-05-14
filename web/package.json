@@ -29,8 +29,6 @@
   "dependencies": {
     "bluebird": "^3.3.5",
     "dompurify": "^0.7.4",
-    "escape-html": "^1.0.3",
-    "jsesc": "^1.0.0",
     "koa": "^2.0.0",
     "koa-compress": "^2.0.0",
     "koa-morgan": "^1.0.1",
@@ -43,7 +41,6 @@
     "react-timeago": "^3.0.0",
     "redux": "^3.5.2",
     "spdy": "^3.3.1",
-    "twitter-text": "^1.13.4",
-    "unescape-html": "^1.0.0"
+    "twitter-text": "^1.13.4"
   }
 }
