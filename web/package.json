@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "bluebird": "^3.3.5",
+    "classnames": "^2.2.5",
     "dompurify": "^0.7.4",
     "koa": "^2.0.0",
     "koa-compress": "^2.0.0",
