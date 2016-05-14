@@ -4,7 +4,7 @@
 var React = require('react');
 
 const Logo = require('../components/Logo');
-// const EventInfo = require('../components/EventInfo');
+const EventInfo = require('../components/EventInfo');
 const Stream = require('../components/Stream');
 
 var digitalHeroes = React.createClass({
@@ -18,7 +18,7 @@ var digitalHeroes = React.createClass({
     return (
       <div id="app" className="app">
         <Logo />
-        {/*<EventInfo />*/}
+        <EventInfo />
         <Stream posts={ posts } />
       </div>
     );
