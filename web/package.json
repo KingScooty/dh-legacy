@@ -72,6 +72,7 @@
           "properties": "never"
         }
       ],
+      "babel/object-curly-spacing": 0,
       "react/jsx-curly-spacing": [
         2,
         "always"
