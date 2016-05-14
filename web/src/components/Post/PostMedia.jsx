@@ -1,12 +1,18 @@
 var React = require('react');
 
 var PostMedia = React.createClass({
+  propTypes: {
+    entities: React.PropTypes.object,
+    extended_entities: React.PropTypes.object,
+    media: React.PropTypes.string,
+    href: React.PropTypes.string.isRequired
+  },
 
-  imgElement: function(media) {
+  imgElement: function (media) {
     return media.map((media, index) => {
       return (
         <div className="stream-post__media-item" key={ index }>
-          <a href={this.props.href}>
+          <a href={ this.props.href }>
             <img src={ media.media_url } />
           </a>
         </div>
@@ -14,7 +20,7 @@ var PostMedia = React.createClass({
     });
   },
 
-  getMedia: function() {
+  getMedia: function () {
     if (this.props.extended_entities &&
         this.props.extended_entities.media) {
       return this.imgElement(this.props.extended_entities.media);
@@ -24,11 +30,11 @@ var PostMedia = React.createClass({
       return this.imgElement(this.props.entities.media);
     }
     else if (this.props.media) {
-      return this.imgElement([{ media_url: this.props.media }]);
+      return this.imgElement([{media_url: this.props.media}]);
     }
   },
 
-  render: function() {
+  render: function () {
     const media = this.getMedia();
     if (!media) return false;
 
