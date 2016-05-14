@@ -65,7 +65,7 @@ web.use(function* () {
       'hello koa',
       'hello react'
     ],
-    posts: [tweetData]
+    posts: [tweetData, tweetData, tweetData]
   });
 });
 
