@@ -6,6 +6,7 @@ module.exports = {
   entry: [
     'webpack-dev-server/client?http://127.0.0.1:3001/',
     'webpack/hot/only-dev-server',
+    'react-hot-loader/patch',
     './src/client.js'
   ],
   output: {
@@ -23,7 +24,7 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
         // loader: 'babel', // 'babel-loader' is also a legal name to reference
-        loaders: ['react-hot', 'babel'] // ,
+        loaders: ['babel'] // ,
         // query: {
         //   presets: ['es2015', 'react']
         // }
@@ -38,7 +39,7 @@ module.exports = {
   devServer: {
     hot: true,
     proxy: {
-      '*': 'http://127.0.0.1:' + (process.env.PORT) || 1337
+      '*': 'http://127.0.0.1:' + (process.env.PORT) || 3000
     },
     host: '127.0.0.1'
   }
