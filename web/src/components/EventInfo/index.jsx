@@ -4,9 +4,9 @@ var marked = require('marked');
 var EventInfo = React.createClass({
   propTypes: {
     titleLead: React.PropTypes.string,
-    titleSupport: React.ProtoTypes.string,
-    body: React.ProtoTypes.string,
-    footer: React.ProtoTypes.string
+    titleSupport: React.PropTypes.string,
+    body: React.PropTypes.string,
+    footer: React.PropTypes.string
   },
 
   convertMarkdown: function (markdown) {
