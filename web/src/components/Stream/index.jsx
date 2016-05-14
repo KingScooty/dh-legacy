@@ -1,12 +1,13 @@
 var React = require('react');
 var Post = require('../Post');
+var Navigation = require('../Navigation');
 
 var Stream = React.createClass({
   propTypes: {
     posts: React.PropTypes.array.isRequired
   },
 
-  getPosts: function() {
+  getPosts: function () {
     return this.props.posts.map(function(post, index) {
       return (
         <Post {...post} key={index} />
@@ -14,7 +15,7 @@ var Stream = React.createClass({
     });
   },
 
-  render: function() {
+  render: function () {
 
     var Posts = this.getPosts();
 
@@ -24,12 +25,7 @@ var Stream = React.createClass({
 
           <div className="live-status">LIVE</div>
 
-          <ul className="stream-navigation">
-            <li className="stream-navigation__item">2016</li>
-            <li className="stream-navigation__item">2015</li>
-            <li className="stream-navigation__item">2014</li>
-          </ul>
-
+          <Navigation />
         </div>
 
         <div className="stream__body">
