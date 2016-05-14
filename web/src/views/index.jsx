@@ -10,7 +10,7 @@ var Stream = require('../components/Stream');
 var index = React.createClass({
   propTypes: {
     title: React.PropTypes.string,
-    list: React.PropTypes.array
+    posts: React.PropTypes.array.isRequired
   },
 
   safeStringify: function(obj) {
@@ -29,7 +29,7 @@ var index = React.createClass({
       <Layout title={this.props.title}>
         <h1>{this.props.title}</h1>
         <Header />
-        
+
         <div id="stream" class="stream" dangerouslySetInnerHTML={{__html: streamString}} />
 
         <script charSet="utf-8" id="__INITIAL_STATE__" type="application/json" dangerouslySetInnerHTML={{__html: dataScript}}></script>
