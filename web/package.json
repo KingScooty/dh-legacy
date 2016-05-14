@@ -20,11 +20,15 @@
     "babel-register": "^6.7.2",
     "chai": "^3.5.0",
     "enzyme": "^2.2.0",
+    "eslint-config-xo": "^0.14.1",
+    "eslint-config-xo-react": "^0.7.0",
+    "eslint-plugin-react": "^5.1.1",
     "lodash": "^4.11.2",
     "mocha": "^2.4.5",
     "react-addons-test-utils": "^15.0.2",
     "sinon": "^1.17.4",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "xo": "^0.15.1"
   },
   "dependencies": {
     "bluebird": "^3.3.5",
@@ -43,5 +47,14 @@
     "redux": "^3.5.2",
     "spdy": "^3.3.1",
     "twitter-text": "^1.13.4"
+  },
+  "xo": {
+    "space": true,
+    "extends": "xo-react",
+    "rules": {
+      "camelcase": [2, {"properties": "never"}],
+      "react/jsx-curly-spacing": [2, "always"],
+      "react/jsx-space-before-closing": [2, "always"]
+    }
   }
 }
