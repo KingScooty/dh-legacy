@@ -15,6 +15,7 @@ const web = new Koa();
 
 const logger = morgan('combined');
 const serve = require('koa-static');
+const minify = require('html-minifier').minify;
 
 const routes = require('./routes');
 
@@ -62,7 +63,11 @@ function renderPage(renderedBody) {
           </body>
       </html>`;
 
-  return html.replace(/>\s+</g, '><'); // trim that whitespace
+  // trim that whitespace
+  return minify(html, {
+    removeAttributeQuotes: true,
+    collapseWhitespace: true
+  });
 }
 
 module.exports = web;
