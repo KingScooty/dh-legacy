@@ -4,15 +4,13 @@ import React from 'react';
 
 const Logo = require('../../components/Logo');
 const EventInfo = require('../../components/EventInfo');
-const Stream = require('../../components/Stream');
 
 var Home = React.createClass({
-  // propTypes: {
-  //   posts: React.PropTypes.array.isRequired
-  // },
+  propTypes: {
+    Stream: React.PropTypes.node.isRequired
+  },
 
   render: function () {
-    var posts = this.props.posts;
     var logoProps = {
       title: 'BLACK OPS HEROES',
       eventTag: 'blackops-2016'
