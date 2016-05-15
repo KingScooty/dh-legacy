@@ -2,8 +2,20 @@ var React = require('react');
 
 var PostMedia = React.createClass({
   propTypes: {
-    entities: React.PropTypes.object,
-    extended_entities: React.PropTypes.object,
+    entities: React.PropTypes.shape({
+      media: React.PropTypes.arrayOf(
+        React.PropTypes.shape({
+           media_url: React.PropTypes.string.isRequired
+         })
+       ),
+    }),
+    extended_entities: React.PropTypes.shape({
+      media: React.PropTypes.arrayOf(
+        React.PropTypes.shape({
+           media_url: React.PropTypes.string.isRequired
+         })
+       ),
+    }),
     media: React.PropTypes.string,
     href: React.PropTypes.string
   },
