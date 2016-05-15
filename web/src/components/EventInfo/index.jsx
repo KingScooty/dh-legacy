@@ -23,9 +23,9 @@ var EventInfo = React.createClass({
 
   render: function () {
     const getEventBody = this.convertMarkdown(this.props.body);
-    const titleLead = this.props.titleLead;
-    const titleSupport = this.props.titleSupport;
-    const footer = this.props.footer;
+    const { titleLead, titleSupport, footer } = this.props;
+    // const titleSupport = this.props.titleSupport;
+    // const footer = this.props.footer;
 
     return (
       <div className="event">
