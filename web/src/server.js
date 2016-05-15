@@ -26,7 +26,7 @@ web.use(compress({
 
 web.use(logger);
 
-web.use(async function(ctx, next) {
+web.use(function (ctx, next) {
   let appHtml;
 
   Router.match({
@@ -42,15 +42,14 @@ web.use(async function(ctx, next) {
     }
     else if (renderProps) {
       appHtml = ReactDOMServer.renderToString(<RouterContext {...renderProps} />);
-      ctx.body = appHtml;
+      ctx.body = renderPage(appHtml);
     }
+    next();
   });
-  await next();
 });
 
 function renderPage(renderedBody) {
-  let html = `
-      <!doctype html>
+  let html = `<!doctype html>
       <html>
           <head>
               <meta charset="utf-8" />
@@ -61,10 +60,9 @@ function renderPage(renderedBody) {
 
               <script src="/bundle.js"></script>
           </body>
-      </html>
-  `;
+      </html>`;
 
-  return html;
+  return html.replace(/>\s+</g, '><'); // trim that whitespace
 }
 
 module.exports = web;

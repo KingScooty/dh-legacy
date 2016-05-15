@@ -1,31 +1,13 @@
 var React = require('react');
-var Post = require('../Post');
 var Navigation = require('../Navigation');
 
 var Stream = React.createClass({
   propTypes: {
-    // posts: React.PropTypes.array.isRequired
+    live: React.PropTypes.node,
+    archive: React.PropTypes.node.isRequired
   },
-
-  getPosts: function () {
-    return this.props.posts.map(function (post, index) {
-      return (
-        <Post {...post} key={ index } />
-      );
-    });
-  },
-
-  // getActiveFeeds: function () {
-  //   return this.props.children.map(function(feed, index) {
-  //     return (
-  //       { feed }
-  //     );
-  //   });
-  // },
 
   render: function () {
-    // var Posts = this.getPosts();
-    // const { live, archive } = this.props.children;
     var { live, archive } = this.props;
 
     return (
