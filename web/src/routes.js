@@ -1,32 +1,39 @@
-const router = require('koa-router')();
-const Promise = require('bluebird');
-const co = Promise.coroutine;
+// modules/routes.js
+import React from 'react';
+import { Route, IndexRedirect } from 'react-router';
+import App from './app';
+import Home from './containers/Page/Home';
+import LiveFeed from './containers/Stream/LiveFeed';
+import ArchiveFeed from './containers/Stream/ArchiveFeed';
+import Stream from './components/Stream';
 
-/**
- * GET all years.
- */
+// import About from './About'
+// import Repos from './Repos'
+// import Repo from './Repo'
+// import Home from './Home'
 
-router.get('/', (ctx, next) => {
-  ctx.body = {
-    body: 'All the events!'
-  }
-});
-
-/**
- * GET year by :year.
- */
-
-router.get('/:year', co(function *(ctx, next) {
-  const year_query = `dh_${ctx.params.year}`;
-  if (!databaseList.hasOwnProperty(year_query)) return ctx.throw(404);
-
-  // ctx.body = yield eventModel.listAll(year_query)
-
-  // this would go in some sort of controller;
-  web.use(function* () {
-    this.render('index', yield eventModel.listAll(year_query));
-  });
-}));
+module.exports = (
+  <Route component={ App } ignoreScrollBehavior>
+    <Route path="/" component={ Home }>
+      <Route components={ {Stream: Stream } } >
+        <IndexRedirect to="/halloween15" />
+        <Route path="halloween15" components={ {live: LiveFeed, archive: ArchiveFeed } } />
+        <Route path=":year" components={ {archive: ArchiveFeed } } />
+      </Route>
+    </Route>
+  </Route>
+);
+//
+// <Route name="layout" path="/" handler={App} ignoreScrollBehavior>
+//   <Route name="live" path="/halloween15" handler={LiveFeed}/>
+//   <Route name="year" path="/:year" handler={ArchiveFeed}/>
+// </Route>
 
 
-module.exports = router;
+//
+// var routes = (
+//   <Route name="layout" path="/" handler={Feed} ignoreScrollBehavior>
+//     <Route name="live" path="/halloween15" handler={LiveFeed}/>
+//     <Route name="year" path="/:year" handler={ArchiveFeed}/>
+//   </Route>
+// );

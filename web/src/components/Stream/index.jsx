@@ -1,23 +1,14 @@
 var React = require('react');
-var Post = require('../Post');
 var Navigation = require('../Navigation');
 
 var Stream = React.createClass({
   propTypes: {
-    posts: React.PropTypes.array.isRequired
-  },
-
-  getPosts: function () {
-    return this.props.posts.map(function(post, index) {
-      return (
-        <Post {...post} key={index} />
-      )
-    });
+    live: React.PropTypes.node,
+    archive: React.PropTypes.node.isRequired
   },
 
   render: function () {
-
-    var Posts = this.getPosts();
+    var { live, archive } = this.props;
 
     return (
       <div id="stream" className="stream">
@@ -29,7 +20,8 @@ var Stream = React.createClass({
         </div>
 
         <div className="stream__body">
-          {Posts}
+          { live }
+          { archive }
         </div>
       </div>
     );
