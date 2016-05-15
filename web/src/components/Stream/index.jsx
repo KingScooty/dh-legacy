@@ -4,20 +4,29 @@ var Navigation = require('../Navigation');
 
 var Stream = React.createClass({
   propTypes: {
-    posts: React.PropTypes.array.isRequired
+    // posts: React.PropTypes.array.isRequired
   },
 
   getPosts: function () {
-    return this.props.posts.map(function(post, index) {
+    return this.props.posts.map(function (post, index) {
       return (
-        <Post {...post} key={index} />
-      )
+        <Post {...post} key={ index } />
+      );
     });
   },
 
-  render: function () {
+  // getActiveFeeds: function () {
+  //   return this.props.children.map(function(feed, index) {
+  //     return (
+  //       { feed }
+  //     );
+  //   });
+  // },
 
-    var Posts = this.getPosts();
+  render: function () {
+    // var Posts = this.getPosts();
+    // const { live, archive } = this.props.children;
+    var { live, archive } = this.props;
 
     return (
       <div id="stream" className="stream">
@@ -29,7 +38,8 @@ var Stream = React.createClass({
         </div>
 
         <div className="stream__body">
-          {Posts}
+          { live }
+          { archive }
         </div>
       </div>
     );

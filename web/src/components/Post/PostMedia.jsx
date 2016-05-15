@@ -5,16 +5,16 @@ var PostMedia = React.createClass({
     entities: React.PropTypes.shape({
       media: React.PropTypes.arrayOf(
         React.PropTypes.shape({
-           media_url: React.PropTypes.string.isRequired
-         })
-       ),
+          media_url: React.PropTypes.string.isRequired
+        })
+      )
     }),
     extended_entities: React.PropTypes.shape({
       media: React.PropTypes.arrayOf(
         React.PropTypes.shape({
-           media_url: React.PropTypes.string.isRequired
-         })
-       ),
+          media_url: React.PropTypes.string.isRequired
+        })
+      )
     }),
     media: React.PropTypes.string,
     href: React.PropTypes.string

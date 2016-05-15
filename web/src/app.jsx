@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react');
-var Home = require('./containers/Home');
+// var Home = require('./containers/Home');
 
 var App = React.createClass({
   propTypes: {
@@ -11,8 +11,8 @@ var App = React.createClass({
   render: function () {
     return (
       <div id="app">
-        {/*{ this.props.children }*/}
-        <Home posts={this.props.posts} />
+        { this.props.children }
+        {/*<Home posts={this.props.posts} />*/}
       </div>
     );
   }
