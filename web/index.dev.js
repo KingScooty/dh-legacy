@@ -10,6 +10,9 @@
 
 'use strict';
 
+require('babel-register')();//('./src/server');
+require("babel-polyfill");
+
 console.log(`Starting server at ${(new Date()).toISOString()}`);
 process.on('exit', () => {
   console.log(`Process exit at ${(new Date()).toISOString()}`);
