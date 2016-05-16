@@ -9,6 +9,10 @@ const ReactDOMServer = require('react-dom/server');
 const Router = require('react-router');
 const RouterContext = Router.RouterContext;
 
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import reducer from './reducers';
+
 // middleware
 const Koa = require('koa');
 const web = new Koa();
@@ -27,8 +31,13 @@ web.use(compress({
 
 web.use(logger);
 
+const initialState = createStore(reducer);
+
 web.use(function (ctx, next) {
   let appHtml;
+
+  console.log('HELLO!!?!?!?!');
+  console.log(initialState.getState());
 
   Router.match({
     routes: routes,
@@ -42,7 +51,10 @@ web.use(function (ctx, next) {
       ctx.redirect(redirectLocation.pathname + redirectLocation.search);
     }
     else if (renderProps) {
-      appHtml = ReactDOMServer.renderToString(<RouterContext {...renderProps} />);
+      appHtml = ReactDOMServer.renderToString(
+        <Provider store={ initialState.getState() }>
+          <RouterContext {...renderProps} />
+        </Provider>);
       ctx.body = renderPage(appHtml);
     }
     else {
@@ -51,6 +63,10 @@ web.use(function (ctx, next) {
     next();
   });
 });
+
+function safeStringify(obj) {
+  return JSON.stringify(obj).replace(/<\/script/g, '<\\/script').replace(/<!--/g, '<\\!--');
+}
 
 function renderPage(renderedBody) {
   let html = `<!doctype html>
@@ -61,6 +77,8 @@ function renderPage(renderedBody) {
           </head>
           <body>
               <div id="app">${renderedBody}</div>
+
+              <script charSet="utf-8" id="__INITIAL_STATE__" type="application/json">${safeStringify(initialState)}</script>
 
               <script src="/bundle.js"></script>
           </body>

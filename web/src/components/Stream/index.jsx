@@ -10,6 +10,8 @@ var Stream = React.createClass({
   render: function () {
     var { live, archive } = this.props;
 
+    console.log(this.props.store);
+
     return (
       <div id="stream" className="stream">
         <div className="stream__header">
