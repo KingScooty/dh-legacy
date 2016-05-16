@@ -1,7 +1,0 @@
-assets/
-.git
-.DS_Store
-public/bower_components
-node_modules
-public/javascripts/dist/main.bundle.js
-_db-dump

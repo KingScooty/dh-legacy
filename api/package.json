@@ -1,0 +1,40 @@
+{
+  "name": "dh-api",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha",
+    "test:watch": "npm run test -- --watch"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
+  "keywords": [],
+  "author": "Scotty Vernon <scott.vernon@gmail.com> (http://wildflame.co.uk)",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^2.4.0",
+    "eslint-config-airbnb": "^6.1.0",
+    "mocha": "^2.3.4",
+    "nano": "^6.2.0",
+    "proxyquire": "^1.7.4",
+    "sinon": "^1.17.3",
+    "supertest": "^1.2.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.3.4",
+    "cradle": "^0.7.1",
+    "glob": "^7.0.3",
+    "koa": "^2.0.0",
+    "koa-compress": "^2.0.0",
+    "koa-morgan": "^1.0.1",
+    "koa-router": "^7.0.1",
+    "socket.io": "^1.4.5",
+    "spdy": "^3.3.1"
+  }
+}

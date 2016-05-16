@@ -1,0 +1,25 @@
+{
+  "name": "dh-worker",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha",
+    "test:watch": "npm run test -- --watch"
+  },
+  "keywords": [],
+  "author": "Scotty Vernon <scott.vernon@gmail.com> (http://wildflame.co.uk)",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.3",
+    "sinon-chai": "^2.8.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.3.4",
+    "nano": "^6.2.0",
+    "twit": "^2.2.3"
+  }
+}
