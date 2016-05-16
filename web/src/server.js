@@ -45,6 +45,9 @@ web.use(function (ctx, next) {
       appHtml = ReactDOMServer.renderToString(<RouterContext {...renderProps} />);
       ctx.body = renderPage(appHtml);
     }
+    else {
+      ctx.throw('404, Page not found, bro', 404);
+    }
     next();
   });
 });
