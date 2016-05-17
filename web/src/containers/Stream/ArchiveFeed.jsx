@@ -12,7 +12,7 @@ var ArchiveFeed = React.createClass({
   // },
 
   renderPosts: function () {
-    return this.state.posts.map(function (post, index) {
+    return this.props.posts.map(function (post, index) {
       return <Post {...post} key={ index } />;
     });
   },
@@ -20,7 +20,7 @@ var ArchiveFeed = React.createClass({
   render: function () {
     var posts = this.renderPosts();
 
-    console.log(this.state.store);
+    console.log(this.props);
 
     return (
       <div>
@@ -33,7 +33,7 @@ var ArchiveFeed = React.createClass({
 
 var mapStateToProps = function(state) {
   return { posts: state.posts};
-}
+};
 
 // module.exports = ArchiveFeed;
 module.exports = connect(mapStateToProps)(ArchiveFeed);

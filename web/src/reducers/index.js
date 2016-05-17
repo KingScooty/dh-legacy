@@ -2,6 +2,8 @@
 import { List, Map } from 'immutable';
 const initialState = require('../store/initialState')().posts;
 
+const init = List(initialState);
+
 // const init = List(initialState);
 
 // console.log(init);
@@ -10,7 +12,7 @@ const initialState = require('../store/initialState')().posts;
 //   GET_POSTS
 // } from '../actions';
 
-export default function (posts = initialState, action) {
+export default function (posts = init, action) {
   switch (action.type) {
     case 'GET_POSTS':
       return posts.push(Map(action.posts));

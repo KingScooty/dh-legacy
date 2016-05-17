@@ -31,13 +31,15 @@ web.use(compress({
 
 web.use(logger);
 
-const initialState = createStore(reducer);
+var initialState = require('./store/initialState');
+
+const store = createStore(reducer, initialState());
 
 web.use(function (ctx, next) {
   let appHtml;
 
   console.log('HELLO!!?!?!?!');
-  console.log(initialState.getState());
+  // console.log(initialState.getState());
 
   Router.match({
     routes: routes,
@@ -52,7 +54,7 @@ web.use(function (ctx, next) {
     }
     else if (renderProps) {
       appHtml = ReactDOMServer.renderToString(
-        <Provider store={ initialState.getState() }>
+        <Provider store={ store }>
           <RouterContext {...renderProps} />
         </Provider>);
       ctx.body = renderPage(appHtml);
@@ -78,7 +80,7 @@ function renderPage(renderedBody) {
           <body>
               <div id="app">${renderedBody}</div>
 
-              <script charSet="utf-8" id="__INITIAL_STATE__" type="application/json">${safeStringify(initialState)}</script>
+              <script charSet="utf-8" id="__INITIAL_STATE__" type="application/json">${safeStringify(store.getState())}</script>
 
               <script src="/bundle.js"></script>
           </body>

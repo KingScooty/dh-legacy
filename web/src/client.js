@@ -16,7 +16,7 @@ import routes from './routes';
 
 render(
   <Provider store={ store } key="provider">
-    <Router routes={ routes } history={ browserHistory } store={ store } />
+    <Router routes={ routes } history={ browserHistory } />
   </Provider>,
   mountPoint
 );
