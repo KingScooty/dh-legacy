@@ -1,13 +1,16 @@
 // import { combineReducers } from 'redux';
 import { List, Map } from 'immutable';
+const initialState = require('../store/initialState')().posts;
 
-const init = List([]);
+// const init = List(initialState);
+
+// console.log(init);
 
 // import {
 //   GET_POSTS
 // } from '../actions';
 
-export default function(posts=init, action) {
+export default function (posts = initialState, action) {
   switch (action.type) {
     case 'GET_POSTS':
       return posts.push(Map(action.posts));

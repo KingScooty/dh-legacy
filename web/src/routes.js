@@ -4,8 +4,8 @@ import { Route, IndexRedirect } from 'react-router';
 import App from './app';
 import Home from './containers/Page/Home';
 import LiveFeed from './containers/Stream/LiveFeed';
-// import ArchiveFeed from './containers/Stream/ArchiveFeed';
-import ArchiveFeed from './containers/Stream/ArchiveFeedContainer';
+import ArchiveFeed from './containers/Stream/ArchiveFeed';
+// import ArchiveFeed from './containers/Stream/ArchiveFeedContainer';
 import Stream from './components/Stream';
 
 // import About from './About'

@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 const mountPoint = document.getElementById('app');
 
 // This gets put in a store going forward???
-const store = JSON.parse(document.getElementById('__INITIAL_STATE__').innerHTML);
+// const store = JSON.parse(document.getElementById('__INITIAL_STATE__').innerHTML);
 
 // const App = require('./App');
 import routes from './routes';
