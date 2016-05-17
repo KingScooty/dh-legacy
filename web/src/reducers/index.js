@@ -1,5 +1,7 @@
 // import { combineReducers } from 'redux';
 import { List, Map } from 'immutable';
+import { combineReducers } from 'redux';
+
 const initialState = require('../store/initialState')().posts;
 
 const init = List(initialState);
@@ -12,14 +14,37 @@ const init = List(initialState);
 //   GET_POSTS
 // } from '../actions';
 
-export default function (posts = init, action) {
+const getPosts = (state = init, action) => {
   switch (action.type) {
-    case 'GET_POSTS':
-      return posts.push(Map(action.posts));
+    // case 'GET_POSTS':
+    //   return state.posts.push(Map(action.posts));
     default:
-      return posts;
+      return state;
   }
-}
+};
+
+const toggleStatus = (state = false, action) => {
+  switch (action.type) {
+    case 'TOGGLE_STATUS':
+      return action.liveStatus;
+    default:
+      return state;
+  }
+};
+
+// export default getPosts;
+
+const rootReducer = combineReducers({
+  isLive: toggleStatus,
+  posts: getPosts
+});
+
+export default rootReducer;
+
+// export default combineReducers({
+//   getPosts: getPosts,
+//   setStatus: setStatus
+// });
 
 // import {
 //   SELECT_EVENT,

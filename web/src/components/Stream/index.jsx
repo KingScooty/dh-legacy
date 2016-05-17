@@ -1,4 +1,5 @@
 var React = require('react');
+var LiveIndicator = require('../../containers/LiveIndicator');
 var Navigation = require('../Navigation');
 
 var Stream = React.createClass({
@@ -14,7 +15,7 @@ var Stream = React.createClass({
       <div id="stream" className="stream">
         <div className="stream__header">
 
-          <div className="live-status">LIVE</div>
+          <LiveIndicator />
 
           <Navigation />
         </div>

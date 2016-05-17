@@ -19,6 +19,7 @@ https://facebook.github.io/react/blog/2015/10/07/react-v0.14.html#stateless-func
 ```
 {
   selectedEvent: 'halloween15',
+  isLive: false,
   postsByEvent: {
     halloween15: {
       isFetching: true,

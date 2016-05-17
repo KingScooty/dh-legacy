@@ -14,6 +14,8 @@
 //   };
 // }
 //
+
+
 // export const REQUEST_POSTS = 'REQUEST_POSTS';
 //
 // export function requestPosts(event) {
@@ -22,7 +24,8 @@
 //     event
 //   };
 // }
-//
+
+
 // export const RECEIVE_POSTS = 'RECEIVE_POSTS';
 //
 // export function receivePosts(event, json) {
@@ -36,12 +39,22 @@
 // }
 
 
-// export const GET_POSTS = 'GET_POSTS';
+export const TOGGLE_STATUS = 'TOGGLE_STATUS'
 
-export function getPosts() {
-  console.log('Is this action getting called???');
+export function toggleStatus(liveStatus) {
   return {
-    type: GET_POSTS,
-
+    type: TOGGLE_STATUS,
+    liveStatus
   };
 }
+
+
+// export const GET_POSTS = 'GET_POSTS';
+//
+// export function getPosts() {
+//   console.log('Is this action getting called???');
+//   return {
+//     type: GET_POSTS,
+//
+//   };
+// }
