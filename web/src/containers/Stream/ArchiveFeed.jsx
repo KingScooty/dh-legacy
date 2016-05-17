@@ -1,15 +1,12 @@
-var React = require('react');
-var Post = require('../../components/Post');
+const React = require('react');
 import { connect } from 'react-redux';
 
-var ArchiveFeed = React.createClass({
+var Post = require('../../components/Post');
 
-  // getInitialState: function () {
-  //
-  //   return {
-  //     posts: this.props.
-  //   };
-  // },
+var ArchiveFeed = React.createClass({
+  propTypes: {
+    posts: React.PropTypes.array.isRequired
+  },
 
   renderPosts: function () {
     return this.props.posts.map(function (post, index) {
@@ -20,8 +17,6 @@ var ArchiveFeed = React.createClass({
   render: function () {
     var posts = this.renderPosts();
 
-    console.log(this.props);
-
     return (
       <div>
         <h1>ARCHIVE FEED!</h1>
@@ -31,7 +26,7 @@ var ArchiveFeed = React.createClass({
   }
 });
 
-var mapStateToProps = function(state) {
+var mapStateToProps = function (state) {
   return { posts: state.posts};
 };
 
