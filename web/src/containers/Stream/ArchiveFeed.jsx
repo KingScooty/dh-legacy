@@ -30,5 +30,4 @@ var mapStateToProps = function (state) {
   return { posts: state.posts};
 };
 
-// module.exports = ArchiveFeed;
 module.exports = connect(mapStateToProps)(ArchiveFeed);
