@@ -5,13 +5,7 @@ import App from './app';
 import Home from './containers/Page/Home';
 import LiveFeed from './containers/Stream/LiveFeed';
 import ArchiveFeed from './containers/Stream/ArchiveFeed';
-// import ArchiveFeed from './containers/Stream/ArchiveFeedContainer';
 import Stream from './components/Stream';
-
-// import About from './About'
-// import Repos from './Repos'
-// import Repo from './Repo'
-// import Home from './Home'
 
 module.exports = (
   <Route component={ App } ignoreScrollBehavior>
@@ -24,17 +18,3 @@ module.exports = (
     </Route>
   </Route>
 );
-//
-// <Route name="layout" path="/" handler={App} ignoreScrollBehavior>
-//   <Route name="live" path="/halloween15" handler={LiveFeed}/>
-//   <Route name="year" path="/:year" handler={ArchiveFeed}/>
-// </Route>
-
-
-//
-// var routes = (
-//   <Route name="layout" path="/" handler={Feed} ignoreScrollBehavior>
-//     <Route name="live" path="/halloween15" handler={LiveFeed}/>
-//     <Route name="year" path="/:year" handler={ArchiveFeed}/>
-//   </Route>
-// );
