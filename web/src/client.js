@@ -11,10 +11,8 @@ const mountPoint = document.getElementById('app');
 
 // This gets put in a store going forward???
 const initialState = JSON.parse(document.getElementById('__INITIAL_STATE__').innerHTML);
-
 const store = createStore(reducer, initialState);
 
-// const App = require('./App');
 import routes from './routes';
 
 render(
