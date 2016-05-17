@@ -21,4 +21,6 @@ var mapStateToProps = function (state) {
   return { isLive: state.isLive };
 };
 
-module.exports = connect(mapStateToProps)(LiveIndicatorContainer);
+module.exports = connect(
+  mapStateToProps
+)(LiveIndicatorContainer);
