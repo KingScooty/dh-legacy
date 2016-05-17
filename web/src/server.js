@@ -4,15 +4,6 @@ const path = require('path');
 const compress = require('koa-compress');
 const morgan = require('koa-morgan');
 
-const React = require('react');
-const ReactDOMServer = require('react-dom/server');
-const Router = require('react-router');
-const RouterContext = Router.RouterContext;
-
-import { createStore } from 'redux';
-import { Provider } from 'react-redux';
-import reducer from './reducers';
-
 // middleware
 const Koa = require('koa');
 const web = new Koa();
@@ -20,6 +11,20 @@ const web = new Koa();
 const logger = morgan('combined');
 const serve = require('koa-static');
 const minify = require('html-minifier').minify;
+
+// React
+const React = require('react');
+const ReactDOMServer = require('react-dom/server');
+const Router = require('react-router');
+const RouterContext = Router.RouterContext;
+
+// Redux
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+
+const initialState = require('./store/initialState');
+import reducer from './reducers';
+const store = createStore(reducer, initialState());
 
 const routes = require('./routes');
 
@@ -31,15 +36,8 @@ web.use(compress({
 
 web.use(logger);
 
-var initialState = require('./store/initialState');
-
-const store = createStore(reducer, initialState());
-
 web.use(function (ctx, next) {
   let appHtml;
-
-  console.log('HELLO!!?!?!?!');
-  // console.log(initialState.getState());
 
   Router.match({
     routes: routes,
