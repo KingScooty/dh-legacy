@@ -17,8 +17,8 @@ module.exports = (
   <Route component={ App } ignoreScrollBehavior>
     <Route path="/" component={ Home }>
       <Route components={ {Stream: Stream } } >
-        <IndexRedirect to="/halloween15" />
-        <Route path="halloween15" components={ {live: LiveFeed, archive: ArchiveFeed } } />
+        <IndexRedirect to="/2016" />
+        <Route path="2016" components={ {live: LiveFeed, archive: ArchiveFeed } } />
         <Route path=":year" components={ {archive: ArchiveFeed } } />
       </Route>
     </Route>
