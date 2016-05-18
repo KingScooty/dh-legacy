@@ -17,22 +17,22 @@ var Navigation = React.createClass({
     return (
       <ul className="stream-navigation">
         <li className="stream-navigation__item">
-          <Link to="/2016">2016</Link>
+          <Link activeClassName='active' to="/2016">2016</Link>
         </li>
         <li className="stream-navigation__item">
-          <Link to="/halloween15">Halloween ’15</Link>
+          <Link activeClassName='active' to="/halloween15">Halloween ’15</Link>
         </li>
         <li className="stream-navigation__item">
-          <Link to="/2015">2015</Link>
+          <Link activeClassName='active' to="/2015">2015</Link>
         </li>
         <li className="stream-navigation__item">
-          <Link to="/2014">2014</Link>
+          <Link activeClassName='active' to="/2014">2014</Link>
         </li>
         <li className="stream-navigation__item">
-          <Link to="/2013">2013</Link>
+          <Link activeClassName='active' to="/2013">2013</Link>
         </li>
         <li className="stream-navigation__item">
-          <Link to="/2012">2012</Link>
+          <Link activeClassName='active' to="/2012">2012</Link>
         </li>
       </ul>
     );
