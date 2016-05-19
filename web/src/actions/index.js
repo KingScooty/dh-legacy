@@ -5,41 +5,11 @@
 // SELECT_EVENT
 // @TODO INCLUDE ERROR HANDLING
 
-// export const SELECT_EVENT = 'SELECT_EVENT';
-//
-// export function selectEvent(event) {
-//   return {
-//     type: SELECT_EVENT,
-//     event
-//   };
-// }
-//
+import { TOGGLE_STATUS } from '../constants/ActionTypes';
 
-
-// export const REQUEST_POSTS = 'REQUEST_POSTS';
-//
-// export function requestPosts(event) {
-//   return {
-//     type: REQUEST_POSTS,
-//     event
-//   };
-// }
-
-
-// export const RECEIVE_POSTS = 'RECEIVE_POSTS';
-//
-// export function receivePosts(event, json) {
-//   return {
-//     type: RECEIVE_POSTS,
-//     event,
-//     // might need to update this
-//     posts: json.data.children.map(child => child.data),
-//     receivedAt: Date.now()
-//   };
-// }
-
-
-export const TOGGLE_STATUS = 'TOGGLE_STATUS'
+/*
+ * action creators
+ */
 
 export function toggleStatus(liveStatus) {
   return {
@@ -47,14 +17,3 @@ export function toggleStatus(liveStatus) {
     liveStatus
   };
 }
-
-
-// export const GET_POSTS = 'GET_POSTS';
-//
-// export function getPosts() {
-//   console.log('Is this action getting called???');
-//   return {
-//     type: GET_POSTS,
-//
-//   };
-// }
