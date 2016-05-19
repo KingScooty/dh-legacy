@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "startDev": "node index.dev.js",
-    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register $(find src -path '*spec*')",
+    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register --require babel-polyfill $(find src -path '*spec*')",
     "dev": "npm run startDev & webpack-dev-server --progress --color",
     "build": "NODE_ENV=production webpack --progress --color -p --config webpack.prod.config.js"
   },
