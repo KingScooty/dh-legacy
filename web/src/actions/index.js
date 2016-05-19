@@ -1,11 +1,8 @@
-// FETCH_ARCHIVED_TWEETS
-// SUBSCRIBE_TO_LIVE_TWEETS
-// GET_EVENT_INFO
+import fetch from 'isomorphic-fetch';
 
-// SELECT_EVENT
 // @TODO INCLUDE ERROR HANDLING
 
-import { TOGGLE_STATUS } from '../constants/ActionTypes';
+import { TOGGLE_STATUS, REQUEST_EVENT } from '../constants/ActionTypes';
 
 /*
  * action creators
@@ -15,5 +12,12 @@ export function toggleStatus(liveStatus) {
   return {
     type: TOGGLE_STATUS,
     liveStatus
+  };
+}
+
+export function requestEvent(event) {
+  return {
+    type: REQUEST_EVENT,
+    event
   };
 }

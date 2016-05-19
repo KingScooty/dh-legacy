@@ -26,4 +26,6 @@ describe('Reducer', () => {
     const nextState = reducer(initialState, action);
     expect(nextState.get('isLive')).to.equal(true);
   });
+
+  // it('')
 });
