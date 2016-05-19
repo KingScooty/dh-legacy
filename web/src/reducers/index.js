@@ -2,19 +2,24 @@
 import { List, Map } from 'immutable';
 import { combineReducers } from 'redux';
 
-const initialState = require('../store/initialState')().posts;
+const posts = require('../store/initialState')().posts;
 
-const init = List(initialState);
+const initialState = Map({
+  selectedEvent: 'halloween15',
+  isLive: false,
+  isFetching: false,
+  lastUpdated: 0,
+  eventInfo: {},
+  fetchedPostCount: 2,
+  posts: posts
+});
+
 
 // const init = List(initialState);
 
-// console.log(init);
 
-// import {
-//   GET_POSTS
-// } from '../actions';
 
-const getPosts = (state = init, action) => {
+const getPosts = (state = initialState, action) => {
   switch (action.type) {
     // case 'GET_POSTS':
     //   return state.posts.push(Map(action.posts));
@@ -22,6 +27,27 @@ const getPosts = (state = init, action) => {
       return state;
   }
 };
+
+
+
+// function posts(state = initialState, action) {
+//   switch (action.type) {
+//     case REQUEST_POSTS:
+//       return {
+//         ...state,
+//         isFetching: true
+//       };
+//     // case RECEIVE_POSTS:
+//     //   return Object.assign({}, state, {
+//     //     isFetching: false,
+//     //     didInvalidate: false,
+//     //     items: action.posts,
+//     //     lastUpdated: action.receivedAt
+//     //   })
+//     default:
+//       return state
+//   }
+// }
 
 const toggleStatus = (state = false, action) => {
   switch (action.type) {
