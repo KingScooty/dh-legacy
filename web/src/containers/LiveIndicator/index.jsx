@@ -20,8 +20,9 @@ var LiveIndicatorContainer = React.createClass({
 var mapStateToProps = function (state) {
   // return { isLive: state.isLive };
   console.log('INDICATOR CONTAINER');
-  console.log(state.get('isLive'));
-  return { isLive: state.get('isLive') };
+  return { isLive: state.isLive };
+  // console.log(state.get('isLive'));
+  // return { isLive: state.get('isLive') };
 };
 
 module.exports = connect(

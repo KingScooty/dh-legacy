@@ -32,7 +32,14 @@ const matchRoutes = async (context) => {
       }
       else {
         // Route matched
-        store.dispatch(actions.fetchEventIfNeeded(renderProps.params.year))
+
+        let path = (renderProps && renderProps.location && renderProps.location.pathname) ? renderProps.location.pathname : redirectLocation.pathname;
+
+        path = path.slice(1);
+
+        console.log('PATH:', path);
+
+        store.dispatch(actions.fetchEventIfNeeded('2015'))
         .then(() => {
           resolve({ redirectLocation, renderProps });
         });

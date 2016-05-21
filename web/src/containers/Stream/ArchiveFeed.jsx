@@ -31,8 +31,10 @@ var ArchiveFeed = React.createClass({
 var mapStateToProps = function (state) {
   // return { posts: state.posts};
   console.log('ARCHIVE FEED');
+  // console.log(state);
   // console.log(state.get('posts').toJS()[0]);
-  return { posts: state.get('posts').toJS() };
+  // return { posts: state.get('posts').toJS() };
+  return { posts: state.posts };
 };
 
 module.exports = connect(mapStateToProps)(ArchiveFeed);
