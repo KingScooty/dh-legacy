@@ -58,13 +58,5 @@ describe('Async actions', () => {
       .then(() => { // return of async actions
         expect(store.getActions()).to.deep.equal(expectedActions);
       });
-
-  // it.only('gets some json (wtf?)', async () => {
-  //   const json = await actions.fetchEvent('2015');
-  //
-  //   console.log(json);
-  //   expect(json.eventInfo).to.be.an('array');
-  //   expect(json.eventPosts).to.be.an('array');
-  // });
   });
 });
