@@ -17,7 +17,7 @@ describe('Reducer', () => {
   it('handles TOGGLE_STATUS', () => {
     const action = {
       type: types.TOGGLE_STATUS,
-      liveStatus: true
+      isLive: true
     };
 
     const nextState = reducer(initialState, action);

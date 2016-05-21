@@ -13,7 +13,7 @@ export const initialState = fromJS({
 const events = (state = initialState, action) => {
   switch (action.type) {
     case TOGGLE_STATUS:
-      return state.set('isLive', action.liveStatus);
+      return state.set('isLive', action.isLive);
     case REQUEST_EVENT:
       return state.merge(fromJS({
         selectedEvent: action.event,

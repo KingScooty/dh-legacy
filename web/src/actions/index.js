@@ -11,7 +11,7 @@ import { TOGGLE_STATUS, REQUEST_EVENT, RECEIVE_EVENT } from '../constants/Action
 export function toggleStatus(liveStatus) {
   return {
     type: TOGGLE_STATUS,
-    liveStatus
+    isLive: liveStatus
   };
 }
 

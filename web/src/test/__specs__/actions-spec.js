@@ -10,7 +10,7 @@ describe('Actions', () => {
     const liveStatus = true;
     const expectedAction = {
       type: types.TOGGLE_STATUS,
-      liveStatus
+      isLive: liveStatus
     };
     expect(actions.toggleStatus(liveStatus)).to.deep.equal(expectedAction);
   });
