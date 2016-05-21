@@ -1,14 +1,13 @@
 import { fromJS } from 'immutable';
 import { TOGGLE_STATUS } from '../constants/ActionTypes';
-const posts = require('../store/initialState')().posts;
 
 export const initialState = fromJS({
   selectedEvent: 'halloween15',
   isLive: false,
   isFetching: false,
   eventInfo: {},
-  fetchedPostCount: 4,
-  posts: posts
+  fetchedPostCount: 0,
+  posts: []
 });
 
 const events = (state = initialState, action) => {

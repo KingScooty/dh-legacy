@@ -17,7 +17,7 @@ describe('Async actions', () => {
     nock.cleanAll();
   });
 
-  it.only('creates RECEIVE_EVENT when fetching events has been done', () => {
+  it('creates RECEIVE_EVENT when fetching events has been done', () => {
     const expectedInfoResponse = {
       value: {
         type: 'info',
@@ -25,12 +25,14 @@ describe('Async actions', () => {
       }
     };
 
-    const expectedPostsResponse = {
-      value: {
-        type: 'tweet',
-        html: '<div>Tweet</div>'
+    const expectedPostsResponse = [
+      {
+        value: {
+          text: 'some tweet text',
+          type: 'tweet'
+        }
       }
-    };
+    ];
 
     nock('http://www.digital-heroes.com/')
       .get('/2015/info?format=json')
@@ -49,6 +51,7 @@ describe('Async actions', () => {
         type: types.RECEIVE_EVENT,
         event: '2015',
         eventInfo: expectedInfoResponse,
+        fetchedPostCount: 1,
         posts: expectedPostsResponse
       }
     ];
