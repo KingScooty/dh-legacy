@@ -39,6 +39,12 @@ describe('Actions', () => {
             text: 'some tweet text',
             type: 'tweet'
           }
+        },
+        {
+          value: {
+            text: 'some more tweet text',
+            type: 'tweet'
+          }
         }
       ]
     };
@@ -47,11 +53,17 @@ describe('Actions', () => {
       type: types.RECEIVE_EVENT,
       event: '2016',
       eventInfo: json.eventInfo.value,
-      fetchedPostCount: 1,
-      posts: [{
-        text: 'some tweet text',
-        type: 'tweet'
-      }]
+      fetchedPostCount: 2,
+      posts: [
+        {
+          text: 'some tweet text',
+          type: 'tweet'
+        },
+        {
+          text: 'some more tweet text',
+          type: 'tweet'
+        }
+      ]
     };
     expect(actions.receiveEvent(event, json)).to.deep.equal(expectedAction);
   });
