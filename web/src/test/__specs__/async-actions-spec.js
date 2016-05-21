@@ -50,11 +50,12 @@ describe('Async actions', () => {
       {
         type: types.RECEIVE_EVENT,
         event: '2015',
-        eventInfo: expectedInfoResponse,
+        eventInfo: expectedInfoResponse.value,
         fetchedPostCount: 1,
-        posts: expectedPostsResponse
+        posts: expectedPostsResponse.map(post => post.value)
       }
     ];
+
     const store = mockStore();
 
     return store.dispatch(actions.fetchEvent('2015'))

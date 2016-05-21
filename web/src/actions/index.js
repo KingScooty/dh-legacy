@@ -26,9 +26,9 @@ function receiveEvent(event, json) {
   return {
     type: RECEIVE_EVENT,
     event,
-    eventInfo: json.eventInfo,
+    eventInfo: json.eventInfo.value,
     fetchedPostCount: json.eventPosts.length,
-    posts: json.eventPosts
+    posts: json.eventPosts.map(post => post.value)
   };
 }
 
