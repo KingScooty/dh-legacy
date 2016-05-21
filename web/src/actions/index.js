@@ -27,9 +27,7 @@ function receiveEvent(event, json) {
     type: RECEIVE_EVENT,
     event,
     eventInfo: json.eventInfo,
-    // posts: json.eventPosts.children.map(child => child.data),
-    posts: json.eventPosts // ,
-    // receivedAt: Date.now()
+    posts: json.eventPosts
   };
 }
 

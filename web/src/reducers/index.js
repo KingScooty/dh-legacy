@@ -6,7 +6,6 @@ export const initialState = fromJS({
   selectedEvent: 'halloween15',
   isLive: false,
   isFetching: false,
-  lastUpdated: 0,
   eventInfo: {},
   fetchedPostCount: 4,
   posts: posts
