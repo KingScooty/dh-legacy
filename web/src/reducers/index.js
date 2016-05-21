@@ -1,5 +1,5 @@
-import { fromJS } from 'immutable';
-import { TOGGLE_STATUS, REQUEST_EVENT } from '../constants/ActionTypes';
+import { Map, fromJS } from 'immutable';
+import { TOGGLE_STATUS, REQUEST_EVENT, RECEIVE_EVENT } from '../constants/ActionTypes';
 
 export const initialState = fromJS({
   selectedEvent: 'halloween15',
@@ -15,12 +15,17 @@ const events = (state = initialState, action) => {
     case TOGGLE_STATUS:
       return state.set('isLive', action.liveStatus);
     case REQUEST_EVENT:
-      return state.mergeDeep({
+      return state.merge(fromJS({
         selectedEvent: action.event,
         isFetching: true
-      });
-    // case 'RECEIVE_POSTS':
-      // return
+      }));
+    case RECEIVE_EVENT:
+      return state.merge(fromJS({
+        isFetching: false,
+        eventInfo: action.eventInfo,
+        fetchedPostCount: action.fetchedPostCount,
+        posts: action.posts
+      }));
     default:
       return state;
   }
