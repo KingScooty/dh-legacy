@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch';
 
 // @TODO INCLUDE ERROR HANDLING
 
-import { TOGGLE_STATUS, REQUEST_EVENT } from '../constants/ActionTypes';
+import { TOGGLE_STATUS, REQUEST_EVENT, RECEIVE_EVENT } from '../constants/ActionTypes';
 
 /*
  * action creators
@@ -22,30 +22,38 @@ export function requestEvent(event) {
   };
 }
 
-export async function fetchEvent(event) {
-  // return dispatch => {
-    // dispatch(requestEvent(event));
+function receiveEvent(event, json) {
+  return {
+    type: RECEIVE_EVENT,
+    event,
+    eventInfo: json.eventInfo,
+    // posts: json.eventPosts.children.map(child => child.data),
+    posts: json.eventPosts // ,
+    // receivedAt: Date.now()
+  };
+}
 
-  const eventInfo = await fetch(`http://www.digital-heroes.com/${event}/info?format=json`)
-    .then((response) => {
-      if (response.status >= 400) {
-        throw new Error('Bad response from server');
-      }
-      return response.json();
-    });
+export function fetchEvent(event) {
+  return async dispatch => {
+    dispatch(requestEvent(event));
 
-  const eventPosts = await fetch(`http://www.digital-heroes.com/${event}/tweets?format=json`)
-    .then((response) => {
-      if (response.status >= 400) {
-        throw new Error('Bad response from server');
-      }
-      return response.json();
-    });
+    const eventInfo = await fetch(`http://www.digital-heroes.com/${event}/info?format=json`)
+      .then((response) => {
+        if (response.status >= 400) {
+          throw new Error('Bad response from server');
+        }
+        return response.json();
+      });
 
-  // console.log({eventInfo, eventPosts});
-  return { eventInfo, eventPosts };
+    const eventPosts = await fetch(`http://www.digital-heroes.com/${event}/tweets?format=json`)
+      .then((response) => {
+        if (response.status >= 400) {
+          throw new Error('Bad response from server');
+        }
+        return response.json();
+      });
 
-  // return dispatch(receivePosts(event, eventObject));
-
-  // };
+    const eventObject = { eventInfo, eventPosts };
+    return dispatch(receiveEvent(event, eventObject));
+  };
 }

@@ -1,6 +1,5 @@
 /* eslint-env node, mocha */
 
-var chai = require('chai');
 import { expect } from 'chai';
 
 import * as actions from '../../actions';
@@ -23,13 +22,5 @@ describe('Actions', () => {
       event
     };
     expect(actions.requestEvent(event)).to.deep.equal(expectedAction);
-  });
-
-  it.only('gets some json (wtf?)', async () => {
-    const json = await actions.fetchEvent('2015');
-
-    console.log(json);
-    expect(json.eventInfo).to.be.an('array');
-    expect(json.eventPosts).to.be.an('array');
   });
 });
