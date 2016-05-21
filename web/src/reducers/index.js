@@ -15,8 +15,9 @@ const events = (state = initialState, action) => {
     case TOGGLE_STATUS:
       return state.set('isLive', action.liveStatus);
     case 'REQUEST_POSTS':
-      //return //state.set('isFetching', )
-    case 'RECEIVE_POSTS':
+      return state.set('isFetching', true);
+    // case 'RECEIVE_POSTS':
+      // return
     default:
       return state;
   }

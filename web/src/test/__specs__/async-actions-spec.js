@@ -42,6 +42,8 @@ describe('Async actions', () => {
       .get('/2015/tweets?format=json')
       .reply(200, expectedPostsResponse);
 
+    // Perhaps going forward this should test spies to see if the right actions
+    // are being called? As the individual actions will already be tested.
     const expectedActions = [
       {
         event: '2015',

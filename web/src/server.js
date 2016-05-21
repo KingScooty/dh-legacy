@@ -19,12 +19,17 @@ const Router = require('react-router');
 const RouterContext = Router.RouterContext;
 
 // Redux
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+import thunkMiddleware from 'redux-thunk';
 
 const initialState = require('./store/initialState');
 import reducer from './reducers';
-const store = createStore(reducer, initialState());
+const store = createStore(
+  reducer,
+  initialState(),
+  applyMiddleware(thunkMiddleware)
+);
 
 const routes = require('./routes');
 

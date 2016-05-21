@@ -22,7 +22,7 @@ export function requestEvent(event) {
   };
 }
 
-function receiveEvent(event, json) {
+export function receiveEvent(event, json) {
   return {
     type: RECEIVE_EVENT,
     event,
