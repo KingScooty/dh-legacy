@@ -1,5 +1,5 @@
 import { fromJS } from 'immutable';
-import { TOGGLE_STATUS } from '../constants/ActionTypes';
+import { TOGGLE_STATUS, REQUEST_EVENT } from '../constants/ActionTypes';
 
 export const initialState = fromJS({
   selectedEvent: 'halloween15',
@@ -14,8 +14,11 @@ const events = (state = initialState, action) => {
   switch (action.type) {
     case TOGGLE_STATUS:
       return state.set('isLive', action.liveStatus);
-    case 'REQUEST_POSTS':
-      return state.set('isFetching', true);
+    case REQUEST_EVENT:
+      return state.mergeDeep({
+        selectedEvent: action.event,
+        isFetching: true
+      });
     // case 'RECEIVE_POSTS':
       // return
     default:

@@ -24,5 +24,14 @@ describe('Reducer', () => {
     expect(nextState.get('isLive')).to.equal(true);
   });
 
-  // it('')
+  it('handles REQUEST_EVENT', () => {
+    const action = {
+      type: types.REQUEST_EVENT,
+      event: '2015'
+    };
+
+    const nextState = reducer(initialState, action);
+    expect(nextState.get('selectedEvent')).to.equal('2015');
+    expect(nextState.get('isFetching')).to.equal(true);
+  });
 });
