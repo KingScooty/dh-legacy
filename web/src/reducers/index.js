@@ -20,6 +20,7 @@ const events = (state = initialState, action) => {
         isFetching: true
       }));
     case RECEIVE_EVENT:
+      console.log('REDUCER RECEIVED EVENT!');
       return state.merge(fromJS({
         isFetching: false,
         eventInfo: action.eventInfo,

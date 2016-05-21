@@ -1,5 +1,7 @@
 const React = require('react');
 import { connect } from 'react-redux';
+import * as actions from '../../actions';
+import { toJS } from 'immutable';
 
 var Post = require('../../components/Post');
 
@@ -27,7 +29,10 @@ var ArchiveFeed = React.createClass({
 });
 
 var mapStateToProps = function (state) {
-  return { posts: state.posts};
+  // return { posts: state.posts};
+  console.log('ARCHIVE FEED');
+  // console.log(state.get('posts').toJS()[0]);
+  return { posts: state.get('posts').toJS() };
 };
 
 module.exports = connect(mapStateToProps)(ArchiveFeed);

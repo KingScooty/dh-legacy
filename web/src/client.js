@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, browserHistory } from 'react-router';
+import { Router, browserHistory, match } from 'react-router';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
@@ -21,9 +21,11 @@ const store = createStore(
 
 import routes from './routes';
 
-render(
-  <Provider store={ store } key="provider">
-    <Router routes={ routes } history={ browserHistory } />
-  </Provider>,
-  mountPoint
-);
+match({history, routes}, (error, redirectLocation /* , renderProps*/) => {
+  render(
+    <Provider store={ store } key="provider">
+      <Router routes={ routes } history={ browserHistory } />
+    </Provider>,
+    mountPoint
+  );
+});
