@@ -10,6 +10,13 @@ var ArchiveFeed = React.createClass({
     posts: React.PropTypes.array.isRequired
   },
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedEvent !== this.props.selectedEvent) {
+      const { dispatch, selectedEvent } = nextProps;
+      dispatch(actions.fetchEventIfNeeded(selectedEvent));
+    }
+  },
+
   renderPosts: function () {
     return this.props.posts.map(function (post, index) {
       return <Post {...post} key={ index } />;
@@ -34,7 +41,10 @@ var mapStateToProps = function (state) {
   // console.log(state);
   // console.log(state.get('posts').toJS()[0]);
   // return { posts: state.get('posts').toJS() };
-  return { posts: state.posts };
+  return {
+    selectedEvent: state.events.selectedEvent,
+    posts: state.events.posts
+  };
 };
 
 module.exports = connect(mapStateToProps)(ArchiveFeed);

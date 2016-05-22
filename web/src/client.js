@@ -21,12 +21,14 @@ const initialState = JSON.parse(document.getElementById('__INITIAL_STATE__').inn
 // );
 const store = createStore(
   combineReducers({
-    ...reducer,
+    events: reducer,
     routing: routerReducer
   }),
   initialState,
   applyMiddleware(thunkMiddleware)
 );
+
+console.log(store.getState());
 
 import routes from './routes';
 

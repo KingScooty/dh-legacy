@@ -4,11 +4,12 @@
 const React = require('react');
 import { renderToString } from 'react-dom/server';
 import { match, RouterContext } from 'react-router';
+import { routerReducer } from 'react-router-redux';
 
 const minify = require('html-minifier').minify;
 
 // Redux
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import reducer from '../reducers';
@@ -16,7 +17,15 @@ import reducer from '../reducers';
 import routes from '../routes';
 import * as actions from '../actions';
 
-const store = applyMiddleware(thunkMiddleware)(createStore)(reducer);
+const store = createStore(
+  combineReducers({
+    events: reducer,
+    routing: routerReducer
+  }),
+  {},
+  applyMiddleware(thunkMiddleware)
+);
+//applyMiddleware(thunkMiddleware)(createStore)(reducer);
 
 // Private:
 
@@ -33,13 +42,25 @@ const matchRoutes = async (context) => {
       else {
         // Route matched
 
-        let path = (renderProps && renderProps.location && renderProps.location.pathname) ? renderProps.location.pathname : redirectLocation.pathname;
+        // let path = (renderProps && renderProps.location && renderProps.location.pathname) ? renderProps.location.pathname : redirectLocation.pathname;
+        //
+        // path = path.slice(1);
+        //
+        // console.log('PATH:', path);
+        // console.log('router path:', store.getState());
+        // store.getState().selectedEvent
+        // const path = store.getState().events.selectedEvent;
+        // console.log('PATH:', path);
+        // console.log('location:', location);
+        const path = location.slice(1);
+        console.log(location);
 
-        path = path.slice(1);
+        if (redirectLocation) {
+          console.log('redirect location:', redirectLocation);
+          resolve({ redirectLocation, renderProps });
+        }
 
-        console.log('PATH:', path);
-
-        store.dispatch(actions.fetchEventIfNeeded('2015'))
+        store.dispatch(actions.fetchEventIfNeeded(path))
         .then(() => {
           resolve({ redirectLocation, renderProps });
         });
