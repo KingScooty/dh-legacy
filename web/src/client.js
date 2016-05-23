@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, browserHistory, match } from 'react-router';
+import { browserHistory, match } from 'react-router';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
@@ -34,10 +34,12 @@ import routes from './routes';
 
 const history = syncHistoryWithStore(browserHistory, store);
 
-match({history, routes}, (error, redirectLocation /* , renderProps*/) => {
+// <Router routes={ routes } history={ history } />
+
+match({history, routes}, (/* error, redirectLocation, renderProps*/) => {
   render(
     <Provider store={ store } key="provider">
-      <Router routes={ routes } history={ history } />
+      { routes(history, []) }
     </Provider>,
     mountPoint
   );

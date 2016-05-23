@@ -3,7 +3,7 @@
 // React
 const React = require('react');
 import { renderToString } from 'react-dom/server';
-import { match, RouterContext } from 'react-router';
+import { match, RouterContext, createMemoryHistory } from 'react-router';
 import { routerReducer } from 'react-router-redux';
 
 const minify = require('html-minifier').minify;
@@ -25,40 +25,40 @@ const store = createStore(
   {},
   applyMiddleware(thunkMiddleware)
 );
-//applyMiddleware(thunkMiddleware)(createStore)(reducer);
+// applyMiddleware(thunkMiddleware)(createStore)(reducer);
 
 // Private:
 
 // Match url in context against our routes
 const matchRoutes = async (context) => {
+  const history = createMemoryHistory();
   return new Promise((resolve, reject) => {
     // We will see what the routes factory returns below
+    // const actions = [];
+    const router = routes(history);
     const location = context.url;
-    match({ routes, location }, (error, redirectLocation, renderProps) => {
+
+    match({ routes: router, location }, (error, redirectLocation, renderProps) => {
       if (error) {
         // Unable to match any route
         reject(error);
       }
       else {
         // Route matched
+        const path = context.path.slice(1);
+        // console.log(location);
 
-        // let path = (renderProps && renderProps.location && renderProps.location.pathname) ? renderProps.location.pathname : redirectLocation.pathname;
-        //
-        // path = path.slice(1);
-        //
-        // console.log('PATH:', path);
-        // console.log('router path:', store.getState());
-        // store.getState().selectedEvent
-        // const path = store.getState().events.selectedEvent;
-        // console.log('PATH:', path);
-        // console.log('location:', location);
-        const path = location.slice(1);
-        console.log(location);
+        // console.log('redirectlocation', redirectLocation);
+        // console.log('renderPRops', renderProps);
 
         if (redirectLocation) {
           console.log('redirect location:', redirectLocation);
           resolve({ redirectLocation, renderProps });
         }
+
+        // fetchData(context, renderProps).then(() => {
+        //   resolve({ redirectLocation, renderProps });
+        // });
 
         store.dispatch(actions.fetchEventIfNeeded(path))
         .then(() => {
@@ -68,6 +68,30 @@ const matchRoutes = async (context) => {
     });
   });
 };
+
+/* fetch data promise */
+// function fetchData(context, renderProps) {
+//   let { query, params } = renderProps;
+//   return new Promise(function(resolve, reject) {
+//     let comp = renderProps.components[renderProps.components.length - 1].archive.WrappedComponent;
+//     console.log('COMP:', renderProps.components[renderProps.components.length - 1].archive.WrappedComponent.fetchData);
+//     // let url = req.protocol + '://' + req.get('host');
+//     let event = context.path.slice(1);
+//     console.log('EVENT:::', event);
+//     resolve(comp.fetchData(store, url));
+//   });
+// }
+
+// const listenOnActions = (actions, callback) => {
+//   if (actions.length === 0) {
+//     callback([]);
+//   } else if (actions.length === 1) {
+//     // actions[0].listen((resp) => callback([resp]));
+//     store.dispatch(action[0]);
+//   }// else {
+//   //   Reflux.joinLeading(...actions).listen(callback)
+//   // }
+// };
 
 const handleError = async (context, error) => {
   console.error(error.stack);

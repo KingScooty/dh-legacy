@@ -1,7 +1,8 @@
 const React = require('react');
 import { connect } from 'react-redux';
-import * as actions from '../../actions';
-import { toJS } from 'immutable';
+// import * as actions from '../../actions';
+// import { toJS } from 'immutable';
+// import fetchEventIfNeeded from '../../actions';
 
 var Post = require('../../components/Post');
 
@@ -10,11 +11,18 @@ var ArchiveFeed = React.createClass({
     posts: React.PropTypes.array.isRequired
   },
 
+  // statics: {
+  //   fetchData: function (store, event) {
+  //     console.log('ArchiveFeed fetchData()', event);
+  //     return store.dispatch(fetchEventIfNeeded(event));
+  //   }
+  // },
+
   componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedEvent !== this.props.selectedEvent) {
-      const { dispatch, selectedEvent } = nextProps;
-      dispatch(actions.fetchEventIfNeeded(selectedEvent));
-    }
+    // if (nextProps.selectedEvent !== this.props.selectedEvent) {
+    //   const { dispatch, selectedEvent } = nextProps;
+    //   dispatch(actions.fetchEventIfNeeded(selectedEvent));
+    // }
   },
 
   renderPosts: function () {

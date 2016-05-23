@@ -78,7 +78,8 @@ export function fetchEventIfNeeded(event) {
     if (shouldFetchEvent(getState(), event)) {
       // Dispatch a thunk from thunk!
       return dispatch(fetchEvent(event));
-    } else {
+    }
+    else {
       // Let the calling code know there's nothing to wait for.
       return Promise.resolve();
     }
