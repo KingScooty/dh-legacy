@@ -1,22 +1,15 @@
 const React = require('react');
 import { connect } from 'react-redux';
-import * as actions from '../../actions';
-import { toJS } from 'immutable';
-
 var Post = require('../../components/Post');
 
-var ArchiveFeed = React.createClass({
-  propTypes: {
-    posts: React.PropTypes.array.isRequired
-  },
-
-  renderPosts: function () {
+class ArchiveFeed extends React.Component {
+  renderPosts() {
     return this.props.posts.map(function (post, index) {
       return <Post {...post} key={ index } />;
     });
-  },
+  }
 
-  render: function () {
+  render() {
     var posts = this.renderPosts();
 
     return (
@@ -26,13 +19,23 @@ var ArchiveFeed = React.createClass({
       </div>
     );
   }
-});
+}
 
 var mapStateToProps = function (state) {
   // return { posts: state.posts};
   console.log('ARCHIVE FEED');
+  // console.log(state);
   // console.log(state.get('posts').toJS()[0]);
-  return { posts: state.get('posts').toJS() };
+  // return { posts: state.get('posts').toJS() };
+  return {
+    selectedEvent: state.events.selectedEvent,
+    posts: state.events.posts
+  };
 };
 
-module.exports = connect(mapStateToProps)(ArchiveFeed);
+ArchiveFeed.propTypes = {
+  posts: React.PropTypes.array.isRequired
+};
+
+// module.exports = provideHooks(hooks)(connect(mapStateToProps)(ArchiveFeed));
+export default connect(mapStateToProps)(ArchiveFeed);

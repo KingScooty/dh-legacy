@@ -3,12 +3,13 @@
 // React
 const React = require('react');
 import { renderToString } from 'react-dom/server';
-import { match, RouterContext } from 'react-router';
+import { match, RouterContext, createMemoryHistory } from 'react-router';
+import { routerReducer } from 'react-router-redux';
 
 const minify = require('html-minifier').minify;
 
 // Redux
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import reducer from '../reducers';
@@ -16,23 +17,52 @@ import reducer from '../reducers';
 import routes from '../routes';
 import * as actions from '../actions';
 
-const store = applyMiddleware(thunkMiddleware)(createStore)(reducer);
+const store = createStore(
+  combineReducers({
+    events: reducer,
+    routing: routerReducer
+  }),
+  {},
+  applyMiddleware(thunkMiddleware)
+);
+// applyMiddleware(thunkMiddleware)(createStore)(reducer);
 
 // Private:
 
 // Match url in context against our routes
 const matchRoutes = async (context) => {
+  const history = createMemoryHistory();
   return new Promise((resolve, reject) => {
     // We will see what the routes factory returns below
+
+    // Don't pass dispatch into router on server to prevent fetching twice.
+    // const { dispatch } = store;
+    const router = routes(history);
     const location = context.url;
-    match({ routes, location }, (error, redirectLocation, renderProps) => {
+
+    match({ routes: router, location }, (error, redirectLocation, renderProps) => {
       if (error) {
         // Unable to match any route
         reject(error);
       }
       else {
         // Route matched
-        store.dispatch(actions.fetchEventIfNeeded(renderProps.params.year))
+        const path = context.path.slice(1);
+        // console.log(location);
+
+        // console.log('redirectlocation', redirectLocation);
+        // console.log('renderPRops', renderProps);
+
+        if (redirectLocation) {
+          console.log('redirect location:', redirectLocation);
+          resolve({ redirectLocation, renderProps });
+        }
+
+        // fetchData(context, renderProps).then(() => {
+        //   resolve({ redirectLocation, renderProps });
+        // });
+
+        store.dispatch(actions.fetchEventIfNeeded(path))
         .then(() => {
           resolve({ redirectLocation, renderProps });
         });
