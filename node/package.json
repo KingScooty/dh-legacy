@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^6.0.3",
-    "babelify": "*",
+    "babelify": "6.4.0",
     "bower": "^1.6.3",
     "chai": "*",
     "cssnano": "^3.3.1",
