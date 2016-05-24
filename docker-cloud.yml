@@ -1,0 +1,31 @@
+lb:
+  image: dockercloud/haproxy
+  autorestart: always
+  links:
+    - api
+    - web
+  ports:
+    - "80:80"
+  roles:
+    - global
+
+api:
+  image: node
+  autorestart: always
+  links:
+    - couchdb
+
+couchdb:
+  image: couchdb
+
+web:
+  image: node
+  autorestart: always
+  links:
+    - api
+
+worker:
+  image: node
+  autorestart: always
+  links:
+    - couchdb
