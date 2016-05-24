@@ -16,10 +16,10 @@ describe('<EventInfo />', function () {
   describe('convertMarkdown()', function () {
     it('returns nothing if there is no body prop', function () {
       const response = EventInfo.prototype.convertMarkdown();
-      expect(response).to.equal(null);
+      expect(response).to.equal(false);
     });
 
-    it.only('returns a sanitized markdown repsonse if body prop exists', function () {
+    it('returns a sanitized markdown repsonse if body prop exists', function () {
       const markdown = '# This is a title';
       const response = EventInfo.prototype.convertMarkdown(markdown);
 

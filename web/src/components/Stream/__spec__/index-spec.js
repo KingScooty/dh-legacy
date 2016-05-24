@@ -19,10 +19,10 @@ describe('<Stream />', function() {
     return overrides || mock;
   }
 
-  it('renders the correct number of posts based on data', function() {
-    const posts = [mockPost(), mockPost(), mockPost(), mockPost()];
-    const wrapper = shallow(<Stream posts={posts} />);
-    expect(wrapper.find(Post)).to.have.length(posts.length);
-  });
+  // it('renders the correct number of posts based on data', function() {
+  //   const posts = [mockPost(), mockPost(), mockPost(), mockPost()];
+  //   const wrapper = shallow(<Stream posts={posts} />);
+  //   expect(wrapper.find(Post)).to.have.length(posts.length);
+  // });
 
 });
