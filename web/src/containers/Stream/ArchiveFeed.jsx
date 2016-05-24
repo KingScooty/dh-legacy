@@ -1,37 +1,15 @@
 const React = require('react');
 import { connect } from 'react-redux';
-// import * as actions from '../../actions';
-// import { toJS } from 'immutable';
-// import fetchEventIfNeeded from '../../actions';
-
 var Post = require('../../components/Post');
 
-var ArchiveFeed = React.createClass({
-  propTypes: {
-    posts: React.PropTypes.array.isRequired
-  },
-
-  // statics: {
-  //   fetchData: function (store, event) {
-  //     console.log('ArchiveFeed fetchData()', event);
-  //     return store.dispatch(fetchEventIfNeeded(event));
-  //   }
-  // },
-
-  componentWillReceiveProps(nextProps) {
-    // if (nextProps.selectedEvent !== this.props.selectedEvent) {
-    //   const { dispatch, selectedEvent } = nextProps;
-    //   dispatch(actions.fetchEventIfNeeded(selectedEvent));
-    // }
-  },
-
-  renderPosts: function () {
+class ArchiveFeed extends React.Component {
+  renderPosts() {
     return this.props.posts.map(function (post, index) {
       return <Post {...post} key={ index } />;
     });
-  },
+  }
 
-  render: function () {
+  render() {
     var posts = this.renderPosts();
 
     return (
@@ -41,7 +19,7 @@ var ArchiveFeed = React.createClass({
       </div>
     );
   }
-});
+}
 
 var mapStateToProps = function (state) {
   // return { posts: state.posts};
@@ -55,4 +33,9 @@ var mapStateToProps = function (state) {
   };
 };
 
-module.exports = connect(mapStateToProps)(ArchiveFeed);
+ArchiveFeed.propTypes = {
+  posts: React.PropTypes.array.isRequired
+};
+
+// module.exports = provideHooks(hooks)(connect(mapStateToProps)(ArchiveFeed));
+export default connect(mapStateToProps)(ArchiveFeed);

@@ -33,6 +33,7 @@ console.log(store.getState());
 import routes from './routes';
 
 const history = syncHistoryWithStore(browserHistory, store);
+const { dispatch } = store;
 
 // history.listen(location => {
   // analyticsService.track(location.pathname);
@@ -43,7 +44,7 @@ const history = syncHistoryWithStore(browserHistory, store);
 match({history, routes}, (/* error, redirectLocation, renderProps*/) => {
   render(
     <Provider store={ store } key="provider">
-      { routes(history) }
+      { routes(history, dispatch) }
     </Provider>,
     mountPoint
   );

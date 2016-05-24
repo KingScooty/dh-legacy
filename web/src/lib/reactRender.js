@@ -34,7 +34,9 @@ const matchRoutes = async (context) => {
   const history = createMemoryHistory();
   return new Promise((resolve, reject) => {
     // We will see what the routes factory returns below
-    // const actions = [];
+
+    // Don't pass dispatch into router on server to prevent fetching twice.
+    // const { dispatch } = store;
     const router = routes(history);
     const location = context.url;
 
@@ -68,30 +70,6 @@ const matchRoutes = async (context) => {
     });
   });
 };
-
-/* fetch data promise */
-// function fetchData(context, renderProps) {
-//   let { query, params } = renderProps;
-//   return new Promise(function(resolve, reject) {
-//     let comp = renderProps.components[renderProps.components.length - 1].archive.WrappedComponent;
-//     console.log('COMP:', renderProps.components[renderProps.components.length - 1].archive.WrappedComponent.fetchData);
-//     // let url = req.protocol + '://' + req.get('host');
-//     let event = context.path.slice(1);
-//     console.log('EVENT:::', event);
-//     resolve(comp.fetchData(store, url));
-//   });
-// }
-
-// const listenOnActions = (actions, callback) => {
-//   if (actions.length === 0) {
-//     callback([]);
-//   } else if (actions.length === 1) {
-//     // actions[0].listen((resp) => callback([resp]));
-//     store.dispatch(action[0]);
-//   }// else {
-//   //   Reflux.joinLeading(...actions).listen(callback)
-//   // }
-// };
 
 const handleError = async (context, error) => {
   console.error(error.stack);
