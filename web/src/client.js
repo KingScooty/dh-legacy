@@ -34,12 +34,16 @@ import routes from './routes';
 
 const history = syncHistoryWithStore(browserHistory, store);
 
+// history.listen(location => {
+  // analyticsService.track(location.pathname);
+// });
+
 // <Router routes={ routes } history={ history } />
 
 match({history, routes}, (/* error, redirectLocation, renderProps*/) => {
   render(
     <Provider store={ store } key="provider">
-      { routes(history, []) }
+      { routes(history) }
     </Provider>,
     mountPoint
   );
