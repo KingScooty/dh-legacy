@@ -1,36 +1,39 @@
-api:
-  build: ./api
-  volumes:
-    # Mount local dir for development
-    - "./node:/usr/src/api"
-  ports:
-    - "80:3000"
-  links:
-    - couchdb
-  # env_file:
-  #   - ./.env_dev.env
+version: '2'
+services:
+  api:
+    build: ./api
+    volumes:
+      # Mount local dir for development
+      - "./api:/usr/src/api"
+    ports:
+      - "80:3000"
+    links:
+      - couchdb
+      - web
+    # env_file:
+    #   - ./.env_dev.env
 
-database:
-  image: tutum/couchdb
-  ports:
-    - "5984:5984"
+  couchdb:
+    image: tutum/couchdb
+    ports:
+      - "5984:5984"
 
-web:
-  build: ./web
-  volumes:
-    # Mount local dir for development
-    - "./node:/usr/src/web"
-  ports:
-    - "80:3000"
-  links:
-    - api
+  web:
+    build: ./web
+    volumes:
+      # Mount local dir for development
+      - "./web:/usr/src/web"
+    ports:
+      - "80:3000"
+    links:
+      - api
 
-worker:
-  build: ./worker
-  volumes:
-    # Mount local dir for development
-    - "./node:/usr/src/worker"
-  ports:
-    - "80:3000"
-  links:
-    - couchdb
+  worker:
+    build: ./worker
+    volumes:
+      # Mount local dir for development
+      - "./worker:/usr/src/worker"
+    ports:
+      - "80:3000"
+    links:
+      - couchdb
