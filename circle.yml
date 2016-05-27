@@ -1,13 +1,13 @@
 machine:
   node:
-    version: 5.9.0
+    version: 6.2.0
   timezone:
     Europe/London
   services:
     - docker
 
 dependencies:
-    pre:
+  pre:
     # Install circleci-matrix
     - curl -fsSL https://git.io/v2Ifn | bash
 
